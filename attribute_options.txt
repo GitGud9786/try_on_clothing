@@ -1,0 +1,3615 @@
+================================================================================
+PERSON ATTRIBUTES AND THEIR POSSIBLE VALUES
+================================================================================
+
+BODY SHAPE:
+----------------------------------------
+  - athletic
+  - average
+  - curvy
+  - fit
+  - full-figured
+  - lean
+  - maternity
+  - petite
+  - plus-size
+  - pregnant
+  - rectangle
+  - round
+  - slender
+  - slim
+  Total: 14 options
+
+FIT OF UPPER CLOTH:
+----------------------------------------
+  - comfortable
+  - fitted
+  - flowy
+  - loose
+  - regular
+  - relaxed
+  - semi-fitted
+  - slim
+  - structured
+  - tight
+  Total: 10 options
+
+GENDER:
+----------------------------------------
+  - man
+  - woman
+  Total: 2 options
+
+HAIR LENGTH:
+----------------------------------------
+  - below chin length
+  - below shoulders, long
+  - chin length bob
+  - chin-length bob, short
+  - chin-length, bob cut
+  - chin-length, short bob
+  - chin-length, slightly above
+  - chin-length, slightly wavy
+  - chin-length, straight
+  - closely cropped, scalp
+  - ear-length curly bob
+  - hair in a bun
+  - hair tied back
+  - jaw-length, neat bob
+  - long
+  - long and straight
+  - long below shoulders
+  - long braided, tied back
+  - long braids, past shoulders
+  - long braids, tied back
+  - long enough to shoulder
+  - long enough, over shoulders
+  - long flowing
+  - long flowing waves
+  - long hair tied
+  - long past shoulders
+  - long ponytail, down back
+  - long ponytail, tied
+  - long pulled back
+  - long straight below shoulders
+  - long tied back
+  - long tied up
+  - long to back
+  - long to chest
+  - long to medium
+  - long to mid-back
+  - long to shoulder
+  - long to shoulders
+  - long updo bun
+  - long, below shoulder
+  - long, below shoulders
+  - long, beyond shoulders
+  - long, braided
+  - long, braided back
+  - long, braided style
+  - long, curly, lush
+  - long, down back
+  - long, down to waist
+  - long, falls past shoulders
+  - long, flowing down
+  - long, gathered back
+  - long, in bun
+  - long, in ponytail
+  - long, mid-back
+  - long, mid-back length
+  - long, mid-back, straight
+  - long, near chest
+  - long, near shoulders
+  - long, over shoulders
+  - long, past shoulders
+  - long, pulled back
+  - long, pulled up
+  - long, shoulder length
+  - long, slicked back
+  - long, slightly below shoulders
+  - long, straight, flowing
+  - long, straight, past shoulders
+  - long, straight, sleek
+  - long, tied back
+  - long, tied back ponytail
+  - long, tied in bun
+  - long, tied up
+  - long, tied up bun
+  - long, to bun
+  - long, to chest
+  - long, to collar
+  - long, to mid-back
+  - long, to shoulders
+  - long, to upper back
+  - long, to waist
+  - long, updo bun
+  - long, wavy
+  - long, wavy, shoulder
+  - long, wavy, shoulder-length
+  - longer than shoulders
+  - longer, past shoulders
+  - longer, straight down
+  - medium
+  - medium length
+  - medium length, below chin
+  - medium length, below shoulders
+  - medium length, braided
+  - medium length, curly
+  - medium length, down
+  - medium length, past shoulders
+  - medium length, shoulder
+  - medium length, straight
+  - medium length, tied
+  - medium length, tied back
+  - medium length, tied up
+  - medium length, to shoulders
+  - medium length, updo
+  - medium length, voluminous
+  - medium length, wavy
+  - medium to long
+  - medium to short
+  - medium to shoulder
+  - medium to shoulders
+  - medium updo, curly
+  - medium, above shoulders
+  - medium, around shoulders
+  - medium, below chin
+  - medium, below jawline
+  - medium, below shoulders
+  - medium, chin-length bob
+  - medium, in bun
+  - medium, in ponytail
+  - medium, just above
+  - medium, just above shoulders
+  - medium, just below ears
+  - medium, just past shoulders
+  - medium, natural curls
+  - medium, past shoulders
+  - medium, shoulder length
+  - medium, shoulder-length
+  - medium, tied back
+  - medium, tied up
+  - medium, to chin
+  - medium, to neck
+  - medium, to shoulder
+  - medium, to shoulders
+  - medium, touching shoulders
+  - medium, toward back
+  - medium, updo style
+  - medium-length below shoulders
+  - medium-length curls
+  - medium-length to chin
+  - medium-length to shoulders
+  - medium-length, above shoulders
+  - medium-length, below chin
+  - medium-length, below ears
+  - medium-length, below shoulder
+  - medium-length, below shoulders
+  - medium-length, braided
+  - medium-length, braided style
+  - medium-length, braids
+  - medium-length, curly
+  - medium-length, curly bangs
+  - medium-length, curly bush
+  - medium-length, curly waves
+  - medium-length, in a bun
+  - medium-length, in bun
+  - medium-length, in updo
+  - medium-length, just past shoulders
+  - medium-length, loose curls
+  - medium-length, mid-back
+  - medium-length, near shoulder
+  - medium-length, near shoulders
+  - medium-length, neat bun
+  - medium-length, over shoulders
+  - medium-length, past chin
+  - medium-length, past shoulders
+  - medium-length, shoulder length
+  - medium-length, shoulder level
+  - medium-length, shoulder-grazing
+  - medium-length, shoulder-length
+  - medium-length, side parted
+  - medium-length, slicked back
+  - medium-length, slightly below shoulders
+  - medium-length, slightly past shoulders
+  - medium-length, straight
+  - medium-length, tied back
+  - medium-length, tied back bun
+  - medium-length, tied up
+  - medium-length, to chin
+  - medium-length, to ears
+  - medium-length, to neck
+  - medium-length, to shoulders
+  - medium-length, updo bun
+  - medium-length, updo hairstyle
+  - medium-length, updo style
+  - medium-length, wavy ends
+  - medium-long tied back
+  - medium-long, below shoulders
+  - medium-long, past shoulders
+  - medium-sized afro
+  - pulled back, updo
+  - short
+  - short above shoulders
+  - short afro style
+  - short and braided
+  - short and close-cropped
+  - short and cropped
+  - short and curly
+  - short and to neck
+  - short bob
+  - short bob cut
+  - short bob length
+  - short bob, chin-length
+  - short close-cropped style
+  - short cropped style
+  - short cropped, close
+  - short curly above
+  - short curly afro
+  - short curly bob
+  - short hair, braids
+  - short in bun
+  - short natural length
+  - short tied back
+  - short tied up
+  - short to chin
+  - short to medium
+  - short to medium length
+  - short to medium-length
+  - short to mid-length
+  - short to neck
+  - short to shoulder
+  - short to shoulders
+  - short to the neckline
+  - short with bangs
+  - short with volume
+  - short, above chin
+  - short, above ear
+  - short, above ears
+  - short, above neck
+  - short, above neckline
+  - short, above shoulder
+  - short, above shoulders
+  - short, around chin
+  - short, around ears
+  - short, bob
+  - short, bob length
+  - short, braided style
+  - short, braided, natural
+  - short, braided, neat
+  - short, chin length
+  - short, chin-length
+  - short, chin-length bob
+  - short, chin-length, curly
+  - short, close to
+  - short, close-cropped
+  - short, close-cropped style
+  - short, close-cropped, to ears
+  - short, closely cropped
+  - short, cropped closely
+  - short, cropped style
+  - short, curly, above shoulders
+  - short, curly, up
+  - short, ear length
+  - short, just above shoulders
+  - short, just below chin
+  - short, near chin
+  - short, pixie cut
+  - short, styled up
+  - short, tied back
+  - short, tied up
+  - short, tied-up bun
+  - short, to chin
+  - short, to ears
+  - short, to neck
+  - short, to neckline
+  - short, to shoulders
+  - short, touching jawline
+  - short, updo style
+  - shoulder length, curly
+  - shoulder length, straight
+  - shoulder-length curls
+  - shoulder-length with layers
+  - shoulder-length, center part
+  - shoulder-length, curly
+  - shoulder-length, curly ends
+  - shoulder-length, neat bob
+  - shoulder-length, slightly curly
+  - shoulder-length, slightly wavy
+  - shoulder-length, straight
+  - shoulder-length, straight ends
+  - shoulder-length, wavy
+  - shoulder-length, wavy style
+  - straight, long
+  - tied back, long
+  - to shoulders, medium
+  - very long, below shoulders
+  - very long, below waist
+  - very long, flowing
+  - very long, past shoulders
+  - very long, straight
+  - very long, to chest
+  - very long, to waist
+  - very long, waist-length
+  - very short
+  - very short bob, short
+  - very short buzz
+  - very short close-cropped
+  - very short crop
+  - very short cropped
+  - very short, above chin
+  - very short, above ears
+  - very short, above neck
+  - very short, braided
+  - very short, buzz cut
+  - very short, buzzcut
+  - very short, close
+  - very short, close cut
+  - very short, close-cropped
+  - very short, close-cut
+  - very short, cornrows
+  - very short, cropped
+  - very short, ear length
+  - very short, near scalp
+  - very short, shaved
+  - very short, shaved sides
+  Total: 311 options
+
+HAIR STYLE:
+----------------------------------------
+  - beachy waves, side-parted
+  - blonde curly bouncy
+  - blunt cut, bangs
+  - bob with bangs
+  - bouncy curls, natural
+  - braided and sleek
+  - braided close scalp
+  - braided cornrows, tightly styled
+  - braided in cornrows
+  - braided with part
+  - braided, close to scalp
+  - braided, natural fall
+  - braided, neat cornrows
+  - braided, neat style
+  - braided, neatly styled
+  - braided, pulled back
+  - braided, sleek style
+  - braids, pulled back
+  - buzzed, clean cut
+  - casual, tied back
+  - center part, sleek
+  - close-cropped, minimal styling
+  - close-cropped, natural texture
+  - close-cropped, neat style
+  - close-cropped, textured look
+  - closely buzzed, natural
+  - closely cropped natural
+  - closely cropped, neat
+  - closely cut, neat
+  - closely shaved, natural
+  - closely shaven style
+  - closely-cropped, minimalist style
+  - cornrow braids, straight
+  - cornrows, neatly braided
+  - curly afro, natural
+  - curly and voluminous
+  - curly bob, natural
+  - curly natural waves
+  - curly with bangs
+  - curly with volume
+  - curly, full volume
+  - curly, high bun
+  - curly, in bun
+  - curly, loose curls
+  - curly, loose strands
+  - curly, loosely pulled-back
+  - curly, messy waves
+  - curly, natural
+  - curly, natural flow
+  - curly, natural look
+  - curly, natural part
+  - curly, natural texture
+  - curly, natural volume
+  - curly, natural waves
+  - curly, natural, up
+  - curly, natural, updo
+  - curly, natural, voluminous
+  - curly, pulled back
+  - curly, pulled up
+  - curly, slightly messy
+  - curly, slightly tousled
+  - curly, tied back
+  - curly, tied-up
+  - curly, tight bun
+  - curly, tousled bob
+  - curly, updo style
+  - curly, voluminous
+  - curly, voluminous afro
+  - curly, voluminous layers
+  - curly, voluminous style
+  - curly, voluminous texture
+  - curly, voluminous waves
+  - curly, voluminous, natural
+  - defined curls, natural
+  - elegant, loose curls
+  - even, close-cropped
+  - full, natural curls
+  - full, natural texture
+  - gentle waves, middle-part
+  - half up, loose waves
+  - half-up with scrunchie
+  - half-up, loose curls
+  - high bun style
+  - high bun, natural
+  - high bun, neat
+  - high bun, off face
+  - high bun, sleek
+  - high ponytail, sleek
+  - layered waves, side part
+  - layered, natural waves
+  - layered, tousled waves
+  - light curls, side-parted
+  - light waves, center
+  - light waves, headband
+  - light waves, layered
+  - light waves, loose
+  - light waves, middle part
+  - light waves, natural
+  - light waves, natural part
+  - light waves, parted
+  - light waves, side part
+  - light waves, side-part
+  - light waves, side-parted
+  - light waves, slight wave
+  - light waves, tied back
+  - light waves, tousled
+  - lightly tousled, natural texture
+  - lightly wavy, parted side
+  - lightly wavy, side part
+  - long braided style
+  - long braids, middle-parted
+  - long curls, natural
+  - long curly, natural
+  - long ponytail, middle part
+  - long ponytail, sleek
+  - long ponytail, slicked back
+  - long waves, side-parted
+  - long, curly, voluminous
+  - long, gentle waves
+  - long, natural waves
+  - long, naturally curly
+  - long, neat braids
+  - long, slight waves
+  - loose and natural
+  - loose bun, casual
+  - loose bun, natural
+  - loose bun, some strands
+  - loose bun, tidy
+  - loose curls, natural
+  - loose curls, parted
+  - loose curls, pinned
+  - loose curls, side
+  - loose curls, side part
+  - loose curls, voluminous
+  - loose natural waves
+  - loose strands, bun
+  - loose waves
+  - loose waves to side
+  - loose waves with headband
+  - loose waves, bangs
+  - loose waves, center
+  - loose waves, center part
+  - loose waves, center-part
+  - loose waves, center-parted
+  - loose waves, fringe
+  - loose waves, middle
+  - loose waves, middle part
+  - loose waves, natural
+  - loose waves, natural part
+  - loose waves, off-center
+  - loose waves, part
+  - loose waves, parted
+  - loose waves, ponytail
+  - loose waves, relaxed
+  - loose waves, side
+  - loose waves, side part
+  - loose waves, side-part
+  - loose waves, side-parted
+  - loose waves, slight part
+  - loose waves, soft
+  - loose waves, tied up
+  - loose waves, tucked behind
+  - loose with waves
+  - loose, natural curls
+  - loose, natural part
+  - loose, natural waves
+  - loose, slight wave
+  - loose, slight waves
+  - loose, slightly wavy
+  - loose, soft waves
+  - loose, straight, natural
+  - loose, straight, side
+  - loose, wavy with part
+  - low ponytail, sleek
+  - messy bun style
+  - messy waves, naturally
+  - middle part, natural waves
+  - natural and textured
+  - natural curl, afro
+  - natural curls, afro
+  - natural curls, defined
+  - natural curls, lifted
+  - natural curls, loose
+  - natural curls, neat
+  - natural curls, side part
+  - natural curls, voluminous
+  - natural curls, volumized
+  - natural curls, waves
+  - natural curly afro
+  - natural curly crop
+  - natural curly texture
+  - natural curly updo
+  - natural curly waves
+  - natural curly, voluminous
+  - natural flat parted
+  - natural loose curls
+  - natural loose waves
+  - natural short afro
+  - natural short curls
+  - natural texture, rounded
+  - natural texture, styled neatly
+  - natural texture, volume
+  - natural textured look
+  - natural tight curls
+  - natural voluminous curls
+  - natural waves, center-parted
+  - natural waves, loose
+  - natural waves, middle part
+  - natural waves, parted
+  - natural waves, pulled back
+  - natural waves, side part
+  - natural waves, side parting
+  - natural waves, side-parted
+  - natural waves, tousled
+  - natural with bun
+  - natural with curls
+  - natural with part
+  - natural with twists
+  - natural with waves
+  - natural, afro, textured
+  - natural, buzz cut
+  - natural, center part
+  - natural, close cropped
+  - natural, close cut
+  - natural, close to scalp
+  - natural, close-cropped
+  - natural, close-cropped style
+  - natural, close-cut
+  - natural, close-cut style
+  - natural, closely cropped
+  - natural, curly afro
+  - natural, curly texture
+  - natural, defined curls
+  - natural, flat top
+  - natural, full volume
+  - natural, loose curls
+  - natural, loose layers
+  - natural, loose waves
+  - natural, neat finish
+  - natural, neatly styled
+  - natural, short afro
+  - natural, short curl
+  - natural, sleek style
+  - natural, slight curl
+  - natural, slight curls
+  - natural, slight texture
+  - natural, slight wave
+  - natural, slight waves
+  - natural, slightly curly
+  - natural, slightly wavy
+  - natural, small curls
+  - natural, smooth, minimal
+  - natural, soft curls
+  - natural, soft waves
+  - natural, straight, part
+  - natural, straight, parted
+  - natural, subtle curls
+  - natural, tapered afro
+  - natural, textured afro
+  - natural, textured volume
+  - natural, textured, close-cropped
+  - natural, textured, cropped
+  - natural, textured, voluminous
+  - natural, tied back
+  - natural, tightly coiled
+  - natural, tightly curled
+  - natural, very short
+  - natural, voluminous curls
+  - natural, voluminous, afro
+  - natural, wavy texture
+  - neat braids, back
+  - neat bun, clean
+  - neat bun, simple
+  - neat bun, sleek
+  - neat bun, slicked back
+  - neat bun, tidy
+  - neat cornrows across scalp
+  - neat curls, shaped
+  - neat low ponytail
+  - neat ponytail
+  - neat straight braids
+  - neat with strands
+  - neat, cascading braids
+  - neat, centered part
+  - neat, close cropped
+  - neat, cornrow braids
+  - neat, high bun
+  - neat, low bun
+  - neat, pulled back
+  - neat, short, closely cut
+  - neat, side part
+  - neat, simple style
+  - neat, sleek, braids
+  - neat, tied bun
+  - neatly braided, sleek back
+  - neatly parted down
+  - neatly pulled back
+  - neatly slicked back
+  - neatly tied back
+  - neatly tied edges
+  - neatly tied up
+  - no style, natural
+  - parted in middle, loose waves
+  - pony tail, neat
+  - ponytail, sleek
+  - ponytail, slightly wavy
+  - ponytail, tucked back
+  - pulled back bun
+  - pulled back loosely
+  - pulled back neatly
+  - pulled back sleek
+  - pulled back updo
+  - pulled back, bun
+  - pulled back, curly
+  - pulled back, loose
+  - pulled back, natural
+  - pulled back, neat
+  - pulled back, neat bun
+  - pulled back, ponytail
+  - pulled back, sleek
+  - pulled back, smooth
+  - pulled back, straight
+  - pulled back, updo
+  - pulled back, upstyle
+  - pulled back, waves
+  - shaved sides, textured top
+  - shaved, close cut
+  - shaved, smooth texture
+  - short afro, natural
+  - short bob, straight
+  - short buzz cut
+  - short cropped curls
+  - short cropped, natural
+  - short curls, natural
+  - short curls, neat
+  - short curls, styled
+  - short curly afro
+  - short curly style
+  - short curly top
+  - short curly, natural
+  - short natural afro
+  - short natural curls
+  - short pixie cut
+  - short sides, voluminous top
+  - short straight bangs
+  - short tight curls
+  - short, braided, natural
+  - short, close-cropped
+  - short, closely shaven
+  - short, closely-cropped natural
+  - short, curly style
+  - short, natural curls
+  - short, natural texture
+  - short, natural waves
+  - short, natural, close
+  - short, natural, simple
+  - short, natural, sleek
+  - short, natural, textured
+  - short, neat, trimmed
+  - short, shaved, buzzed
+  - short, side part
+  - short, straight bangs
+  - short, textured curls
+  - short, textured top
+  - short, textured, natural
+  - short, textured, styled
+  - side part, loose
+  - side part, natural
+  - side part, natural waves
+  - side part, soft waves
+  - side part, straight
+  - side parted elegant
+  - side swept, textured
+  - simple, neat ponytail
+  - simple, pulled back
+  - simple, side-parted
+  - simple, tied back
+  - single braid, pulled back
+  - sleek and smooth
+  - sleek bun, neat
+  - sleek high ponytail
+  - sleek ponytail, center
+  - sleek ponytail, part
+  - sleek pulled-back
+  - sleek side ponytail
+  - sleek, center part
+  - sleek, close to head
+  - sleek, close to scalp
+  - sleek, close-cropped
+  - sleek, loose strand
+  - sleek, low bun
+  - sleek, middle part
+  - sleek, natural texture
+  - sleek, neat bun
+  - sleek, polished updo
+  - sleek, pulled back
+  - sleek, side part
+  - sleek, side-parted
+  - sleek, simple bun
+  - sleek, slicked back
+  - sleek, straight back
+  - sleek, straight, tied
+  - sleek, tidy bun
+  - slick back, ponytail
+  - slick, pulled back
+  - slicked back bun
+  - slicked back ponytail
+  - slicked back, brushed
+  - slicked back, bun
+  - slicked back, clean
+  - slicked back, natural
+  - slicked back, neat
+  - slicked back, ponytail
+  - slicked back, sleek
+  - slicked back, smooth
+  - slicked back, straight
+  - slicked back, tidy
+  - slicked back, tied
+  - slicked, low bun
+  - slicked, straight back
+  - slight wave, center part
+  - slightly messy bun
+  - slightly wavy, center part
+  - slightly wavy, natural
+  - slightly wavy, parted
+  - slightly wavy, side part
+  - smooth and side-parted
+  - smooth bun, neat
+  - smooth ponytail, neat
+  - smooth waves, side part
+  - smooth with part
+  - smooth, elegant bun
+  - smooth, high bun
+  - smooth, light waves
+  - smooth, loose curls
+  - smooth, low bun
+  - smooth, low ponytail
+  - smooth, middle part
+  - smooth, natural flow
+  - smooth, natural part
+  - smooth, natural texture
+  - smooth, natural waves
+  - smooth, neat bun
+  - smooth, neat, pulled back
+  - smooth, pulled back
+  - smooth, side part
+  - smooth, side-parted
+  - smooth, simple ponytail
+  - smooth, simple, neat
+  - smooth, sleek, tidy
+  - smooth, sleek, tied
+  - smooth, sleek, updo
+  - smooth, slight wave
+  - smooth, straight, neat
+  - smooth, tied back
+  - soft waves with part
+  - soft waves, bangs
+  - soft waves, blunt bangs
+  - soft waves, center part
+  - soft waves, fringe
+  - soft waves, light layers
+  - soft waves, loose
+  - soft waves, middle
+  - soft waves, middle part
+  - soft waves, middle-parted
+  - soft waves, natural
+  - soft waves, off-face
+  - soft waves, part
+  - soft waves, parted
+  - soft waves, side
+  - soft waves, side part
+  - soft waves, side-part
+  - soft waves, side-parted
+  - soft waves, side-swept
+  - straight and natural
+  - straight and neat
+  - straight and parted
+  - straight and simple
+  - straight and sleek
+  - straight and smooth
+  - straight bangs, sleek
+  - straight bob cut
+  - straight bob fringe
+  - straight bob, bangs
+  - straight center part
+  - straight light waves
+  - straight parted middle
+  - straight slicked back
+  - straight tied back
+  - straight with bangs
+  - straight with braid
+  - straight with braids
+  - straight with bun
+  - straight with center part
+  - straight with center-part
+  - straight with fringe
+  - straight with headband
+  - straight with layers
+  - straight with middle
+  - straight with middle part
+  - straight with natural
+  - straight with natural part
+  - straight with part
+  - straight with side part
+  - straight with side-part
+  - straight with slight wave
+  - straight with volume
+  - straight with wave
+  - straight with waves
+  - straight, bangs
+  - straight, behind ears
+  - straight, blunt bangs
+  - straight, blunt cut
+  - straight, center part
+  - straight, center parted
+  - straight, center-parted
+  - straight, centered part
+  - straight, clean part
+  - straight, flowing back
+  - straight, fringe bangs
+  - straight, full bangs
+  - straight, light fringe
+  - straight, light wave
+  - straight, light waves
+  - straight, lightly parted
+  - straight, loose waves
+  - straight, loose, natural
+  - straight, low bun
+  - straight, low ponytail
+  - straight, middle part
+  - straight, middle-parted
+  - straight, minimal waves
+  - straight, natural
+  - straight, natural bangs
+  - straight, natural down
+  - straight, natural ends
+  - straight, natural flow
+  - straight, natural middle
+  - straight, natural part
+  - straight, natural parted
+  - straight, natural parting
+  - straight, natural side
+  - straight, natural wave
+  - straight, natural waves
+  - straight, natural, bangs
+  - straight, natural, loose
+  - straight, natural, parted
+  - straight, natural, side-part
+  - straight, neat bun
+  - straight, neat part
+  - straight, neat ponytail
+  - straight, neat, tucked
+  - straight, parted in middle
+  - straight, parted middle
+  - straight, parted side
+  - straight, parted sides
+  - straight, parted to side
+  - straight, pinned back
+  - straight, ponytail
+  - straight, pulled back
+  - straight, shiny, neat
+  - straight, side part
+  - straight, side parted
+  - straight, side-parted
+  - straight, side-swept bangs
+  - straight, simple
+  - straight, simple ponytail
+  - straight, simple style
+  - straight, simple, natural
+  - straight, simple, neat
+  - straight, sleek
+  - straight, sleek bob
+  - straight, sleek bun
+  - straight, sleek neat
+  - straight, sleek ponytail
+  - straight, sleek, bun
+  - straight, sleek, center
+  - straight, sleek, center-part
+  - straight, sleek, center-parted
+  - straight, sleek, middle part
+  - straight, sleek, natural
+  - straight, sleek, neat
+  - straight, sleek, parted
+  - straight, sleek, side
+  - straight, sleek, side part
+  - straight, sleek, side-part
+  - straight, sleek, side-parted
+  - straight, sleek, tied-back
+  - straight, sleek, tucked
+  - straight, slicked back
+  - straight, slight bangs
+  - straight, slight bob
+  - straight, slight curl
+  - straight, slight part
+  - straight, slight parting
+  - straight, slight wave
+  - straight, slight waves
+  - straight, slightly bobbed
+  - straight, slightly parted
+  - straight, slightly tousled
+  - straight, slightly tucked
+  - straight, slightly wavy
+  - straight, smooth texture
+  - straight, smooth, parted
+  - straight, smooth, side part
+  - straight, soft waves
+  - straight, subtle volume
+  - straight, swept back
+  - straight, tied back
+  - straight, tousled waves
+  - straight, tucked back
+  - straight, tucked behind
+  - straight, tucked behind ear
+  - straight, tucked behind ears
+  - straight, updo style
+  - straight, with bangs
+  - straight, with fringe
+  - straight, with layers
+  - straight, with part
+  - straight, with side-part
+  - straight, with slight wave
+  - straight, with volume
+  - styled updo, casual
+  - styled waves, side part
+  - styled with gel
+  - subtle waves, parted
+  - textured afro puffs
+  - textured top fade
+  - textured, close-cropped
+  - textured, cropped, natural
+  - textured, modern style
+  - textured, natural curl
+  - textured, slightly wavy
+  - thick curls, natural
+  - tied back neatly
+  - tied back ponytail
+  - tied back, loose strands
+  - tied back, middle part
+  - tied back, natural
+  - tied back, neat
+  - tied back, simple
+  - tied back, sleek
+  - tied back, with part
+  - tied bun, loose strands
+  - tied in bun
+  - tied up bun
+  - tied up, loose strands
+  - tight braids, natural part
+  - tight braids, pulled back
+  - tight braids, sleek
+  - tight braids, swept back
+  - tight bun, neat
+  - tight curls, natural
+  - tight curls, natural volume
+  - tight curls, neat
+  - tight curls, voluminous
+  - tightly braided, cornrows
+  - tightly coiled, natural
+  - top knot bun
+  - updo with bangs
+  - updo with bun
+  - updo with tendrils
+  - updo, clean finish
+  - updo, secured bun
+  - very short, close-cropped
+  - very short, closely cropped
+  - very short, closely-cropped
+  - very short, shaved
+  - volume at the top
+  - voluminous curls, side part
+  - voluminous natural curls
+  - voluminous, curly waves
+  - voluminous, natural curls
+  - voluminous, tight curls
+  - waves, natural part
+  - wavy and loose
+  - wavy and tied
+  - wavy with bangs
+  - wavy with clips
+  - wavy with curls
+  - wavy with part
+  - wavy with volume
+  - wavy, center-parted
+  - wavy, loose curls
+  - wavy, loose part
+  - wavy, loose, part
+  - wavy, natural curls
+  - wavy, natural flow
+  - wavy, natural fringe
+  - wavy, natural part
+  - wavy, natural texture
+  - wavy, parted center
+  - wavy, side part
+  - wavy, side-parted
+  - wavy, side-swept
+  - wavy, slightly tousled
+  - wavy, swept side
+  - wavy, tied back
+  - wavy, tousled, parted
+  - wavy, tousled, side-part
+  - wavy, with fringe
+  Total: 701 options
+
+SLEEVE ROLLING STYLE:
+----------------------------------------
+  - a long-sleeved with rolled-up sleeves
+  - a long-sleeved with sleeves down
+  - a long-sleeved with the sleeves down
+  - long sleeve with lace
+  - long sleeve, rolled up
+  - long-sleeved sleeves down
+  - long-sleeved with sheer sleeves down
+  - long-sleeved with sleeves down
+  - long-sleeved, down
+  - loose, long sleeves
+  - short sleeve
+  - sleeveless
+  - three-quarter sleeve
+  - three-quarter sleeves
+  Total: 14 options
+
+POSE:
+----------------------------------------
+  - angled slightly forward, head tilted, relaxed expression
+  - angled slightly sideways, looking ahead with confidence
+  - angled slightly, right shoulder forward, looking at camera
+  - arms crossed, facing camera, slight side angle
+  - back turned, looking over shoulder, relaxed stance
+  - facing camera, head slightly tilted, neutral expression
+  - facing camera, relaxed stance, neutral expression
+  - facing camera, slight angle, looking to side smiling
+  - facing camera, slight smile, body slightly turned
+  - facing camera, slight smile, relaxed posture
+  - facing forward, arms crossed, confident expression, standing straight
+  - facing forward, body tilted slightly to side
+  - facing forward, head tilted, soft expression
+  - facing forward, neutral expression, head slightly tilted
+  - facing forward, neutral expression, slightly angled
+  - facing forward, neutral expression, standing straight
+  - facing forward, slight angle, relaxed with smile
+  - facing forward, slight head tilt, engaging smile
+  - facing forward, slight tilt, looking to side
+  - facing forward, slightly tilted head, neutral expression
+  - facing forward, slightly tilted head, soft expression
+  - facing forward, slightly tilting head, confident expression
+  - facing forward, smiling directly towards the camera
+  - facing forward, smiling, looking at the camera
+  - facing sideways, smiling, looking slightly downward at floor
+  - gently leaning, looking thoughtfully to the side
+  - hand on belly, smiling, looking towards the camera
+  - hand on chin, smiling, looking at camera
+  - hands on hips, neutral expression, slightly tilted head
+  - head slightly tilted, looking directly at the camera
+  - head tilted to left, smiling with eyes closed
+  - leaning slightly forward, head tilted, relaxed expression
+  - leaning slightly forward, looking confidently at camera
+  - leaning slightly forward, playful expression, head tilted
+  - leaning slightly forward, smiling, looking directly at camera
+  - leaning slightly forward, soft smile, looking relaxed
+  - leaning slightly sideways, smiling cheerfully, looking ahead
+  - leaning slightly to one side, relaxed expression
+  - leaning slightly, casual expression, looking at the camera
+  - leaning slightly, conveying laid-back, easygoing attitude
+  - looking down thoughtfully, slight lean to right
+  - looking down, gentle smile, holding skirt softly
+  - looking down, slightly turned to the side
+  - looking downward, slight tilt of head, neutral expression
+  - looking slightly away, neutral expression, relaxed posture
+  - one hand on hip, joyful expression, leaning slightly
+  - slight angle, head tilted, confident expression
+  - slight angle, looking slightly downward with smile
+  - slight angle, neutral expression, facing camera
+  - slight turn to right, looking downward with head
+  - slightly angled to camera, head tilted slightly back
+  - slightly angled, confident expression, head tilted slightly
+  - slightly angled, facing camera, slight smile on lips
+  - slightly angled, gentle expression, looking at camera
+  - slightly angled, gentle smile, looking at camera
+  - slightly angled, head tilted, looking directly at camera
+  - slightly angled, head tilted, looking downward
+  - slightly angled, head tilted, relaxed expression
+  - slightly angled, head tilted, serious expression
+  - slightly angled, head turned, looking away from camera
+  - slightly angled, looking away from the camera
+  - slightly angled, looking away, neutral expression
+  - slightly angled, looking directly, slight smile
+  - slightly angled, neutral expression, facing camera
+  - slightly angled, neutral expression, head tilted sideways
+  - slightly angled, neutral expression, looking at camera
+  - slightly angled, neutral expression, looking at lens
+  - slightly angled, neutral expression, looking at the camera
+  - slightly angled, relaxed expression, looking at camera
+  - slightly angled, right shoulder forward, head tilted
+  - slightly angled, smiling, looking at camera confidently
+  - slightly angled, smiling, looking away from camera
+  - slightly angled, smiling, looking away from the camera
+  - slightly angled, smiling, looking directly at the camera
+  - slightly angled, tilting head, gentle expression
+  - slightly bent, laughing, looking downward, casual expression
+  - slightly facing left, confident expression, relaxed stance
+  - slightly leaning forward, looking down at the ground
+  - slightly leaning, head tilted, facing the camera
+  - slightly leaning, head tilted, light smile
+  - slightly leaning, head tilted, looking downward
+  - slightly leaning, looking directly at the camera
+  - slightly leaning, looking down, soft expression
+  - slightly leaning, relaxed expression, looking at camera
+  - slightly tilted head, gentle expression, facing forward
+  - slightly tilted head, looking down, relaxed expression
+  - slightly tilted head, looking downward with a soft expression
+  - slightly tilted head, relaxed expression, neutral gaze
+  - slightly turned with a slight smile, facing camera
+  - slightly turned, chin up, looking to side
+  - slightly turned, confident expression, looking forward
+  - slightly turned, head tilted, eyes down
+  - slightly turned, head tilted, gentle smile
+  - slightly turned, subtle expression, facing the camera
+  - smiling, facing camera, weight on one leg
+  - smiling, relaxed posture, looking directly at the camera
+  - standing angled slightly, looking directly at the camera
+  - standing angled slightly, smiling, looking to the side
+  - standing angled to side, looking slightly to side
+  - standing angled with head tilted to side
+  - standing angled, calm expression, looking camera
+  - standing angled, casual expression, looking directly forward
+  - standing angled, confident expression, gaze to side
+  - standing angled, confident expression, hands on hips
+  - standing angled, confident expression, looking at camera
+  - standing angled, confident expression, slight head tilt
+  - standing angled, eyes down, hand on hip
+  - standing angled, face tilted, neutral expression
+  - standing angled, face turned slightly towards camera
+  - standing angled, gentle expression, looking rightward
+  - standing angled, gentle smile, head slightly tilted
+  - standing angled, gentle smile, looking directly at camera
+  - standing angled, hand on hip, confident expression
+  - standing angled, hand on hip, looking at camera
+  - standing angled, hand on hip, looking confident
+  - standing angled, hands back, looking to the side
+  - standing angled, head slightly tilted, neutral expression
+  - standing angled, head slightly tilted, relaxed expression
+  - standing angled, head slightly tilted, relaxed posture
+  - standing angled, head slightly turned, relaxed expression
+  - standing angled, head tilted down, smiling gently
+  - standing angled, head tilted, looking at camera
+  - standing angled, head tilted, looking at the camera
+  - standing angled, head turned slightly to the side
+  - standing angled, head turned to the side
+  - standing angled, head turned, confident expression
+  - standing angled, head turned, looking at camera
+  - standing angled, head turned, slight smile on face
+  - standing angled, leaning slightly forward, composed expression
+  - standing angled, leaning slightly, confident expression
+  - standing angled, looking at the camera, relaxed expression
+  - standing angled, looking away from the camera
+  - standing angled, looking away to the side
+  - standing angled, looking away with a serene expression
+  - standing angled, looking away with slight tilt
+  - standing angled, looking away, calm expression
+  - standing angled, looking away, neutral expression
+  - standing angled, looking away, relaxed expression
+  - standing angled, looking away, slight smile
+  - standing angled, looking confidently at the camera
+  - standing angled, looking confidently to the side
+  - standing angled, looking directly at the camera
+  - standing angled, looking directly at the camera confidently
+  - standing angled, looking down gently towards floor
+  - standing angled, looking down to the right side
+  - standing angled, looking down, calm expression
+  - standing angled, looking down, relaxed expression
+  - standing angled, looking down, thoughtful expression
+  - standing angled, looking down, with soft smile
+  - standing angled, looking downward, neutral expression
+  - standing angled, looking downward, relaxed expression
+  - standing angled, looking downward, thoughtful expression
+  - standing angled, looking off to the side
+  - standing angled, looking over left shoulder, neutral expression
+  - standing angled, looking slightly away from camera
+  - standing angled, looking slightly away from the camera
+  - standing angled, looking slightly away to right
+  - standing angled, looking slightly away to the side
+  - standing angled, looking slightly away, relaxed expression
+  - standing angled, looking slightly downward, subtle smile
+  - standing angled, looking slightly to side thoughtfully
+  - standing angled, looking slightly to the side
+  - standing angled, looking to the left of camera
+  - standing angled, looking to the left, neutral expression
+  - standing angled, looking to the right confidently
+  - standing angled, looking to the right, calm expression
+  - standing angled, looking to the right, confident
+  - standing angled, looking to the right, neutral expression
+  - standing angled, looking to the right, thoughtful expression
+  - standing angled, looking to the side confidently
+  - standing angled, looking to the side smiling
+  - standing angled, looking to the side, relaxed expression
+  - standing angled, looking to the side, slight smile
+  - standing angled, looking to the side, smiling
+  - standing angled, looking to the side, thoughtful expression
+  - standing angled, looking with a gentle expression
+  - standing angled, neutral expression, facing the camera
+  - standing angled, neutral expression, looking at camera
+  - standing angled, neutral expression, looking at the camera
+  - standing angled, neutral expression, looking directly at camera
+  - standing angled, neutral expression, looking to side
+  - standing angled, neutral expression, looking to the side
+  - standing angled, one hand on hip, confident expression
+  - standing angled, one hand towards face, thoughtful expression
+  - standing angled, relaxed expression, facing forward slightly
+  - standing angled, relaxed expression, facing the camera
+  - standing angled, relaxed expression, looking at camera
+  - standing angled, relaxed expression, slight smile at camera
+  - standing angled, serious expression, looking sideways
+  - standing angled, slight head tilt, neutral expression
+  - standing angled, slight lean, facing the camera
+  - standing angled, slight lean, neutral expression, gazing ahead
+  - standing angled, slight lean, relaxed expression, playful gaze
+  - standing angled, slight smile, facing towards the camera
+  - standing angled, slight smile, gentle tilt of head
+  - standing angled, slight smile, head slightly tilted
+  - standing angled, slight smile, looking at camera
+  - standing angled, slight smile, looking at the camera
+  - standing angled, slight smile, looking off camera
+  - standing angled, slight smile, looking to the side
+  - standing angled, slight turn towards the camera
+  - standing angled, slightly tilted head, relaxed expression
+  - standing angled, smiling slightly, looking at camera
+  - standing angled, smiling slightly, looking at the camera
+  - standing angled, smiling, looking at the camera
+  - standing angled, smiling, looking directly at the camera
+  - standing angled, smiling, looking slightly off-camera
+  - standing angled, smiling, looking to the side
+  - standing angled, smiling, looking towards the camera
+  - standing angled, soft expression, looking at camera
+  - standing angled, tilted head, looking at camera
+  - standing angled, with a slight lean forward
+  - standing angled, with a slight tilt, relaxed expression
+  - standing arms crossed, slightly turned angle, neutral expression
+  - standing at an angle, head slightly tilted left
+  - standing at an angle, head slightly tilted, relaxed
+  - standing at an angle, looking at the camera
+  - standing at an angle, looking directly at the camera
+  - standing at an angle, looking forward confidently
+  - standing at an angle, looking to the right
+  - standing at an angle, neutral expression, facing forward
+  - standing at an angle, slight lean, relaxed expression
+  - standing at an angle, slightly raised head, thoughtful expression
+  - standing at angle, looking off to side, thoughtful
+  - standing at angle, looking to the side
+  - standing at angle, smile, looking at camera
+  - standing at slight angle, head slightly tilted left
+  - standing at slight angle, looking at camera with interest
+  - standing at slight angle, looking confidently ahead
+  - standing at slight angle, looking confidently at camera
+  - standing at slight angle, looking directly at camera
+  - standing at slight angle, neutral expression, looking forward
+  - standing at slight angle, smiling at the camera
+  - standing at slight angle, smiling, looking at camera
+  - standing at slight angle, smiling, relaxed expression
+  - standing casually, facing forward, subtle smile
+  - standing casually, facing slightly away from camera
+  - standing casually, looking slightly to the side
+  - standing casually, neutral expression, looking at the camera
+  - standing casually, relaxed expression, looking downward
+  - standing casually, slight angle, looking at camera
+  - standing casually, slight head tilt to side
+  - standing casually, slight head tilt, confident expression
+  - standing casually, slight smile, facing camera
+  - standing casually, smiling lightly, tilting head slightly
+  - standing casually, smiling, facing the camera
+  - standing casually, smiling, looking slightly to the side
+  - standing centered, directly facing, neutral expression
+  - standing comfortably, gentle smile, looking at camera
+  - standing confident, direct gaze, slight tilt forward
+  - standing confident, facing camera, neutral expression
+  - standing confident, slight smile, facing forward
+  - standing confidently with slight smile, facing forward
+  - standing confidently, angled, looking away from camera
+  - standing confidently, angled, looking to the side
+  - standing confidently, casual expression, facing the camera
+  - standing confidently, face slightly angled, neutral expression
+  - standing confidently, facing forward, neutral expression
+  - standing confidently, facing forward, relaxed expression
+  - standing confidently, facing forward, slight head tilt
+  - standing confidently, facing forward, slight smile
+  - standing confidently, hands on hips, looking at camera
+  - standing confidently, head slightly tilted back
+  - standing confidently, head slightly tilted upwards
+  - standing confidently, head slightly tilted, engaging gaze
+  - standing confidently, head slightly tilted, looking forward
+  - standing confidently, head slightly tilted, relaxed expression
+  - standing confidently, head turned slightly to the side
+  - standing confidently, leaning slightly, head turned to side
+  - standing confidently, looking away, hand on hip
+  - standing confidently, looking directly at the camera
+  - standing confidently, looking off to the right
+  - standing confidently, looking slightly away, expressive eyes
+  - standing confidently, neutral expression, facing camera
+  - standing confidently, shoulders back, head held high
+  - standing confidently, slight angle, looking at camera
+  - standing confidently, slight head tilt, casual expression
+  - standing confidently, slight head tilt, facing camera
+  - standing confidently, slight head tilt, neutral expression
+  - standing confidently, slight smile, face towards camera
+  - standing confidently, slight smile, facing camera
+  - standing confidently, slight smile, facing camera forward
+  - standing confidently, slight smile, facing the camera
+  - standing confidently, slight smile, head turned slightly
+  - standing confidently, slight smile, looking at camera
+  - standing confidently, slight tilt of the head
+  - standing confidently, slight tilt to the camera
+  - standing confidently, slight turn towards the camera
+  - standing confidently, slightly angled to the camera
+  - standing confidently, slightly angled, looking at camera
+  - standing confidently, slightly angled, looking forward
+  - standing confidently, slightly angled, neutral expression
+  - standing confidently, slightly tilted head, looking forward
+  - standing confidently, slightly tilting head to side
+  - standing confidently, slightly turned to the side
+  - standing confidently, slightly turned, looking to side
+  - standing confidently, smiling brightly at the camera
+  - standing confidently, smiling brightly, facing camera directly
+  - standing confidently, smiling, looking directly at camera
+  - standing confidently, smiling, relaxed posture
+  - standing confidently, subtle head tilt, looking forward
+  - standing confidently, turning slightly to one side
+  - standing facing camera, neutral expression, hands on sides
+  - standing facing camera, neutral expression, looking directly
+  - standing facing camera, slight head tilt, confident
+  - standing facing forward, neutral expression, direct gaze
+  - standing facing forward, slightly relaxed, neutral expression
+  - standing facing sideways, smiling, looking to the side
+  - standing front, neutral expression, looking forward
+  - standing gently, looking downward, soft expression
+  - standing in slight angle, looking confidently at camera
+  - standing in slight contrapposto, head slightly tilted
+  - standing naturally, looking confidently at the camera
+  - standing naturally, slight smile, facing the camera
+  - standing neutral, slight smile, looking at camera
+  - standing neutral, slightly leaning head, soft expression
+  - standing relaxed, head slightly tilted, casual expression
+  - standing relaxed, head slightly tilted, gentle expression
+  - standing relaxed, head slightly tilted, smiling
+  - standing relaxed, looking directly at the camera
+  - standing relaxed, looking directly at the camera, smiling
+  - standing relaxed, looking off to the side
+  - standing relaxed, looking slightly to the side
+  - standing relaxed, looking to the side, neutral expression
+  - standing relaxed, neutral expression, facing forward
+  - standing relaxed, neutral expression, looking at camera
+  - standing relaxed, neutral expression, slightly angled
+  - standing relaxed, slight angle, looking at camera
+  - standing relaxed, slight smile, facing camera confidently
+  - standing relaxed, slight smile, looking at camera
+  - standing relaxed, slight smile, looking at the camera
+  - standing relaxed, slight smile, looking off-camera
+  - standing relaxed, slight smile, looking to side
+  - standing relaxed, slight turn, head tilted right
+  - standing relaxed, slightly tilted head, gentle expression
+  - standing relaxed, slightly tilted head, soft expression
+  - standing relaxed, slightly tilted head, soft smile
+  - standing relaxed, slightly turned, facing the camera
+  - standing relaxed, slightly turned, neutral expression
+  - standing relaxed, smiling, looking directly at the camera
+  - standing relaxed, smiling, looking slightly downward
+  - standing relaxed, tilted head resting on hand
+  - standing sideways, body angled, looking forward
+  - standing sideways, eyes closed, left hand touching
+  - standing sideways, gazing confidently to the side
+  - standing sideways, gentle expression, slight body curve
+  - standing sideways, gentle smile, head slightly tilted
+  - standing sideways, gentle smile, looking at camera
+  - standing sideways, head slightly tilted downwards
+  - standing sideways, head slightly tilted, neutral expression
+  - standing sideways, head tilted, looking up slightly
+  - standing sideways, head turned right, neutral expression
+  - standing sideways, head turned to the side
+  - standing sideways, head turned, arms extended forward
+  - standing sideways, head turned, looking into distance
+  - standing sideways, looking directly at the camera
+  - standing sideways, looking down at baby bump, smiling
+  - standing sideways, looking down with a smile
+  - standing sideways, looking down, gentle smile
+  - standing sideways, looking down, thoughtful expression
+  - standing sideways, looking downward, elegant posture
+  - standing sideways, looking forward with smile
+  - standing sideways, looking left, calm expression
+  - standing sideways, looking over her shoulder, confident
+  - standing sideways, looking over left shoulder elegantly
+  - standing sideways, looking over right shoulder
+  - standing sideways, looking over shoulder, smiling broadly
+  - standing sideways, looking slightly away, relaxed posture
+  - standing sideways, looking slightly downward, thoughtful
+  - standing sideways, looking slightly off-center confidently
+  - standing sideways, looking slightly over shoulder
+  - standing sideways, looking slightly to camera's side
+  - standing sideways, looking softly at the camera
+  - standing sideways, looking to the left confidently
+  - standing sideways, looking to the left, focused expression
+  - standing sideways, looking to the side, thoughtful
+  - standing sideways, neutral expression, hand on belly
+  - standing sideways, neutral expression, looking to the side
+  - standing sideways, one hand on hip, relaxed expression
+  - standing sideways, relaxed expression, looking at camera
+  - standing sideways, slight smile, eyes closed
+  - standing sideways, slight smile, head tilted
+  - standing sideways, slight smile, looking at camera
+  - standing sideways, slight smile, looking forward
+  - standing sideways, slightly smiling, head slightly tilted
+  - standing sideways, slightly smiling, looking at camera
+  - standing sideways, smiling, looking down to the side
+  - standing sideways, smiling, looking down, relaxed expression
+  - standing sideways, subtle smile, looking at camera
+  - standing slight angle, head turned, neutral expression
+  - standing slight angle, looking at the camera, neutral
+  - standing slight angled, relaxed, looking at camera
+  - standing slightly angled, calm expression, head tilted
+  - standing slightly angled, calm expression, looking forward
+  - standing slightly angled, calm expression, slight tilt
+  - standing slightly angled, casual expression, head tilted
+  - standing slightly angled, casual expression, looking at camera
+  - standing slightly angled, cheerful expression, subtle smile
+  - standing slightly angled, confident expression, looking forward
+  - standing slightly angled, confident look, neutral expression
+  - standing slightly angled, facing the camera, relaxed
+  - standing slightly angled, facing the camera, relaxed expression
+  - standing slightly angled, facing the camera, smiling
+  - standing slightly angled, facing towards the camera
+  - standing slightly angled, gaze directed at camera
+  - standing slightly angled, gentle expression, looking forward
+  - standing slightly angled, gentle smile, facing camera
+  - standing slightly angled, gentle smile, relaxed expression
+  - standing slightly angled, hand in pocket, neutral expression
+  - standing slightly angled, hand on hip, confident expression
+  - standing slightly angled, hand on hip, relaxed expression
+  - standing slightly angled, hands resting on hips
+  - standing slightly angled, head slightly tilted down
+  - standing slightly angled, head slightly tilted left
+  - standing slightly angled, head slightly tilted, looking ahead
+  - standing slightly angled, head slightly turned leftwards
+  - standing slightly angled, head tilted back slightly
+  - standing slightly angled, head tilted confidently
+  - standing slightly angled, head tilted down, thoughtful look
+  - standing slightly angled, head tilted downwards
+  - standing slightly angled, head tilted left
+  - standing slightly angled, head tilted slightly back
+  - standing slightly angled, head tilted slightly downwards
+  - standing slightly angled, head tilted slightly left
+  - standing slightly angled, head tilted to side
+  - standing slightly angled, head tilted, casual expression
+  - standing slightly angled, head tilted, looking at camera
+  - standing slightly angled, head tilted, looking down
+  - standing slightly angled, head tilted, looking forward
+  - standing slightly angled, head tilted, neutral expression
+  - standing slightly angled, head tilted, relaxed expression
+  - standing slightly angled, head tilted, smiling
+  - standing slightly angled, head tilted, soft expression
+  - standing slightly angled, head turned to the right
+  - standing slightly angled, leaning head to left side
+  - standing slightly angled, leaning to one side, relaxed posture
+  - standing slightly angled, looking at camera with poise
+  - standing slightly angled, looking at the camera
+  - standing slightly angled, looking at the camera confidently
+  - standing slightly angled, looking at the camera directly
+  - standing slightly angled, looking away from camera
+  - standing slightly angled, looking away from the camera
+  - standing slightly angled, looking away to left
+  - standing slightly angled, looking away to the left
+  - standing slightly angled, looking away, soft expression
+  - standing slightly angled, looking confidently at camera
+  - standing slightly angled, looking confidently at the camera
+  - standing slightly angled, looking confidently to side
+  - standing slightly angled, looking directly at camera
+  - standing slightly angled, looking directly at the camera
+  - standing slightly angled, looking down and sideways
+  - standing slightly angled, looking down at floor
+  - standing slightly angled, looking down at ground
+  - standing slightly angled, looking down at the floor
+  - standing slightly angled, looking down to floor
+  - standing slightly angled, looking down to side
+  - standing slightly angled, looking down to the side
+  - standing slightly angled, looking down, neutral expression
+  - standing slightly angled, looking downward to the side
+  - standing slightly angled, looking gently at camera
+  - standing slightly angled, looking off to the side
+  - standing slightly angled, looking over left shoulder
+  - standing slightly angled, looking sideways
+  - standing slightly angled, looking slightly away from camera
+  - standing slightly angled, looking slightly downward smiling
+  - standing slightly angled, looking slightly to side
+  - standing slightly angled, looking slightly upward confidently
+  - standing slightly angled, looking straight at camera
+  - standing slightly angled, looking to one side
+  - standing slightly angled, looking to the side
+  - standing slightly angled, looking to the side confidently
+  - standing slightly angled, looking towards the camera
+  - standing slightly angled, looking upwards to the side
+  - standing slightly angled, looking upwards, hand raised
+  - standing slightly angled, minimal expression, looking forward
+  - standing slightly angled, neutral expression, casual stance
+  - standing slightly angled, neutral expression, facing camera
+  - standing slightly angled, neutral expression, facing forward
+  - standing slightly angled, neutral expression, looking ahead
+  - standing slightly angled, neutral expression, looking at camera
+  - standing slightly angled, neutral expression, looking directly ahead
+  - standing slightly angled, neutral expression, looking forward
+  - standing slightly angled, neutral expression, looking right
+  - standing slightly angled, neutral expression, looking sideways
+  - standing slightly angled, neutral expression, relaxed demeanor
+  - standing slightly angled, neutral expression, relaxed posture
+  - standing slightly angled, neutral expression, relaxed stance
+  - standing slightly angled, playful look, relaxed posture
+  - standing slightly angled, relaxed expression, facing camera
+  - standing slightly angled, relaxed expression, head tilted
+  - standing slightly angled, relaxed expression, looking ahead
+  - standing slightly angled, relaxed expression, looking at camera
+  - standing slightly angled, relaxed expression, looking forward
+  - standing slightly angled, relaxed expression, neutral look
+  - standing slightly angled, relaxed expression, slight smile
+  - standing slightly angled, relaxed, confident expression
+  - standing slightly angled, relaxed, looking at camera
+  - standing slightly angled, relaxed, looking at the camera
+  - standing slightly angled, serious expression, facing the camera
+  - standing slightly angled, slight head tilt, relaxed expression
+  - standing slightly angled, slight smile, relaxed expression
+  - standing slightly angled, slight smile, relaxed posture
+  - standing slightly angled, slight tilt of head
+  - standing slightly angled, smile, looking at camera
+  - standing slightly angled, smiling at the camera
+  - standing slightly angled, smiling gently at the camera
+  - standing slightly angled, smiling softly at camera
+  - standing slightly angled, smiling softly at the camera
+  - standing slightly angled, smiling towards the camera
+  - standing slightly angled, smiling, looking directly at camera
+  - standing slightly angled, smiling, looking to the side
+  - standing slightly angled, smiling, looking towards the camera
+  - standing slightly angled, smiling, relaxed expression
+  - standing slightly angled, soft expression, looking at camera
+  - standing slightly angled, soft expression, looking forward
+  - standing slightly angled, soft smile, facing the camera
+  - standing slightly angled, subtle smile, facing camera
+  - standing slightly angled, thoughtful expression, looking down
+  - standing slightly angled, tilted head, confident expression
+  - standing slightly angled, tilting head back confidently
+  - standing slightly angled, turning head to right
+  - standing slightly angled, with head tilted smiling
+  - standing slightly at an angle, gentle smile, relaxed posture
+  - standing slightly bent, head tilted downwards
+  - standing slightly leaning, relaxed expression, looking at camera
+  - standing slightly sideways, gentle smile, looking to the side
+  - standing slightly sideways, head tilted, confident expression
+  - standing slightly sideways, head tilted, relaxed expression
+  - standing slightly sideways, head turned to the left
+  - standing slightly sideways, looking at the camera
+  - standing slightly sideways, looking down, serene expression
+  - standing slightly sideways, looking to the side
+  - standing slightly sideways, looking to the side, neutral
+  - standing slightly sideways, neutral expression, looking forward
+  - standing slightly slouched, direct eye contact, neutral face
+  - standing slightly tilted, head facing camera, neutral expression
+  - standing slightly tilted, head leaning to side
+  - standing slightly tilted, looking confidently at the camera
+  - standing slightly tilted, looking directly at the camera
+  - standing slightly tilted, looking down to the left
+  - standing slightly tilted, looking downwards, soft expression
+  - standing slightly to side, head slightly tilted back
+  - standing slightly turned, facing forward, relaxed expression
+  - standing slightly turned, gentle expression, looking forward
+  - standing slightly turned, head looking downward slightly
+  - standing slightly turned, head tilted downward smiling
+  - standing slightly turned, head tilted, confident expression
+  - standing slightly turned, looking at the camera
+  - standing slightly turned, looking directly at camera
+  - standing slightly turned, looking down at the ground
+  - standing slightly turned, neutral expression, looking forward
+  - standing slightly turned, smiling subtly at the camera
+  - standing slightly turned, smiling, looking at the camera
+  - standing slightly turned, subtle smile, looking sideways
+  - standing straight with head slightly tilted back
+  - standing straight, angled slightly, looking at camera
+  - standing straight, angled slightly, neutral expression
+  - standing straight, arms crossed, confident expression
+  - standing straight, arms crossed, neutral expression
+  - standing straight, arms raised, adjusting collar
+  - standing straight, arms raised, confident expression
+  - standing straight, body turned slightly left, neutral expression
+  - standing straight, calm expression, facing the camera
+  - standing straight, casual expression, facing forward
+  - standing straight, casual expression, head slightly tilted
+  - standing straight, casual expression, looking at camera
+  - standing straight, casual, smiling at the camera
+  - standing straight, chin slightly raised, looking confident
+  - standing straight, confident expression, facing forward
+  - standing straight, confident expression, facing the camera
+  - standing straight, confident expression, head slightly tilted
+  - standing straight, confident expression, looking ahead
+  - standing straight, confident expression, looking at camera
+  - standing straight, confident expression, looking directly ahead
+  - standing straight, confident expression, looking directly forward
+  - standing straight, confident expression, looking forward
+  - standing straight, confident expression, slight head tilt
+  - standing straight, confident expression, slight lean
+  - standing straight, confident expression, slight smile
+  - standing straight, confident gaze, facing camera directly
+  - standing straight, confident look, facing camera directly
+  - standing straight, confident look, relaxed expression
+  - standing straight, confident, looking at the camera
+  - standing straight, direct gaze, relaxed expression
+  - standing straight, elegant demeanor, slight head tilt
+  - standing straight, expression neutral, facing the camera
+  - standing straight, eyes forward, relaxed expression, confident
+  - standing straight, face tilted slightly upwards, confident
+  - standing straight, facial expression neutral, looking forward
+  - standing straight, facing camera, arms crossed
+  - standing straight, facing camera, confident expression
+  - standing straight, facing camera, neutral expression
+  - standing straight, facing camera, neutral expression, confident
+  - standing straight, facing camera, neutral expression, relaxed
+  - standing straight, facing camera, relaxed expression
+  - standing straight, facing camera, slight smile, relaxed
+  - standing straight, facing forward, calm expression
+  - standing straight, facing forward, calm expression visible
+  - standing straight, facing forward, confident expression
+  - standing straight, facing forward, confident expression, relaxed
+  - standing straight, facing forward, engaging expression
+  - standing straight, facing forward, expressionless demeanor
+  - standing straight, facing forward, natural expression
+  - standing straight, facing forward, neutral expression
+  - standing straight, facing forward, neutral expression, relaxed
+  - standing straight, facing forward, relaxed expression
+  - standing straight, facing forward, slight head tilt
+  - standing straight, facing forward, slight smile
+  - standing straight, facing forward, slight smile, friendly
+  - standing straight, facing slightly sideways, neutral expression
+  - standing straight, facing the camera directly, relaxed expression
+  - standing straight, facing the camera, confident expression
+  - standing straight, facing the camera, neutral expression
+  - standing straight, gazing directly at the camera
+  - standing straight, gentle expression, looking at camera
+  - standing straight, gentle smile, facing the camera
+  - standing straight, gentle smile, looking at camera
+  - standing straight, gentle smile, slightly angled body
+  - standing straight, hand on hip, confident gaze
+  - standing straight, hand on hip, facing the camera
+  - standing straight, hand on hips, confident expression
+  - standing straight, hand resting on hip, serious
+  - standing straight, hands at sides, confident expression
+  - standing straight, hands at sides, relaxed expression
+  - standing straight, hands on hips, confident look
+  - standing straight, hands on hips, neutral expression
+  - standing straight, hands on lower back, neutral face
+  - standing straight, head slightly angled to the side
+  - standing straight, head slightly tilted downward
+  - standing straight, head slightly tilted downwards
+  - standing straight, head slightly tilted forward
+  - standing straight, head slightly tilted left
+  - standing straight, head slightly tilted to left
+  - standing straight, head slightly tilted to side
+  - standing straight, head slightly tilted upward
+  - standing straight, head slightly tilted, calm expression
+  - standing straight, head slightly tilted, composed expression
+  - standing straight, head slightly tilted, confident
+  - standing straight, head slightly tilted, confident expression
+  - standing straight, head slightly tilted, confident gaze
+  - standing straight, head slightly tilted, confident look
+  - standing straight, head slightly tilted, gentle smile
+  - standing straight, head slightly tilted, looking away
+  - standing straight, head slightly tilted, looking down
+  - standing straight, head slightly tilted, neutral expression
+  - standing straight, head slightly tilted, relaxed
+  - standing straight, head slightly tilted, relaxed demeanor
+  - standing straight, head slightly tilted, relaxed expression
+  - standing straight, head slightly tilted, serious expression
+  - standing straight, head slightly tilted, soft smile
+  - standing straight, head slightly tilted, subtle smile
+  - standing straight, head slightly turned left
+  - standing straight, head slightly turned to the left
+  - standing straight, head slightly turned to the side
+  - standing straight, head slightly turned, confident look
+  - standing straight, head slightly turned, confident stance
+  - standing straight, head slightly turned, looking left
+  - standing straight, head slightly turned, neutral expression
+  - standing straight, head tilted down, eyes lowered
+  - standing straight, head tilted slightly back
+  - standing straight, head tilted slightly downwards
+  - standing straight, head tilted slightly left, neutral
+  - standing straight, head tilted slightly to right
+  - standing straight, head tilted slightly upward
+  - standing straight, head tilted slightly, expression neutral
+  - standing straight, head tilted slightly, eyes looking down
+  - standing straight, head tilted slightly, looking confident
+  - standing straight, head tilted slightly, relaxed expression
+  - standing straight, head tilted slightly, relaxed look
+  - standing straight, head tilted, confident expression
+  - standing straight, head tilted, happy expression
+  - standing straight, head tilted, looking at camera
+  - standing straight, head tilted, looking away slightly
+  - standing straight, head tilted, looking downward
+  - standing straight, head tilted, looking upwards
+  - standing straight, head tilted, relaxed expression
+  - standing straight, head turned slightly to right
+  - standing straight, head turned slightly to side
+  - standing straight, head turned slightly to the left
+  - standing straight, head turned slightly to the right
+  - standing straight, head turned to the side
+  - standing straight, hip tilted, confident expression
+  - standing straight, leaning slightly, calm expression
+  - standing straight, leaning slightly, looking at camera
+  - standing straight, leaning slightly, neutral expression
+  - standing straight, left hand on hip, confident gaze
+  - standing straight, looking at camera, slight smile
+  - standing straight, looking at the camera, relaxed expression
+  - standing straight, looking away, relaxed expression
+  - standing straight, looking confidently at the camera
+  - standing straight, looking confidently sideways at camera
+  - standing straight, looking directly at the camera
+  - standing straight, looking directly at the camera confidently
+  - standing straight, looking directly at the camera, neutral
+  - standing straight, looking directly at the camera, poised
+  - standing straight, looking directly at the camera, relaxed
+  - standing straight, looking directly at the camera, relaxed expression
+  - standing straight, looking directly, neutral expression
+  - standing straight, looking down slightly, relaxed posture
+  - standing straight, looking down to the left side
+  - standing straight, looking down, relaxed expression
+  - standing straight, looking downward with thoughtful expression
+  - standing straight, looking off to the side
+  - standing straight, looking slightly away to side
+  - standing straight, looking slightly away, serious expression
+  - standing straight, looking slightly down, smiling gently
+  - standing straight, looking slightly sideways, neutral expression
+  - standing straight, looking slightly to the left
+  - standing straight, looking slightly to the left side
+  - standing straight, looking slightly to the right
+  - standing straight, looking slightly to the side
+  - standing straight, looking slightly to the side confidently
+  - standing straight, looking slightly upwards, casual expression
+  - standing straight, looking straight, calm expression
+  - standing straight, looking to side, neutral expression
+  - standing straight, looking to the right side
+  - standing straight, looking to the right, expression neutral
+  - standing straight, looking to the side thoughtfully
+  - standing straight, looking to the side, neutral look
+  - standing straight, looking to the side, relaxed
+  - standing straight, looking to the side, relaxed posture
+  - standing straight, looking to the side, thoughtful expression
+  - standing straight, looking upward, serious expression
+  - standing straight, minimalist expression, facing the camera
+  - standing straight, neutral expression, arms at sides
+  - standing straight, neutral expression, arms by sides
+  - standing straight, neutral expression, arms by the sides
+  - standing straight, neutral expression, arms relaxed at sides
+  - standing straight, neutral expression, bent arm at side
+  - standing straight, neutral expression, confident gaze forward
+  - standing straight, neutral expression, direct gaze forward
+  - standing straight, neutral expression, facing camera
+  - standing straight, neutral expression, facing camera directly
+  - standing straight, neutral expression, facing camera front
+  - standing straight, neutral expression, facing camera frontally
+  - standing straight, neutral expression, facing camera slightly turned
+  - standing straight, neutral expression, facing forward
+  - standing straight, neutral expression, facing forward confidently
+  - standing straight, neutral expression, facing forward directly
+  - standing straight, neutral expression, facing forwards
+  - standing straight, neutral expression, facing front
+  - standing straight, neutral expression, facing the camera
+  - standing straight, neutral expression, hand on head
+  - standing straight, neutral expression, head slightly tilted
+  - standing straight, neutral expression, looking ahead
+  - standing straight, neutral expression, looking ahead confidently
+  - standing straight, neutral expression, looking at camera
+  - standing straight, neutral expression, looking at the camera
+  - standing straight, neutral expression, looking confident
+  - standing straight, neutral expression, looking confidently forward
+  - standing straight, neutral expression, looking directly ahead
+  - standing straight, neutral expression, looking directly at camera
+  - standing straight, neutral expression, looking directly at the camera
+  - standing straight, neutral expression, looking directly forward
+  - standing straight, neutral expression, looking down slightly
+  - standing straight, neutral expression, looking forward
+  - standing straight, neutral expression, looking forward calmly
+  - standing straight, neutral expression, looking into camera
+  - standing straight, neutral expression, looking slightly away
+  - standing straight, neutral expression, looking slightly downward
+  - standing straight, neutral expression, looking slightly left
+  - standing straight, neutral expression, looking straight ahead
+  - standing straight, neutral expression, looking straight at camera
+  - standing straight, neutral expression, looking to side
+  - standing straight, neutral expression, relaxed posture
+  - standing straight, neutral expression, relaxed shoulders
+  - standing straight, neutral expression, slight angle to camera
+  - standing straight, neutral expression, slight head tilt
+  - standing straight, neutral expression, slight head tilt, facing forward
+  - standing straight, neutral expression, slight smile visible
+  - standing straight, neutral expression, slight tilt head
+  - standing straight, neutral expression, slightly to the side
+  - standing straight, neutral face, facing camera directly
+  - standing straight, neutral gaze, facing slightly sideways
+  - standing straight, neutral gaze, facing the camera
+  - standing straight, neutral, looking directly at camera
+  - standing straight, one arm holding waist gently
+  - standing straight, one foot slightly forward, neutral expression
+  - standing straight, one hand in front pocket
+  - standing straight, one hand in pocket, relaxed expression
+  - standing straight, one hand on head, relaxed
+  - standing straight, one hand on hip, confident stance
+  - standing straight, one hand on hip, relaxed expression
+  - standing straight, one leg slightly bent, neutral expression
+  - standing straight, relaxed expression, facing camera
+  - standing straight, relaxed expression, facing camera directly
+  - standing straight, relaxed expression, facing forward
+  - standing straight, relaxed expression, facing the camera
+  - standing straight, relaxed expression, looking at camera
+  - standing straight, relaxed expression, looking at camera confidently
+  - standing straight, relaxed expression, looking at the camera
+  - standing straight, relaxed expression, looking directly ahead
+  - standing straight, relaxed expression, looking directly forward
+  - standing straight, relaxed expression, looking forward
+  - standing straight, relaxed expression, looking slightly left
+  - standing straight, relaxed expression, looking straight ahead
+  - standing straight, relaxed expression, slight head tilt
+  - standing straight, relaxed expression, slight smile
+  - standing straight, relaxed expression, slightly tilted head
+  - standing straight, relaxed posture, facing camera directly
+  - standing straight, relaxed posture, slight smile visible
+  - standing straight, relaxed posture, smiling at camera
+  - standing straight, relaxed, facing camera, neutral expression
+  - standing straight, relaxed, facing towards the camera
+  - standing straight, relaxed, looking at the camera
+  - standing straight, relaxed, looking directly at the camera
+  - standing straight, relaxed, slight lean to left
+  - standing straight, right hand on hip, confident look
+  - standing straight, serious expression, facing forward
+  - standing straight, serious expression, looking at camera
+  - standing straight, serious expression, looking forward
+  - standing straight, slight angle to camera, relaxed expression
+  - standing straight, slight angle, calm expression, looking ahead
+  - standing straight, slight angle, confident expression
+  - standing straight, slight angle, engaging expression, looking forward
+  - standing straight, slight angle, gazing confidently at camera
+  - standing straight, slight angle, looking at camera
+  - standing straight, slight angle, looking at camera confidently
+  - standing straight, slight angle, looking directly at camera
+  - standing straight, slight angle, looking forward calmly
+  - standing straight, slight angle, looking forward confidently
+  - standing straight, slight angle, looking sideways
+  - standing straight, slight angle, neutral expression
+  - standing straight, slight angle, neutral expression, looking away
+  - standing straight, slight angle, relaxed expression
+  - standing straight, slight angle, subtle smile, relaxed expression
+  - standing straight, slight body angle to the side
+  - standing straight, slight curve, relaxed expression
+  - standing straight, slight expression, facing forward
+  - standing straight, slight expression, looking forward at camera
+  - standing straight, slight head tilt, attentive expression
+  - standing straight, slight head tilt, calm expression
+  - standing straight, slight head tilt, casual expression
+  - standing straight, slight head tilt, confident expression
+  - standing straight, slight head tilt, confident gaze
+  - standing straight, slight head tilt, confident look
+  - standing straight, slight head tilt, direct gaze
+  - standing straight, slight head tilt, elegant expression
+  - standing straight, slight head tilt, engaged expression
+  - standing straight, slight head tilt, gentle expression
+  - standing straight, slight head tilt, looking confidently
+  - standing straight, slight head tilt, neutral expression
+  - standing straight, slight head tilt, poised expression
+  - standing straight, slight head tilt, relaxed expression
+  - standing straight, slight head tilt, serious expression
+  - standing straight, slight head tilt, soft expression
+  - standing straight, slight head turn, looking ahead
+  - standing straight, slight head turn, neutral expression
+  - standing straight, slight hip angle, looking at camera
+  - standing straight, slight hip tilt, confident smile
+  - standing straight, slight hip tilt, facing forward
+  - standing straight, slight inward lean, neutral expression
+  - standing straight, slight lean forward, head tilted
+  - standing straight, slight lean forward, neutral expression
+  - standing straight, slight lean to one side
+  - standing straight, slight lean to right, neutral expression
+  - standing straight, slight lean to the right side
+  - standing straight, slight lean, calm expression
+  - standing straight, slight lean, confident expression
+  - standing straight, slight lean, confident expression, relaxed
+  - standing straight, slight lean, facing camera directly
+  - standing straight, slight lean, head facing forward
+  - standing straight, slight lean, looking assertively at camera
+  - standing straight, slight lean, looking at camera
+  - standing straight, slight lean, looking off-camera
+  - standing straight, slight lean, neutral expression
+  - standing straight, slight lean, neutral expression, direct look
+  - standing straight, slight lean, relaxed demeanor
+  - standing straight, slight lean, relaxed expression
+  - standing straight, slight lean, relaxed facial expression
+  - standing straight, slight lean, smiling confidently
+  - standing straight, slight leaning, confident smile
+  - standing straight, slight left tilt, neutral expression
+  - standing straight, slight right angle, neutral expression
+  - standing straight, slight smile, casual demeanor
+  - standing straight, slight smile, direct gaze at camera
+  - standing straight, slight smile, facing camera
+  - standing straight, slight smile, facing camera front
+  - standing straight, slight smile, facing forward
+  - standing straight, slight smile, facing the camera
+  - standing straight, slight smile, head slightly tilted
+  - standing straight, slight smile, head tilted slightly
+  - standing straight, slight smile, looking ahead
+  - standing straight, slight smile, looking at camera
+  - standing straight, slight smile, looking directly ahead
+  - standing straight, slight smile, looking directly at camera
+  - standing straight, slight smile, looking down
+  - standing straight, slight smile, looking forward
+  - standing straight, slight smile, looking to side
+  - standing straight, slight smile, looking to the side
+  - standing straight, slight smile, looks relaxed and cool
+  - standing straight, slight smile, neutral expression
+  - standing straight, slight smile, neutral expression, relaxed
+  - standing straight, slight smile, relaxed and poised
+  - standing straight, slight smile, relaxed expression
+  - standing straight, slight smile, relaxed posture
+  - standing straight, slight smile, shoulders relaxed, forward gaze
+  - standing straight, slight smile, slight head tilt
+  - standing straight, slight tilt of head, relaxed expression
+  - standing straight, slight tilt of head, relaxed stance
+  - standing straight, slight tilt to one side
+  - standing straight, slight tilt to the right
+  - standing straight, slight tilt, casual expression, relaxed
+  - standing straight, slight tilt, confident expression
+  - standing straight, slight tilt, direct eye contact
+  - standing straight, slight tilt, engaging expression
+  - standing straight, slight tilt, facing forward
+  - standing straight, slight tilt, head raised confidently
+  - standing straight, slight tilt, looking at camera
+  - standing straight, slight tilt, looking confidently ahead
+  - standing straight, slight tilt, looking directly ahead
+  - standing straight, slight tilt, neutral expression
+  - standing straight, slight tilt, relaxed expression
+  - standing straight, slight tilt, smiling expression
+  - standing straight, slight torso twist, relaxed expression
+  - standing straight, slight turn to the left, serious expression
+  - standing straight, slight turn to the side, relaxed
+  - standing straight, slight turn, looking off to side
+  - standing straight, slight turn, looking to side smiling
+  - standing straight, slight turn, neutral expression
+  - standing straight, slight turn, neutral facial expression
+  - standing straight, slightly angled to the right
+  - standing straight, slightly angled, confident expression
+  - standing straight, slightly angled, facing the camera
+  - standing straight, slightly angled, gentle smile, relaxed
+  - standing straight, slightly angled, looking at camera
+  - standing straight, slightly angled, looking confidently ahead
+  - standing straight, slightly angled, looking confidently forward
+  - standing straight, slightly angled, looking directly at camera
+  - standing straight, slightly angled, looking past camera
+  - standing straight, slightly angled, looking right
+  - standing straight, slightly angled, looking to side
+  - standing straight, slightly angled, neutral expression
+  - standing straight, slightly angled, neutral expression, looking forward
+  - standing straight, slightly angled, neutral expression, relaxed posture
+  - standing straight, slightly angled, relaxed expression
+  - standing straight, slightly angled, serious expression
+  - standing straight, slightly confident expression, looking forward
+  - standing straight, slightly leaned, neutral expression
+  - standing straight, slightly leaning back, calm expression
+  - standing straight, slightly leaning back, neutral expression
+  - standing straight, slightly leaning sideways, confident expression
+  - standing straight, slightly leaning to one side
+  - standing straight, slightly leaning, casual expression
+  - standing straight, slightly leaning, looking at camera
+  - standing straight, slightly leaning, neutral expression
+  - standing straight, slightly leaning, neutral expression, relaxed
+  - standing straight, slightly relaxed, soft expression
+  - standing straight, slightly smiling, looking at camera
+  - standing straight, slightly tilted head, casual expression
+  - standing straight, slightly tilted head, confident expression
+  - standing straight, slightly tilted head, engaging expression
+  - standing straight, slightly tilted head, gentle smile
+  - standing straight, slightly tilted head, looking confident
+  - standing straight, slightly tilted head, looking forward
+  - standing straight, slightly tilted head, neutral expression
+  - standing straight, slightly tilted head, neutral look
+  - standing straight, slightly tilted head, relaxed expression
+  - standing straight, slightly tilted head, smiling gently
+  - standing straight, slightly tilted head, soft smile
+  - standing straight, slightly turned towards camera, smiling
+  - standing straight, slightly turned, facing the camera
+  - standing straight, slightly turned, looking at camera
+  - standing straight, slightly turned, looking at the camera
+  - standing straight, slightly turned, looking to the side
+  - standing straight, slightly turned, neutral expression
+  - standing straight, slightly turned, relaxed expression
+  - standing straight, slightly turned, smiling at camera
+  - standing straight, slightly turned, smiling gently at camera
+  - standing straight, smiling brightly, looking at camera
+  - standing straight, smiling broadly, facing camera
+  - standing straight, smiling gently, facing the camera
+  - standing straight, smiling gently, shoulders relaxed
+  - standing straight, smiling slightly, looking at camera
+  - standing straight, smiling, facing forward to camera
+  - standing straight, smiling, facing the camera
+  - standing straight, smiling, looking at the camera
+  - standing straight, smiling, looking directly at camera
+  - standing straight, smiling, looking directly at the camera
+  - standing straight, smiling, slightly angled to the camera
+  - standing straight, smiling, slightly turned to side
+  - standing straight, smiling, slightly turned towards camera
+  - standing straight, soft expression, facing forward
+  - standing straight, soft expression, facing the camera
+  - standing straight, soft smile, facing camera directly
+  - standing straight, soft smile, relaxed posture
+  - standing straight, subtle smile, angling slightly
+  - standing straight, subtle smile, facing camera directly
+  - standing straight, subtle smile, facing the camera
+  - standing straight, subtle smile, head slightly tilted
+  - standing straight, subtle smile, head tilted left
+  - standing straight, subtle smile, slightly angled body
+  - standing straight, tilted head, gazing upward thoughtfully
+  - standing straight, tilted head, relaxed expression, casual stance
+  - standing straight, tilting head slightly, relaxed demeanor
+  - standing straight, turned head, looking past camera
+  - standing straight, turned slightly, neutral expression
+  - standing straight, with a confident expression, facing forward
+  - standing tilted, looking directly at the camera
+  - standing tilted, looking slightly away from camera
+  - standing turned slightly, looking away from camera
+  - standing upright, facing camera, slight lean to side
+  - standing upright, facing camera, slight smile, relaxed
+  - standing upright, head slightly turned left, relaxed
+  - standing upright, looking away, composed expression
+  - standing upright, looking directly at the camera
+  - standing upright, looking slightly to the side
+  - standing upright, relaxed posture, facing forward
+  - standing upright, shoulders relaxed, head slightly tilted
+  - standing upright, slight head tilt, neutral expression
+  - standing upright, slight lean, facing camera confidently
+  - standing upright, slight smile, facing the camera
+  - standing upright, slight tilt to the side, smiling
+  - standing upright, slight tilt, neutral expression
+  - standing upright, slight turn, neutral expression
+  - standing with a cheerful expression, facing forward
+  - standing with a confident look, facing camera
+  - standing with a hand on hip, confident posture
+  - standing with a slight forward lean, confident expression
+  - standing with a slight lean, neutral expression, direct gaze
+  - standing with a slight lean, relaxed expression, smiling
+  - standing with a slight side tilt, smiling warmly
+  - standing with a slight tilt, neutral expression, looking forward
+  - standing with a slight twist, relaxed expression, looking forward
+  - standing with a smile, looking at the camera
+  - standing with a smile, looking straight at camera
+  - standing with a soft smile, facing forward
+  - standing with arms crossed, confident expression
+  - standing with arms crossed, confident expression, looking forward
+  - standing with arms crossed, looking directly at camera
+  - standing with arms crossed, looking slightly sideways
+  - standing with arms crossed, slightly tilted head
+  - standing with arms up, looking at camera
+  - standing with attitude, slight tilt, confident expression
+  - standing with back to camera, head slightly turned
+  - standing with back to camera, looking left side
+  - standing with back to camera, looking over shoulder
+  - standing with body angled, slight smile, relaxed
+  - standing with body slightly angled to the left
+  - standing with body slightly angled, neutral expression
+  - standing with body slightly turned, smiling at camera
+  - standing with confident posture, looking at camera
+  - standing with crossed arms, looking down slightly
+  - standing with hand on hip, angled towards camera
+  - standing with hand on hip, facing camera
+  - standing with hand on hip, looking confident
+  - standing with hand on hip, looking sideways
+  - standing with hand on hip, neutral expression
+  - standing with hand on hip, slightly angled head
+  - standing with hand on neck, looking at camera
+  - standing with hands on hips, confident smile
+  - standing with head tilted, looking at camera
+  - standing with head tilted, looking at camera confidently
+  - standing with head tilted, looking slightly downward
+  - standing with head tilted, neutral expression, looking forward
+  - standing with head turned to the left side
+  - standing with head turned, looking slightly sideways
+  - standing with hip out, confident, direct gaze, relaxed
+  - standing with hip out, looking down slightly
+  - standing with hip popped, looking directly at camera
+  - standing with hip slanted, looking at camera confidently
+  - standing with hip slightly angled to left
+  - standing with hip tilted sideways, casual expression
+  - standing with hip tilted, confident expression
+  - standing with hip tilted, looking at the camera
+  - standing with hips angled, looking at camera confidently
+  - standing with lean, slightly angled toward camera
+  - standing with left shoulder slightly forward, neutral expression
+  - standing with legs together, facing the camera
+  - standing with one arm raised, casual expression
+  - standing with one arm raised, head tilted slightly
+  - standing with one hand on hip, relaxed expression
+  - standing with one hand on the hip, gazing sideways
+  - standing with one hip out, looking at camera
+  - standing with one hip slightly to the side
+  - standing with one knee bent, animated facial expression
+  - standing with one leg forward, relaxed expression
+  - standing with relaxed posture, facing the camera
+  - standing with right shoulder forward, head slightly tilted
+  - standing with side view, looking at camera
+  - standing with slight angle, confident demeanor, arms akimbo
+  - standing with slight angle, facing the camera
+  - standing with slight angle, looking at camera
+  - standing with slight angle, looking at camera confidently
+  - standing with slight angle, looking confidently ahead
+  - standing with slight angle, looking straight at camera
+  - standing with slight angle, looking to the side
+  - standing with slight angle, neutral expression on face
+  - standing with slight angle, neutral expression, looking aside
+  - standing with slight angle, neutral expression, looking at camera
+  - standing with slight angle, relaxed expression, facing camera
+  - standing with slight angle, relaxed expression, smiling
+  - standing with slight angle, smiling slightly at camera
+  - standing with slight angle, smiling warmly at camera
+  - standing with slight head tilt, soft expression
+  - standing with slight hip bend, confident expression
+  - standing with slight hip tilt, facing forward
+  - standing with slight hip tilt, looking at camera
+  - standing with slight lean, confident expression, facing forward
+  - standing with slight lean, confident expression, looking ahead
+  - standing with slight lean, confident facial expression
+  - standing with slight lean, head slightly tilted back
+  - standing with slight lean, head slightly tilted right
+  - standing with slight lean, head tilted, confident look
+  - standing with slight lean, head tilted, neutral expression
+  - standing with slight lean, looking at camera confidently
+  - standing with slight lean, looking into the distance
+  - standing with slight lean, neutral expression, looking front
+  - standing with slight lean, relaxed expression
+  - standing with slight lean, relaxed expression, left angled
+  - standing with slight lean, smiling, looking down
+  - standing with slight lean, soft expression, facing forward
+  - standing with slight tilt, gentle smile on face
+  - standing with slight tilt, looking directly at camera
+  - standing with slight tilt, relaxed expression, facing forward
+  - standing with slight turn, looking at the camera
+  - standing with slight turn, looking downward, smiling
+  - standing with slight turn, relaxed expression, looking posed
+  - standing with slight turn, soft confident expression
+  - standing with slight twist, facing camera confidently
+  - standing with slight twist, looking downward and sideways
+  - standing with smile, relaxed, facing the camera
+  - standing with tilt, looking slightly down at camera
+  - standing with weight on one leg, looking sideways
+  - standing with weight shifted, looking at camera
+  - standing, angled slightly, looking at the camera
+  - standing, facing forward, slight head tilt, neutral
+  - standing, head slightly tilted, relaxed expression
+  - standing, head tilted down slightly, thoughtful expression
+  - standing, head tilted downward, looking at the floor
+  - standing, head tilted, smiling at the floor
+  - standing, looking down, gentle expression on face
+  - standing, looking to the side, neutral expression
+  - standing, neutral expression, looking directly at camera
+  - standing, slight angle, looking away from camera
+  - standing, slight angle, looking slightly upwards smiling
+  - standing, slight head tilt, relaxed expression
+  - standing, slight lean, facing towards camera
+  - standing, slight lean, looking confidently at camera
+  - standing, slight tilt, looking confidently at camera
+  - standing, slightly angled, looking at the camera
+  - standing, slightly angled, looking to side, neutral expression
+  - standing, slightly angled, neutral expression, head tilted
+  - standing, slightly tilted head, neutral expression
+  - standing, slightly turned, laughing looking up
+  - standing, slightly turned, looking off to side
+  - standing, slightly turned, neutral expression, hand in pocket
+  - standing, tilted head, looking slightly up
+  - standing, torso twisted, looking to the left side
+  - standing, turned slightly, neutral expression to side
+  - tilted head, leaning slightly, calm expression
+  - tilted head, looking slightly relaxed and thoughtful
+  - tilted head, slight angle, gentle expression, casual
+  - tilted head, subtle smile, leaning slightly to the side
+  - turned slightly to the side, looking upward confidently
+  - turned slightly to the side, smiling at camera
+  Total: 1156 options
+
+HAND POSE:
+----------------------------------------
+  - arms at sides, fingers slightly apart, relaxed posture
+  - arms at sides, hands relaxed near hips
+  - arms at sides, hands relaxed near thighs
+  - arms at sides, hands relaxed next to body
+  - arms at sides, holding clasped hands near waist
+  - arms at sides, relaxed hands, not doing much
+  - arms at sides, right hand slightly behind hip
+  - arms at sides, right hand slightly open
+  - arms by side, hands relaxed near thighs
+  - arms by side, left hand relaxed, right hand relaxed
+  - arms by sides, hands gently relaxed
+  - arms by sides, hands relaxed and natural
+  - arms by sides, hands relaxed at sides
+  - arms by sides, hands relaxed beside the hips
+  - arms by sides, hands relaxed down, one hand slightly bent
+  - arms by sides, hands relaxed near hips
+  - arms by sides, hands relaxed near legs
+  - arms by sides, hands relaxed near pockets
+  - arms by sides, hands relaxed near the thighs
+  - arms by sides, hands relaxed, fingers naturally extended
+  - arms by sides, hands relaxed, fingers slightly bent
+  - arms by sides, hands relaxed, natural position
+  - arms by sides, hands relaxed, slight forward tilt
+  - arms by sides, hands resting against skirt
+  - arms by sides, hands resting naturally
+  - arms by sides, hands slightly bent at wrists
+  - arms crossed casually over the chest
+  - arms crossed casually over the front
+  - arms crossed casually over the torso
+  - arms crossed casually over torso
+  - arms crossed comfortably across chest, relaxed posture
+  - arms crossed comfortably across the chest
+  - arms crossed comfortably over chest, one slightly higher
+  - arms crossed gently across the front
+  - arms crossed gently in front of body
+  - arms crossed gently in front, relaxed
+  - arms crossed gently over the waist
+  - arms crossed in front of body naturally
+  - arms crossed in front of body, relaxed posture
+  - arms crossed in front of body, relaxed stance
+  - arms crossed in front, hands relaxed on opposite arms
+  - arms crossed in front, hands touching elbows
+  - arms crossed in front, relaxed and composed
+  - arms crossed in front, relaxed and confident
+  - arms crossed in front, relaxed manner
+  - arms crossed lightly, relaxed at the front
+  - arms crossed loosely in front of body
+  - arms crossed loosely in front of the body
+  - arms crossed over chest, relaxed demeanor
+  - arms crossed over chest, right hand visible
+  - arms crossed over the body, relaxed posture
+  - arms crossed over torso, hands hidden from view
+  - arms crossed with hands resting on upper arms
+  - arms crossed, hands hidden under arms at sides
+  - arms crossed, hands hidden under opposite arms
+  - arms crossed, hands relaxed under arms
+  - arms crossed, hands tucked under opposite arms
+  - arms crossed, relaxed and casual stance
+  - arms crossed, relaxed and natural in front
+  - arms down with relaxed hands by her sides
+  - arms down, hands positioned at the sides naturally
+  - arms down, hands relaxed at sides
+  - arms down, hands relaxed at the sides
+  - arms down, hands relaxed by the sides
+  - arms down, hands relaxed near the sides
+  - arms down, hands slightly away from sides
+  - arms down, relaxed at the sides
+  - arms down, relaxed by the sides
+  - arms gently crossed, relaxed position
+  - arms hanging down naturally by her sides
+  - arms hanging down, hands relaxed by the sides
+  - arms hanging down, relaxed by her sides
+  - arms hanging naturally at sides, relaxed hands
+  - arms hanging naturally by her sides
+  - arms hanging naturally down by sides
+  - arms hanging naturally straight down by sides
+  - arms hanging naturally, fingers relaxed and curved
+  - arms hanging straight next to body, relaxed hands
+  - arms relaxed at sides, hands facing outward
+  - arms relaxed at sides, hands near hips
+  - arms relaxed at sides, hands near pockets
+  - arms relaxed at sides, hands not visible
+  - arms relaxed at sides, one hand touching thigh
+  - arms relaxed by sides, casual natural position
+  - arms relaxed by sides, fingers lightly touching thighs
+  - arms relaxed by sides, fingers slightly bent inward
+  - arms relaxed by sides, hands near thighs
+  - arms relaxed by sides, hands slightly forward
+  - arms relaxed by sides, hands slightly visible
+  - arms relaxed by sides, left hand visible
+  - arms relaxed down, hands resting at sides
+  - arms relaxed, at sides with fingers slightly bent
+  - arms relaxed, gently touching sides of body
+  - arms relaxed, hands at sides, fingers slightly bent
+  - arms relaxed, hands at the sides
+  - arms relaxed, hands by sides
+  - arms relaxed, hands by sides naturally
+  - arms relaxed, hands by sides, casual appearance
+  - arms relaxed, hands by sides, fingers extended
+  - arms relaxed, hands by sides, fingers relaxed
+  - arms relaxed, hands by sides, fingers slightly bent
+  - arms relaxed, hands by the sides naturally
+  - arms relaxed, hands by the sides, slightly bent
+  - arms relaxed, hands down by the sides
+  - arms relaxed, hands gently resting at sides
+  - arms relaxed, hands gently resting, one by thigh
+  - arms relaxed, hands hanging by sides
+  - arms relaxed, hands hanging by the sides
+  - arms relaxed, hands hanging down at sides
+  - arms relaxed, hands hanging down by sides
+  - arms relaxed, hands hanging down by the sides
+  - arms relaxed, hands hanging down naturally
+  - arms relaxed, hands hanging down naturally at sides
+  - arms relaxed, hands hanging down naturally by sides
+  - arms relaxed, hands hanging loosely at sides
+  - arms relaxed, hands hanging naturally at sides
+  - arms relaxed, hands hanging naturally by sides
+  - arms relaxed, hands hanging naturally by the sides
+  - arms relaxed, hands hanging straight down at sides
+  - arms relaxed, hands hanging straight down naturally
+  - arms relaxed, hands lightly resting on thighs
+  - arms relaxed, hands loosely by sides
+  - arms relaxed, hands loosely held by the sides
+  - arms relaxed, hands low beside the body
+  - arms relaxed, hands naturally at sides
+  - arms relaxed, hands near sides, fingers slightly bent
+  - arms relaxed, hands near sides, natural posture
+  - arms relaxed, hands resting along sides naturally
+  - arms relaxed, hands resting beside hips
+  - arms relaxed, hands resting by sides
+  - arms relaxed, hands resting by sides naturally
+  - arms relaxed, hands resting gently at the sides
+  - arms relaxed, hands resting gently on sides
+  - arms relaxed, hands resting naturally at sides
+  - arms relaxed, hands resting naturally by sides
+  - arms relaxed, hands touching sides slightly
+  - arms relaxed, hanging down naturally at sides
+  - arms relaxed, hanging down naturally at the sides
+  - arms relaxed, hanging down naturally by sides
+  - arms relaxed, hanging naturally at sides
+  - arms relaxed, hanging naturally at the sides
+  - arms relaxed, hanging naturally by her sides
+  - arms relaxed, left hand by side
+  - arms relaxed, loosely hanging at the sides
+  - arms relaxed, one hand slightly on hip
+  - arms relaxed, resting at sides with natural bend
+  - arms straight, hands relaxed at sides
+  - both hands casually in pocket, looking relaxed
+  - both hands casually tucked into pants pockets
+  - both hands comfortably tucked into pockets
+  - both hands down, right hand on hip
+  - both hands placed casually in pockets
+  - both hands relaxed, hanging down at sides
+  - both hands relaxed, hanging naturally at the sides
+  - both hands relaxed, hanging naturally by sides
+  - both hands relaxed, placed in front casually
+  - both hands resting casually on hips
+  - both hands resting on belly, fingers overlapping
+  - both hands resting on thighs, fingers relaxed
+  - both hands resting on top of pants
+  - both hands resting, crossed over the midsection
+  - both hands tucked casually into front pockets
+  - hand relaxed on hip, other hand hanging down
+  - hand resting on hip, left hand down
+  - hands at side, slightly bent at the elbows
+  - hands at sides, fingers slightly curled naturally
+  - hands at sides, relaxed and natural
+  - hands at sides, relaxed around hip area
+  - hands at sides, relaxed by hips
+  - hands at sides, relaxed manner, fingers straight
+  - hands at sides, relaxed with fingers slightly bent
+  - hands at sides, relaxed, fingers slightly spread
+  - hands at sides, right hand slightly forward
+  - hands behind back, relaxed posture
+  - hands behind, left hand visible slightly
+  - hands below belly, elbows slightly bent, relaxed
+  - hands by side, one slightly tucked behind leg
+  - hands by side, relaxed stance with right slightly bent
+  - hands by side, relaxed with slight bend
+  - hands by sides, fingers gently extended
+  - hands by sides, fingers relaxed and slightly curled
+  - hands by sides, fingers slightly bent, natural stance
+  - hands by sides, fingers slightly bent, relaxed posture
+  - hands by sides, fingers slightly curled
+  - hands by sides, gently resting on thighs
+  - hands by sides, relaxed and hanging naturally
+  - hands by sides, relaxed and natural
+  - hands by sides, relaxed and natural posture
+  - hands by sides, relaxed fingers
+  - hands by sides, relaxed posture
+  - hands by sides, relaxed, slightly curled fingers
+  - hands by sides, relaxed, slightly curved fingers
+  - hands by sides, right fingers slightly curled
+  - hands by sides, right hand touching thigh
+  - hands by the sides, right slightly forward and open
+  - hands casually folding together in front
+  - hands casually in front pants pockets
+  - hands casually in front pocket of pants
+  - hands casually in front pockets, relaxed posture
+  - hands casually in front, left tucked in pocket
+  - hands casually on hips, natural demeanor
+  - hands casually placed in front pockets
+  - hands casually placed in side pockets of pants
+  - hands casually placed in skirt pockets
+  - hands casually placed on hips to the sides
+  - hands casually placed on hips, relaxed posture
+  - hands casually placed on skirt pockets
+  - hands casually resting in front pockets
+  - hands casually resting in front pockets of jeans
+  - hands casually resting in side pants pockets
+  - hands casually resting on hips, relaxed stance
+  - hands casually tucked into front pants pockets
+  - hands casually tucked into pockets, relaxed posture
+  - hands clasped gently at the waist
+  - hands clasped gently in front mid-waist level
+  - hands clasped gently in front, fingers interlocked
+  - hands clasped gently together at waist level
+  - hands clasped in front, relaxed and gentle
+  - hands clasped loosely in front of body
+  - hands clasped loosely in front of torso
+  - hands clasped loosely in front, relaxed posture
+  - hands clasped together at the waist
+  - hands clasped together behind the back
+  - hands clasped together in front
+  - hands clasped together in front at waist
+  - hands clasped together in front of body
+  - hands clasped together in front of waist
+  - hands clasped together in front, arms extended forward
+  - hands clasped together in front, relaxed
+  - hands clasped together, resting in front naturally
+  - hands crossed casually in front of waist
+  - hands crossed loosely in front
+  - hands crossed resting gently on front
+  - hands crossed, relaxed, over midsection
+  - hands crossed, resting gently on opposite arms
+  - hands crossed, resting over opposite elbows naturally
+  - hands down by sides, fingers slightly spread
+  - hands down, fingers relaxed, by sides
+  - hands down, fingers relaxed, near waist
+  - hands down, gently clasping the edge of sleeves
+  - hands down, gently touching the hips
+  - hands down, left hand slightly bent, relaxed position
+  - hands down, left hand slightly visible by side
+  - hands down, one hand slightly touching thigh
+  - hands down, right hand slightly visible to the side
+  - hands folded gently in front at waist
+  - hands folded naturally in front, relaxed appearance
+  - hands gently clasped in front at waist
+  - hands gently clasped in front of body
+  - hands gently clasped in front of chest
+  - hands gently clasped in front of her
+  - hands gently clasped in front of the body
+  - hands gently clasped in front of waist
+  - hands gently clasped in front, fingers interlocked
+  - hands gently clasped in front, fingers relaxed
+  - hands gently clasped in front, relaxed pose
+  - hands gently clasped in front, relaxed posture
+  - hands gently clasped together at front
+  - hands gently clasped together in front
+  - hands gently clasped together in front of body
+  - hands gently clasped together in front of waist
+  - hands gently clasped together, resting near waist
+  - hands gently crossed, resting at waist level
+  - hands gently holding together at the front
+  - hands gently resting by her sides
+  - hands gently resting in front and at sides
+  - hands gently resting on maternity top
+  - hands gently resting on sides, fingers slightly bent
+  - hands gently resting over stomach, fingers interlocked
+  - hands gently touching in front, relaxed
+  - hands gently touching, fingers interlocked near waist
+  - hands hanging down by the sides
+  - hands hanging down naturally at sides
+  - hands hanging down naturally at the sides
+  - hands hanging down naturally beside her legs
+  - hands hanging down naturally beside the body
+  - hands hanging down naturally by the sides
+  - hands hanging down relaxed at the sides
+  - hands hanging down, relaxed by the sides
+  - hands hanging loosely at the sides
+  - hands hanging loosely, right hand more visible
+  - hands hanging naturally alongside the body
+  - hands hanging naturally at sides, relaxed posture
+  - hands hanging naturally at sides, right slightly forward
+  - hands hanging naturally at the sides, relaxed
+  - hands hanging naturally beside, relaxed posture
+  - hands hanging naturally by sides, fingers relaxed
+  - hands hanging naturally by sides, relaxed fingers
+  - hands hanging naturally by the sides
+  - hands hanging naturally by the sides, relaxed
+  - hands hanging naturally by the sides, relaxed posture
+  - hands hanging naturally by the sides, slightly bent elbows
+  - hands hanging naturally down by the sides
+  - hands hanging naturally, relaxed at sides
+  - hands hanging naturally, right hand partially hidden
+  - hands hanging relaxed by sides naturally
+  - hands hanging relaxed down by the sides
+  - hands held together in front at waist level
+  - hands held together, resting in front of body
+  - hands holding a bag in front
+  - hands holding back of head, elbows bent wide
+  - hands in front jeans pockets confidently posed
+  - hands in front pants pockets, relaxed pose
+  - hands in front pants pockets, relaxed posture
+  - hands in front pockets, elbows slightly out
+  - hands in front pockets, relaxed and casual
+  - hands in front pockets, relaxed shoulders and arms
+  - hands in pants pockets, relaxed posture
+  - hands in pockets, casual and relaxed stance
+  - hands in pockets, casual relaxed posture
+  - hands in pockets, elbows slightly bent
+  - hands in pockets, elbows slightly bent, relaxed
+  - hands in pockets, fingers relaxed
+  - hands in pockets, relaxed and casual stance
+  - hands in pockets, relaxed position, slightly angled
+  - hands in pockets, relaxed posture
+  - hands in pockets, relaxed posture, casual demeanor
+  - hands in pockets, relaxed posture, confident stance
+  - hands in pockets, relaxed posture, natural look
+  - hands in pockets, relaxed stance, casual demeanor
+  - hands in pockets, thumbs out casually
+  - hands in side pockets, elbows slightly bent
+  - hands inside pockets, relaxed, casual stance
+  - hands joined together, resting on stomach
+  - hands lightly clasped in front of body
+  - hands lightly clasped together at waist
+  - hands lightly clasped together in front
+  - hands lightly clasped, near abdomen, relaxed posture
+  - hands lightly resting on hips confidently
+  - hands lightly touching sides, fingers slightly curled
+  - hands loosely by side, relaxed posture
+  - hands loosely by sides, relaxed posture
+  - hands loosely clasped behind the back
+  - hands loosely clasped in front at waist level
+  - hands loosely clasped in front or side
+  - hands loosely clasped together at waist level
+  - hands loosely clasped together in front
+  - hands loosely crossed near waist, resting comfortably
+  - hands loosely hanging by her sides
+  - hands near collar, right hand on neck
+  - hands not visible, near the sides
+  - hands on belly, fingers interlocked gently in front
+  - hands on head, elbows out to the sides
+  - hands on hips, elbows bent outward
+  - hands on hips, elbows bent outward confidently
+  - hands on hips, elbows bent outwards
+  - hands on hips, elbows bent outwards confidently
+  - hands on hips, elbows out in a V-shape
+  - hands on hips, elbows pointing outward confidently
+  - hands on hips, elbows slightly bent outward
+  - hands on hips, fingers slightly curled
+  - hands on hips, left hand tilted back slightly
+  - hands on hips, relaxed
+  - hands on hips, showing confidence and strength
+  - hands on thighs, relaxed, fingers spread out
+  - hands on thighs, relaxed, natural position, left hand visible
+  - hands partially in front pants pockets
+  - hands placed behind back, arms slightly bent
+  - hands placed casually in front pants pockets
+  - hands placed casually in front pockets
+  - hands placed confidently on hips, elbows out
+  - hands placed into colorful striped pants pockets
+  - hands placed into pockets, fingers visible
+  - hands placed on lower back, fingers interlaced
+  - hands placed on lower back, relaxed posture
+  - hands positioned behind back, relaxed and casual
+  - hands raised, gently holding sweater neck
+  - hands relaxed along sides, left hand near pocket
+  - hands relaxed and hanging down at sides
+  - hands relaxed and hanging naturally by sides
+  - hands relaxed and resting along the sides
+  - hands relaxed at sides, fingers slightly bent
+  - hands relaxed at sides, fingers slightly spread
+  - hands relaxed at sides, one slightly forward
+  - hands relaxed at sides, slightly forward
+  - hands relaxed beside body, slightly bent elbows
+  - hands relaxed by sides near thigh level
+  - hands relaxed by sides, fingers slightly bent
+  - hands relaxed by sides, fingers slightly curled
+  - hands relaxed by sides, fingers slightly spread
+  - hands relaxed by sides, holding fabric gently
+  - hands relaxed by sides, left hand holding object
+  - hands relaxed by sides, left hand slightly forward
+  - hands relaxed by sides, not fully visible
+  - hands relaxed by sides, not prominently visible
+  - hands relaxed by sides, one leg slightly forward
+  - hands relaxed by sides, slightly bent at elbows
+  - hands relaxed by sides, slightly bent elbows
+  - hands relaxed by sides, slightly curled fingers
+  - hands relaxed by sides, slightly forward
+  - hands relaxed down by the sides
+  - hands relaxed down, fingers slightly curled by sides
+  - hands relaxed down, hanging naturally at sides
+  - hands relaxed down, one slightly holding skirt
+  - hands relaxed inside front pants pockets
+  - hands relaxed naturally at sides
+  - hands relaxed on sides, fingers lightly touching pants
+  - hands relaxed together in front, casual stance
+  - hands relaxed, alongside body, natural position
+  - hands relaxed, alongside hips, slightly bent elbows
+  - hands relaxed, arms hanging down at sides
+  - hands relaxed, arms hanging naturally at the sides
+  - hands relaxed, at sides, one slightly behind
+  - hands relaxed, at sides, slightly bent at elbow
+  - hands relaxed, by sides naturally, slightly bent elbows
+  - hands relaxed, by sides with fingers slightly bent
+  - hands relaxed, by sides, fingers slightly bent
+  - hands relaxed, by sides, slightly bent elbows
+  - hands relaxed, close to body or in pockets
+  - hands relaxed, down by sides, fingers slightly curled
+  - hands relaxed, down by the sides naturally
+  - hands relaxed, down naturally at the sides
+  - hands relaxed, down naturally by the sides
+  - hands relaxed, fingers extended naturally at sides
+  - hands relaxed, fingers gently curved near thighs
+  - hands relaxed, fingers intertwined in front
+  - hands relaxed, fingers lightly touching thighs
+  - hands relaxed, fingers resting at sides
+  - hands relaxed, fingers slightly bent by sides
+  - hands relaxed, fingers slightly curled by sides
+  - hands relaxed, fingers slightly curled near sides
+  - hands relaxed, fingers slightly curved at sides
+  - hands relaxed, fingers slightly curved by sides
+  - hands relaxed, fingers slightly touching each other
+  - hands relaxed, fingers touching near hips
+  - hands relaxed, fingers touching near waist
+  - hands relaxed, fingers touching sides, standing casually
+  - hands relaxed, fingers touching together in front
+  - hands relaxed, fingertips touching thighs lightly
+  - hands relaxed, gently holding each other at front
+  - hands relaxed, hanging alongside body casually
+  - hands relaxed, hanging beside body naturally
+  - hands relaxed, hanging by sides naturally
+  - hands relaxed, hanging by the sides
+  - hands relaxed, hanging by the sides naturally
+  - hands relaxed, hanging down at both sides
+  - hands relaxed, hanging down at sides
+  - hands relaxed, hanging down at sides naturally
+  - hands relaxed, hanging down at the sides
+  - hands relaxed, hanging down by sides
+  - hands relaxed, hanging down by the sides
+  - hands relaxed, hanging down naturally at side
+  - hands relaxed, hanging down naturally at sides
+  - hands relaxed, hanging down naturally at the sides
+  - hands relaxed, hanging down naturally beside body
+  - hands relaxed, hanging down naturally by sides
+  - hands relaxed, hanging down naturally by the sides
+  - hands relaxed, hanging loosely by the sides
+  - hands relaxed, hanging naturally along sides
+  - hands relaxed, hanging naturally along the sides
+  - hands relaxed, hanging naturally at sides
+  - hands relaxed, hanging naturally at the sides
+  - hands relaxed, hanging naturally by her sides
+  - hands relaxed, hanging naturally by sides
+  - hands relaxed, hanging naturally by the sides
+  - hands relaxed, hanging naturally down by sides
+  - hands relaxed, hanging naturally near body
+  - hands relaxed, hanging naturally straight at the sides
+  - hands relaxed, hanging straight beside the body
+  - hands relaxed, hanging straight down at sides
+  - hands relaxed, holding edges of shirt lightly
+  - hands relaxed, inserted into pants pockets
+  - hands relaxed, left arm bent slightly forward
+  - hands relaxed, left hand by side, right hand relaxed
+  - hands relaxed, left hand holding shirt hem
+  - hands relaxed, left hand near thigh, right hand back
+  - hands relaxed, left hand on hip, right beside leg
+  - hands relaxed, lightly clasped together in front
+  - hands relaxed, lightly touching sides, fingers straight
+  - hands relaxed, naturally by the sides
+  - hands relaxed, naturally down at sides
+  - hands relaxed, naturally hanging at the sides
+  - hands relaxed, near sides or pockets, casual stance
+  - hands relaxed, one at side, other slightly bent
+  - hands relaxed, one finger resting at pocket
+  - hands relaxed, one hand lightly touching hip
+  - hands relaxed, one hand on hip, one hanging
+  - hands relaxed, one hand overlapping the other arm
+  - hands relaxed, one hand partially visible by side
+  - hands relaxed, one hand resting by side
+  - hands relaxed, one hand slightly bent at side
+  - hands relaxed, one hand touching hip area
+  - hands relaxed, one holding edge of skirt
+  - hands relaxed, one holding the other lightly
+  - hands relaxed, one in pocket, other by side
+  - hands relaxed, one on hip, one by side
+  - hands relaxed, one on hip, other by side
+  - hands relaxed, one slightly behind body
+  - hands relaxed, one slightly holding opposite arm
+  - hands relaxed, one slightly raised near thigh
+  - hands relaxed, one slightly touching hip
+  - hands relaxed, positioned naturally at the sides
+  - hands relaxed, resting against thighs
+  - hands relaxed, resting at sides, fingers gently extended
+  - hands relaxed, resting at sides, fingers slightly curled
+  - hands relaxed, resting at the side naturally
+  - hands relaxed, resting beside the body
+  - hands relaxed, resting by sides leisurely
+  - hands relaxed, resting by the sides
+  - hands relaxed, resting casually along sides
+  - hands relaxed, resting gently at sides
+  - hands relaxed, resting gently on thighs
+  - hands relaxed, resting lightly on sides
+  - hands relaxed, resting naturally at sides
+  - hands relaxed, resting on front pockets of pants
+  - hands relaxed, resting on hips or sides
+  - hands relaxed, resting on thighs naturally
+  - hands relaxed, right hand hanging by side
+  - hands relaxed, right hand resting by side
+  - hands relaxed, right hand slightly raised, left by side
+  - hands relaxed, sides of body, fingers lightly touching
+  - hands relaxed, sides slightly bent outward
+  - hands relaxed, sides, fingers slightly bent inward
+  - hands relaxed, slightly bent near the sides
+  - hands relaxed, slightly bent, hanging by sides
+  - hands relaxed, slightly by the sides of hips
+  - hands relaxed, slightly forward and down at sides
+  - hands relaxed, slightly forward at the sides
+  - hands relaxed, slightly out of view behind body
+  - hands relaxed, touching sides of pants casually
+  - hands relaxed, touching sides of the skirt
+  - hands relaxed, tucked into front pockets
+  - hands relaxed, tucked into pants pockets
+  - hands resting at sides, fingers slightly spread
+  - hands resting by sides without visible engagement
+  - hands resting casually at the sides
+  - hands resting casually below stomach area
+  - hands resting casually by sides
+  - hands resting casually by the sides
+  - hands resting casually in front pants pockets
+  - hands resting casually in front pockets
+  - hands resting casually in pants pockets
+  - hands resting casually in side pockets
+  - hands resting casually on hips
+  - hands resting casually on hips, fingers relaxed
+  - hands resting casually, one on her hip
+  - hands resting down by sides, relaxed fingers
+  - hands resting down by the sides naturally
+  - hands resting firmly on both hips, elbows out
+  - hands resting firmly on hips, elbows out to side
+  - hands resting gently on sides or thighs
+  - hands resting gently on stomach
+  - hands resting lightly on sides of thighs
+  - hands resting naturally at the side, relaxed
+  - hands resting naturally beside the body
+  - hands resting naturally beside thighs
+  - hands resting naturally by sides
+  - hands resting naturally by sides, relaxed posture
+  - hands resting naturally on either side
+  - hands resting naturally on hips and sides
+  - hands resting naturally, one hand slightly bent
+  - hands resting near hips, fingers relaxed, casual
+  - hands resting on hips in a confident manner
+  - hands resting on hips with elbows outwards
+  - hands resting on hips, elbows pointing outward
+  - hands resting on hips, elbows slightly bent
+  - hands resting on hips, elbows slightly out
+  - hands resting on hips, elbows slightly outward
+  - hands resting on hips, fingers relaxed
+  - hands resting on hips, fingers relaxed, elbows bent
+  - hands resting on hips, fingers slightly relaxed
+  - hands resting on hips, left on right arm
+  - hands resting on sides, slightly behind
+  - hands resting on waist, relaxed elbows
+  - hands resting relaxed by sides naturally
+  - hands resting relaxed on hips, elbows slightly bent
+  - hands resting together in front of the body
+  - hands resting, left arm slightly bent
+  - hands resting, left touching waist, right by side
+  - hands resting, with one slightly forward by thigh
+  - hands slightly apart, relaxed by sides
+  - hands slightly bent, one by side, one behind
+  - hands subtly supporting around stomach area
+  - hands together in front, fingers loosely interlocked
+  - hands together, fingers intertwined in front
+  - hands together, fingers relaxed near waist
+  - hands together, held gently at the front
+  - hands together, relaxed in front of body
+  - hands touching each other in front of waist
+  - hands tucked casually into front pants pockets
+  - hands tucked casually into pant pockets
+  - hands tucked casually into pants pockets
+  - hands tucked casually into side pants pockets
+  - left arm across body, right hand on arm
+  - left arm bent, hand on hip, right hand down
+  - left arm bent, hand on hip, right hand relaxed
+  - left arm crossed, right hand touching collarbone
+  - left arm hanging down, right hand near watch
+  - left arm relaxed by side, right arm relaxed along
+  - left arm relaxed, right hand on hip
+  - left hand across body, right hand supporting chin
+  - left hand at hip, right hand hanging down
+  - left hand at hips, right arm relaxed down
+  - left hand at side, right hand relaxed at side
+  - left hand at side, right hand relaxed by pants
+  - left hand behind head, right hand at side
+  - left hand by side, right hand by side
+  - left hand by side, right hand gently bent
+  - left hand by side, right hand gently on hip
+  - left hand by side, right hand hanging down
+  - left hand by side, right hand hanging down naturally
+  - left hand by side, right hand hanging relaxed
+  - left hand by side, right hand holding wrist
+  - left hand by side, right hand in pocket
+  - left hand by side, right hand near front pocket
+  - left hand by side, right hand near waist
+  - left hand by side, right hand on belly
+  - left hand by side, right hand on hip
+  - left hand by side, right hand relaxed
+  - left hand by side, right hand relaxed across body
+  - left hand by side, right hand relaxed against waist
+  - left hand by side, right hand relaxed behind
+  - left hand by side, right hand relaxed by side
+  - left hand by side, right hand relaxed down
+  - left hand by side, right hand relaxed downward
+  - left hand by side, right hand relaxed forward
+  - left hand by side, right hand relaxed in pocket
+  - left hand by side, right hand relaxed near body
+  - left hand by side, right hand relaxed near hip
+  - left hand by side, right hand relaxed near pocket
+  - left hand by side, right hand relaxed near side
+  - left hand by side, right hand relaxed near waist
+  - left hand by side, right hand relaxed on leg
+  - left hand by side, right hand relaxed on skirt
+  - left hand by side, right hand relaxed to side
+  - left hand by side, right hand resting at thigh
+  - left hand by side, right hand resting casually
+  - left hand by side, right hand resting on hip
+  - left hand by side, right hand slightly bent
+  - left hand by side, right hand slightly forward
+  - left hand by side, right hand touching hair
+  - left hand by side, right hand tucked in pocket
+  - left hand by side, right holding shirt hem
+  - left hand crossed over right arm, right hand down
+  - left hand down, right hand on hip
+  - left hand down, right hand partially visible near pocket
+  - left hand down, right hand partly hidden behind
+  - left hand down, right hand raised touching head
+  - left hand down, right hand resting at side
+  - left hand gently touching hair, right hand out of view
+  - left hand hanging by side, right hand relaxed
+  - left hand hanging by side, right hand relaxed down
+  - left hand hanging down, right hand near hip
+  - left hand hanging down, right hand relaxed at side
+  - left hand hanging down, right hand touching leg
+  - left hand hanging down, right hand touching neck
+  - left hand hanging naturally, right hand by side
+  - left hand hanging, right hand on hip
+  - left hand hanging, right hand partially in pocket
+  - left hand hanging, right hand resting near hip
+  - left hand hanging, right hand slightly bent by side
+  - left hand holding right arm near elbow
+  - left hand holding right wrist near waist
+  - left hand holding right wrist, relaxed by side
+  - left hand in pocket, right arm relaxed by side
+  - left hand in pocket, right hand at side
+  - left hand in pocket, right hand by side
+  - left hand in pocket, right hand by side relaxed
+  - left hand in pocket, right hand down by side
+  - left hand in pocket, right hand hanging down
+  - left hand in pocket, right hand hanging freely
+  - left hand in pocket, right hand relaxed beside hip
+  - left hand in pocket, right hand relaxed by side
+  - left hand in pocket, right hand relaxed down
+  - left hand in pocket, right hand resting by side
+  - left hand in pocket, right hanging beside body
+  - left hand lifting, right hand relaxed by side
+  - left hand near hip, right hand at side
+  - left hand near neck, right arm relaxed down
+  - left hand near pocket, right hand hanging naturally
+  - left hand on arm, right hand at side
+  - left hand on head, right hand by side
+  - left hand on hip, right arm bent touching elbow
+  - left hand on hip, right arm by side
+  - left hand on hip, right arm relaxed down
+  - left hand on hip, right hand by side
+  - left hand on hip, right hand down relaxed
+  - left hand on hip, right hand hanging down
+  - left hand on hip, right hand hanging relaxed
+  - left hand on hip, right hand holding pocket
+  - left hand on hip, right hand in pocket
+  - left hand on hip, right hand near head
+  - left hand on hip, right hand near thigh
+  - left hand on hip, right hand on head
+  - left hand on hip, right hand on thigh
+  - left hand on hip, right hand relaxed at side
+  - left hand on hip, right hand relaxed beside
+  - left hand on hip, right hand relaxed by side
+  - left hand on hip, right hand relaxed down
+  - left hand on hip, right hand relaxed down side
+  - left hand on hip, right hand relaxed on thigh
+  - left hand on hip, right hand relaxed to side
+  - left hand on hip, right hand slightly forward
+  - left hand on hip, right hand touching hair
+  - left hand on hip, right relaxed by side
+  - left hand on leg, right hand relaxed down side
+  - left hand on neck, right hand at side
+  - left hand on skirt, right hand hanging down
+  - left hand on stomach, right hand by side
+  - left hand on thigh, right hanging relaxed beside
+  - left hand on waist, right hand relaxed down
+  - left hand raised near face, right arm crossed
+  - left hand relaxed along side, right hand touching belly
+  - left hand relaxed along thigh, right hand on hip
+  - left hand relaxed at side, right hand hanging
+  - left hand relaxed at side, right hand hanging down
+  - left hand relaxed at side, right hand holding hem
+  - left hand relaxed at side, right hand not visible
+  - left hand relaxed at side, right hand on hip
+  - left hand relaxed at side, right hand relaxed
+  - left hand relaxed at side, right hand relaxed down
+  - left hand relaxed by side, right arm slightly bent
+  - left hand relaxed by side, right hand by side
+  - left hand relaxed by side, right hand by waist
+  - left hand relaxed by side, right hand hanging down
+  - left hand relaxed by side, right hand hidden
+  - left hand relaxed by side, right hand in pocket
+  - left hand relaxed by side, right hand near pocket
+  - left hand relaxed by side, right hand not visible
+  - left hand relaxed by side, right hand on hip
+  - left hand relaxed by side, right hand partially raised
+  - left hand relaxed by side, right hand relaxed
+  - left hand relaxed by side, right hand slightly bent
+  - left hand relaxed by side, right hanging loosely
+  - left hand relaxed by side, right relaxed
+  - left hand relaxed by side, slight hip tilt
+  - left hand relaxed down, right touching thigh
+  - left hand relaxed near hip, right hand hanging down
+  - left hand relaxed, right hand also relaxed, both down
+  - left hand relaxed, right hand by side
+  - left hand relaxed, right hand by the side
+  - left hand relaxed, right hand gently touching hip
+  - left hand relaxed, right hand grazing back pocket
+  - left hand relaxed, right hand hanging by side
+  - left hand relaxed, right hand hanging down
+  - left hand relaxed, right hand in pocket
+  - left hand relaxed, right hand near pocket
+  - left hand relaxed, right hand partially in pocket
+  - left hand relaxed, right hand partially visible
+  - left hand relaxed, right hand relaxed near side
+  - left hand relaxed, right hand resting on hip
+  - left hand relaxed, right hand slightly on hip
+  - left hand relaxed, right hand thumb in pocket
+  - left hand relaxed, right hand touching belt loop
+  - left hand relaxed, right hand touching waist
+  - left hand relaxed, right hand touching wrist
+  - left hand resting arm, right hand relaxed by side
+  - left hand resting at side, right hand near face
+  - left hand resting by side, right hand by hip
+  - left hand resting by side, right hand unseen
+  - left hand resting on head, right hand relaxed down
+  - left hand resting on hip, right by side
+  - left hand resting on hip, right hand by side
+  - left hand resting on hip, right hand down
+  - left hand resting on hip, right hand relaxed
+  - left hand resting on thigh, right hand relaxed
+  - left hand slightly raised, right hand down naturally
+  - left hand touching chin, right hand on hip
+  - left hand touching chin, right hand relaxed by side
+  - left hand touching collarbone, right hand on hip
+  - left hand touching hair, right hand by hip
+  - left hand touching hair, right hand by side
+  - left hand touching head, right hand relaxed by side
+  - left hand touching hip, right hand by side
+  - left hand touching hip, right hand relaxed down
+  - left hand touching side, right hand relaxed by side
+  - left hand touching stomach, right hand relaxed down
+  - left hand touching thigh, right hand relaxed down
+  - one hand by side, other hand relaxed near hip
+  - one hand by side, other partly raised slightly
+  - one hand by side, other relaxed near pocket
+  - one hand by side, other resting on waist
+  - one hand by side, other touching hair
+  - one hand hanging down, the other slightly bent
+  - one hand hip, other relaxed by side
+  - one hand holding hair, other hanging naturally
+  - one hand in pocket, one hand at side
+  - one hand in pocket, one relaxed by side
+  - one hand in pocket, other arm relaxed by side
+  - one hand in pocket, other by side
+  - one hand in pocket, other by side relaxed
+  - one hand in pocket, other hand hanging down
+  - one hand in pocket, other hand hanging relaxed
+  - one hand in pocket, other hand on hip
+  - one hand in pocket, other hand relaxed
+  - one hand in pocket, other hand relaxed down
+  - one hand in pocket, other hand slightly forward
+  - one hand in pocket, other hanging by side
+  - one hand in pocket, other hanging naturally
+  - one hand in pocket, other hanging relaxed by side
+  - one hand in pocket, other relaxed by side
+  - one hand in pocket, other resting naturally by side
+  - one hand in pocket, the other relaxed by side
+  - one hand near face, other relaxed by side
+  - one hand on face, other hanging by side
+  - one hand on head, other relaxed by side
+  - one hand on hip, one hanging loosely at side
+  - one hand on hip, other arm relaxed down side
+  - one hand on hip, other at side
+  - one hand on hip, other by side
+  - one hand on hip, other by side relaxed
+  - one hand on hip, other hand by side
+  - one hand on hip, other hand down by side
+  - one hand on hip, other hand down to side
+  - one hand on hip, other hand hanging down
+  - one hand on hip, other hand in pocket
+  - one hand on hip, other hand relaxed by side
+  - one hand on hip, other hand relaxed down
+  - one hand on hip, other hand relaxed down side
+  - one hand on hip, other hand resting near waist
+  - one hand on hip, other hand touching hair
+  - one hand on hip, other hanging by side
+  - one hand on hip, other hanging casually at side
+  - one hand on hip, other in front pocket
+  - one hand on hip, other in pocket
+  - one hand on hip, other relaxed by side
+  - one hand on stomach, other hanging relaxed at side
+  - one hand pocket, other hand by side
+  - one hand raised, touching hair casually
+  - one hand relaxed at side, other on hip
+  - one hand relaxed, other hand on waist
+  - one hand resting near waist, other hanging naturally
+  - one hand resting on bump, other relaxed by side
+  - one hand resting on hip, other by side
+  - one hand resting on opposite forearm, relaxed
+  - one hand slightly bent, other hanging down
+  - one hand to hair, other by the side
+  - one hand to side, other on hip casually
+  - one hand touching hair, other hand by the side
+  - one hand touching hair, other hand in pocket
+  - one hand touching hair, other hand on hip
+  - one hand touching hair, other hanging down naturally
+  - one hand touching hair, other relaxed by side
+  - one hand touching head, other hand relaxed by side
+  - one hand touching neck, other hand on baby bump
+  - one hand touching neck, other relaxed down
+  - one hand tucked behind, other hanging by side
+  - relaxed at sides, hands close to body
+  - right arm at side, left hand slightly raised
+  - right arm by side, left hand near pocket
+  - right arm by side, left hand on hip
+  - right arm crossed over body, left hand relaxed
+  - right arm crossed, left hand resting on elbow
+  - right arm down, left hand by side
+  - right arm relaxed at side, left hand by thigh
+  - right arm relaxed at side, left hand on hip
+  - right arm relaxed by side, left hand hidden
+  - right arm relaxed by side, left hand relaxed
+  - right arm relaxed by side, left out of view
+  - right arm relaxed, left arm mostly hidden behind
+  - right arm relaxed, left hand in pocket
+  - right hand across stomach, left hand holding wrist
+  - right hand adjusting hair, left hand relaxed by side
+  - right hand at side, left hand on hip
+  - right hand at side, left hand on thigh
+  - right hand at side, left hand relaxed down
+  - right hand at side, left hand slightly forward
+  - right hand at side, left near pocket
+  - right hand behind head, left hand by side
+  - right hand behind, left hand hanging down
+  - right hand by face, left hand on hip
+  - right hand by side, left arm relaxed
+  - right hand by side, left arm relaxed naturally
+  - right hand by side, left arm touching belly
+  - right hand by side, left fist slightly raised
+  - right hand by side, left gently on thigh
+  - right hand by side, left hand behind back
+  - right hand by side, left hand brushing thigh
+  - right hand by side, left hand by side
+  - right hand by side, left hand by side relaxed
+  - right hand by side, left hand gently on belly
+  - right hand by side, left hand hanging down
+  - right hand by side, left hand hanging loose
+  - right hand by side, left hand hanging naturally
+  - right hand by side, left hand held to side
+  - right hand by side, left hand hidden
+  - right hand by side, left hand holding shorts
+  - right hand by side, left hand in pocket
+  - right hand by side, left hand in rear pocket
+  - right hand by side, left hand lightly placed on hip
+  - right hand by side, left hand near hip
+  - right hand by side, left hand near waist
+  - right hand by side, left hand not shown
+  - right hand by side, left hand not visible
+  - right hand by side, left hand on hip
+  - right hand by side, left hand on hip relaxed
+  - right hand by side, left hand on pocket
+  - right hand by side, left hand on thigh
+  - right hand by side, left hand on waist
+  - right hand by side, left hand out of view
+  - right hand by side, left hand over belly
+  - right hand by side, left hand partially visible
+  - right hand by side, left hand partially visible nearby
+  - right hand by side, left hand relaxed
+  - right hand by side, left hand relaxed at hip
+  - right hand by side, left hand relaxed at side
+  - right hand by side, left hand relaxed at waist
+  - right hand by side, left hand relaxed by hip
+  - right hand by side, left hand relaxed by side
+  - right hand by side, left hand relaxed down
+  - right hand by side, left hand relaxed downward
+  - right hand by side, left hand relaxed downwards
+  - right hand by side, left hand relaxed forward
+  - right hand by side, left hand relaxed naturally
+  - right hand by side, left hand relaxed near hip
+  - right hand by side, left hand relaxed near pocket
+  - right hand by side, left hand relaxed near side
+  - right hand by side, left hand relaxed near skirt
+  - right hand by side, left hand relaxed near thigh
+  - right hand by side, left hand relaxed near waist
+  - right hand by side, left hand relaxed on hip
+  - right hand by side, left hand relaxed on leg
+  - right hand by side, left hand relaxed slightly bent
+  - right hand by side, left hand relaxed slightly raised
+  - right hand by side, left hand relaxed, down
+  - right hand by side, left hand resting by thigh
+  - right hand by side, left hand resting on hip
+  - right hand by side, left hand resting on thigh
+  - right hand by side, left hand resting on waist
+  - right hand by side, left hand slightly behind
+  - right hand by side, left hand slightly behind back
+  - right hand by side, left hand slightly bent
+  - right hand by side, left hand slightly bent up
+  - right hand by side, left hand slightly forward
+  - right hand by side, left hand slightly hidden
+  - right hand by side, left hand slightly lifted near skirts
+  - right hand by side, left hand slightly raised
+  - right hand by side, left hand slightly raising
+  - right hand by side, left hand slightly relaxed forward
+  - right hand by side, left hand touching hip
+  - right hand by side, left hand touching neck
+  - right hand by side, left hand touching waist
+  - right hand by side, left relaxed, hanging down
+  - right hand by side, left slightly bent near face
+  - right hand by side, left thumb in pocket
+  - right hand by side, relaxed posture
+  - right hand clasping left wrist in front
+  - right hand crossed over left arm, relaxed position
+  - right hand crossed over left, relaxed posture
+  - right hand down, left hand by side
+  - right hand down, left hand grazes hip
+  - right hand down, left hand hidden from view
+  - right hand down, left hand in pocket
+  - right hand down, left hand lightly touching garment
+  - right hand down, left hand on skirt
+  - right hand down, left hand on waist
+  - right hand down, left hand out of frame
+  - right hand down, left hand relaxed at side
+  - right hand down, left hand slightly by side
+  - right hand down, left hand slightly raised
+  - right hand down, left hanging at side
+  - right hand extended, left hand on hip
+  - right hand gently relaxed by side, left in pocket
+  - right hand gently resting on hip, left relaxed
+  - right hand gently touching chin, left hand relaxed
+  - right hand gently touching edge of the fabric
+  - right hand hanging by side, left hand unseen
+  - right hand hanging down naturally by side
+  - right hand hanging down, left hand by side
+  - right hand hanging down, left hand in pocket
+  - right hand hanging down, left hand not visible
+  - right hand hanging down, left hand on hip
+  - right hand hanging down, left hand relaxed by side
+  - right hand hanging naturally at the side
+  - right hand hanging, left hand by side
+  - right hand hanging, left hand hidden behind back
+  - right hand hanging, left hand in pocket
+  - right hand hanging, left hand on hip confidently
+  - right hand hanging, left hand slightly bent near side
+  - right hand holding left arm casually
+  - right hand holding left arm lightly, relaxed posture
+  - right hand holding shirt hem, left hand relaxed
+  - right hand holding skirt, left hand relaxed down
+  - right hand holds left wrist gently in front
+  - right hand in pocket, left arm relaxed down
+  - right hand in pocket, left hand at side
+  - right hand in pocket, left hand by side
+  - right hand in pocket, left hand down
+  - right hand in pocket, left hand down at side
+  - right hand in pocket, left hand down by side
+  - right hand in pocket, left hand hanging down
+  - right hand in pocket, left hand hanging naturally
+  - right hand in pocket, left hand hanging relaxed
+  - right hand in pocket, left hand on hip
+  - right hand in pocket, left hand relaxed
+  - right hand in pocket, left hand relaxed at side
+  - right hand in pocket, left hand relaxed by side
+  - right hand in pocket, left hand relaxed down
+  - right hand in pocket, left hand resting on hip
+  - right hand in pocket, left hand resting on side
+  - right hand in pocket, left hanging by side
+  - right hand in pocket, left hanging down naturally
+  - right hand in pocket, left hanging naturally down
+  - right hand in pocket, left relaxed by side
+  - right hand lightly on hip, left hand relaxed
+  - right hand lightly resting on hip, left relaxed
+  - right hand loose, left hand relaxed by side
+  - right hand near chin, left hand relaxed by side
+  - right hand near face, left hand by side
+  - right hand near hair, left hand relaxed by side
+  - right hand near hip, left arm crossed over stomach
+  - right hand near hip, left hand relaxed by side
+  - right hand near pocket, left hand by side
+  - right hand near pocket, left hand hanging down
+  - right hand near pocket, left hand relaxed
+  - right hand near waist, left arm relaxed downward
+  - right hand near waist, left hand relaxed by side
+  - right hand on arm, left hand relaxed
+  - right hand on belly, left hand by side
+  - right hand on belly, left hand relaxed side
+  - right hand on head, left hand by side
+  - right hand on head, left hand relaxed by side
+  - right hand on head, left hand relaxed down
+  - right hand on head, left on hip
+  - right hand on hip, left arm hanging down
+  - right hand on hip, left arm parallel to body
+  - right hand on hip, left arm relaxed
+  - right hand on hip, left arm relaxed by side
+  - right hand on hip, left arm relaxed down
+  - right hand on hip, left arm relaxed downward
+  - right hand on hip, left arm relaxed outward
+  - right hand on hip, left by side
+  - right hand on hip, left hand at side
+  - right hand on hip, left hand by side
+  - right hand on hip, left hand down
+  - right hand on hip, left hand down relaxed
+  - right hand on hip, left hand down, relaxed
+  - right hand on hip, left hand hanging down
+  - right hand on hip, left hand hanging naturally
+  - right hand on hip, left hand hanging relaxed
+  - right hand on hip, left hand in pocket
+  - right hand on hip, left hand lightly on belly
+  - right hand on hip, left hand on belly
+  - right hand on hip, left hand relaxed
+  - right hand on hip, left hand relaxed at side
+  - right hand on hip, left hand relaxed beside
+  - right hand on hip, left hand relaxed by side
+  - right hand on hip, left hand relaxed down
+  - right hand on hip, left hand relaxed downward
+  - right hand on hip, left hand relaxed to side
+  - right hand on hip, left hanging at side
+  - right hand on hip, left hanging naturally
+  - right hand on hip, left in pocket
+  - right hand on hip, left naturally relaxed
+  - right hand on hip, left relaxed by side
+  - right hand on left elbow, left arm relaxed
+  - right hand on left elbow, relaxed stance
+  - right hand on thigh, left hand relaxed by side
+  - right hand on waist, left by side
+  - right hand on waist, left hand relaxed by side
+  - right hand on waist, left hand relaxed down
+  - right hand partially in pocket, left hand relaxed
+  - right hand partially visible, relaxed along side
+  - right hand partly in pocket, left arm relaxed
+  - right hand raised, left hand near waist
+  - right hand raised, touching hair, left relaxed
+  - right hand relaxed against hip, left hand folded
+  - right hand relaxed alongside body, left hand crossing
+  - right hand relaxed at side, left arm hidden
+  - right hand relaxed at side, left hand hidden
+  - right hand relaxed at side, left hand on hip
+  - right hand relaxed at side, left hand touching hip
+  - right hand relaxed at side, left hand touching thigh
+  - right hand relaxed at side, left hand tucked back
+  - right hand relaxed at side, left hand unseen
+  - right hand relaxed at side, left not visible
+  - right hand relaxed at side, left slightly raised
+  - right hand relaxed at side, left touching skirt
+  - right hand relaxed at side, left unseen
+  - right hand relaxed by side
+  - right hand relaxed by side, left behind back
+  - right hand relaxed by side, left bent slightly
+  - right hand relaxed by side, left hand behind
+  - right hand relaxed by side, left hand bent
+  - right hand relaxed by side, left hand by side
+  - right hand relaxed by side, left hand hanging relaxed
+  - right hand relaxed by side, left hand hidden
+  - right hand relaxed by side, left hand in pocket
+  - right hand relaxed by side, left hand invisible
+  - right hand relaxed by side, left hand near pocket
+  - right hand relaxed by side, left hand not visible
+  - right hand relaxed by side, left hand obscured
+  - right hand relaxed by side, left hand on hip
+  - right hand relaxed by side, left hand on waist
+  - right hand relaxed by side, left hand out of view
+  - right hand relaxed by side, left hand partly visible
+  - right hand relaxed by side, left hand pocket
+  - right hand relaxed by side, left hand relaxed
+  - right hand relaxed by side, left hand same
+  - right hand relaxed by side, left hand slightly bent
+  - right hand relaxed by side, left hand slightly raised
+  - right hand relaxed by side, left hand touching hip
+  - right hand relaxed by side, left hand touching neck
+  - right hand relaxed by side, left hand tucked
+  - right hand relaxed by side, left hand unseen
+  - right hand relaxed by side, left hand unseen behind
+  - right hand relaxed by side, left hand visible
+  - right hand relaxed by side, left hidden from view
+  - right hand relaxed by side, left in pocket
+  - right hand relaxed by side, left on hip
+  - right hand relaxed by side, left unseen
+  - right hand relaxed by the side
+  - right hand relaxed down, left hand by side
+  - right hand relaxed holding skirt side
+  - right hand relaxed in pocket, left arm by side
+  - right hand relaxed in pocket, left hand by side
+  - right hand relaxed near side, left hand on hip
+  - right hand relaxed on hip, left hand by side
+  - right hand relaxed on hip, left hand out of view
+  - right hand relaxed touching skirt, left hand by side
+  - right hand relaxed, left arm at side
+  - right hand relaxed, left arm hanging by side
+  - right hand relaxed, left arm slightly bent
+  - right hand relaxed, left hand behind back
+  - right hand relaxed, left hand by side
+  - right hand relaxed, left hand by side naturally
+  - right hand relaxed, left hand by the side
+  - right hand relaxed, left hand hanging by side
+  - right hand relaxed, left hand hanging down
+  - right hand relaxed, left hand hanging naturally
+  - right hand relaxed, left hand hanging naturally down
+  - right hand relaxed, left hand hangs naturally
+  - right hand relaxed, left hand holding wrist in front
+  - right hand relaxed, left hand in front pocket
+  - right hand relaxed, left hand in pocket
+  - right hand relaxed, left hand near chin
+  - right hand relaxed, left hand near pocket
+  - right hand relaxed, left hand not visible
+  - right hand relaxed, left hand on hip
+  - right hand relaxed, left hand on the hip
+  - right hand relaxed, left hand out of view
+  - right hand relaxed, left hand partially visible
+  - right hand relaxed, left hand partly visible
+  - right hand relaxed, left hand resting by side
+  - right hand relaxed, left hand resting on hip
+  - right hand relaxed, left hand resting on thigh
+  - right hand relaxed, left hand slightly bent at side
+  - right hand relaxed, left hand slightly bent at waist
+  - right hand relaxed, left hand slightly forward
+  - right hand relaxed, left hand touching hip
+  - right hand relaxed, left hand touching side lightly
+  - right hand relaxed, resting against her hip
+  - right hand relaxed, touching her neck, left relaxed
+  - right hand resting by chin, left arm crossed
+  - right hand resting by side, left hand relaxed
+  - right hand resting casually, left hand visible beside
+  - right hand resting gently on belly
+  - right hand resting in pocket, left hand by side
+  - right hand resting on hip, left by side
+  - right hand resting on hip, left hand by side
+  - right hand resting on hip, left hand down
+  - right hand resting on hip, left hand relaxed
+  - right hand resting on hip, left hanging down
+  - right hand resting on hip, left holding wrist
+  - right hand resting on hip, left relaxed down
+  - right hand resting on hip, left relaxed side
+  - right hand resting on hip, left touching belly
+  - right hand resting on left arm, left arm down
+  - right hand resting on leg, left hand in pocket
+  - right hand resting on neck, left hand by side
+  - right hand resting on side, relaxed left arm
+  - right hand resting on thigh, left hand by side
+  - right hand resting on thigh, left near side
+  - right hand slightly lifted, left hand relaxed down
+  - right hand slightly raised, left hand hanging down
+  - right hand slightly raised, left hand relaxed down
+  - right hand straight, left hand relaxed by side
+  - right hand to chin, left arm crossed naturally
+  - right hand to face, left hand on hip
+  - right hand touching back of head, left relaxed
+  - right hand touching belly, left arm by side
+  - right hand touching belly, left hand by side
+  - right hand touching chin, left arm across body
+  - right hand touching chin, left arm crossed
+  - right hand touching chin, left crossed over stomach
+  - right hand touching chin, left hand across body
+  - right hand touching chin, left hand by side
+  - right hand touching chin, left hand under arm
+  - right hand touching face, left arm crossed
+  - right hand touching face, left hand by side
+  - right hand touching face, left hand relaxed at side
+  - right hand touching face, left hand relaxed by side
+  - right hand touching hair near the ear
+  - right hand touching hair, left arm hanging down
+  - right hand touching hair, left arm relaxed down
+  - right hand touching hair, left hand by side
+  - right hand touching hair, left hand near pocket
+  - right hand touching hair, left hand on hip
+  - right hand touching hair, left hand on waist
+  - right hand touching hair, left hand relaxed
+  - right hand touching hair, left hand relaxed by side
+  - right hand touching hair, left hand resting on arm
+  - right hand touching hip, left hand on arm
+  - right hand touching hip, left hand relaxed down
+  - right hand touching neck, left arm bent
+  - right hand touching neck, left arm resting across
+  - right hand touching neck, left hand by side
+  - right hand touching neck, left hand hanging relaxed
+  - right hand touching neck, left hand to side
+  - right hand touching pocket, left hand relaxed down
+  - right hand touching side, left hand by side
+  - right hand touching skirt, left hand relaxed
+  - right hand touching thigh, left hand relaxed down
+  - right hand tucked behind, left hanging down
+  Total: 1204 options
+
+TUCKING STYLE:
+----------------------------------------
+  - French Tucked
+  - Fully Tucked in
+  - Untucked
+  Total: 3 options
+
+
+================================================================================
+CLOTHING ATTRIBUTES AND THEIR POSSIBLE VALUES
+================================================================================
+
+UPPER CLOTH CATEGORY:
+----------------------------------------
+  - blazer
+  - blouse
+  - bodysuit
+  - bralette
+  - bustier
+  - camisole
+  - cardigan
+  - crop
+  - crop-top
+  - dress
+  - halter
+  - henley
+  - hoodie
+  - jacket
+  - jersey
+  - maternity
+  - polo
+  - pullover
+  - shirt
+  - sleeveless
+  - slip
+  - sportswear
+  - sweater
+  - sweatshirt
+  - t-shirt
+  - tank
+  - top
+  - tshirt
+  - tube
+  - tunic
+  - turtleneck
+  - vest
+  - wrap
+  Total: 33 options
+
+UPPER CLOTH LENGTH:
+----------------------------------------
+  - above knee
+  - bodice length
+  - bodysuit length
+  - bodysuit style
+  - cropped length
+  - full length
+  - hip length
+  - knee length
+  - mid-thigh length
+  - thigh length
+  - torso length
+  - tunic length
+  - tunics length
+  - waist length
+  Total: 14 options
+
+MATERIAL:
+----------------------------------------
+  - chiffon
+  - cotton
+  - crepe
+  - denim
+  - embellished
+  - fleece
+  - jersey
+  - knit
+  - lace
+  - leather
+  - linen
+  - lycra
+  - mesh
+  - metallic
+  - organza
+  - plaid
+  - polyester
+  - ribbed
+  - satin
+  - sequin
+  - sequined
+  - sheer
+  - silk
+  - spandex
+  - stretch
+  - synthetic
+  - velvet
+  - wool
+  Total: 28 options
+
+NECKLINE:
+----------------------------------------
+  - asymmetric
+  - asymmetrical
+  - boat
+  - button
+  - collar
+  - collared
+  - cowl
+  - crew
+  - cut-out
+  - deep v-neck
+  - halter
+  - halterneck
+  - henley
+  - high
+  - high-neck
+  - hooded
+  - keyhole
+  - lapel
+  - mandarin
+  - mock
+  - mock-neck
+  - mockneck
+  - off-shoulder
+  - one-shoulder
+  - peter-pan
+  - plunge
+  - polo
+  - round
+  - ruffled
+  - scalloped
+  - scoop
+  - scooped
+  - shawl
+  - split
+  - square
+  - straight
+  - strapless
+  - surplice
+  - sweetheart
+  - tie
+  - tie-neck
+  - turtle
+  - turtleneck
+  - u-neck
+  - v-neck
+  - wide
+  - zip
+  - zip-neck
+  Total: 48 options
+
+SLEEVE:
+----------------------------------------
+  - 3/4
+  - batwing
+  - bell
+  - cap
+  - elbow
+  - half
+  - kimono
+  - long
+  - ruffle
+  - short
+  - sleeveless
+  - three-quarter
+  Total: 12 options
+
