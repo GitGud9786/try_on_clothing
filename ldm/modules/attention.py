@@ -181,7 +181,9 @@ class CrossAttention(nn.Module):
         )
         
 
-    def forward(self, x, context=None, mask=None, mask1=None, mask2=None, use_attention_tv_loss=False):
+    # Replace the forward method in CrossAttention class (around line 184-243)
+
+    def forward(self, x, context=None, mask=None, hint=None, mask1=None, mask2=None, use_attention_tv_loss=False):
         h = self.heads
         is_self_attn = context is None
         q = self.to_q(x)
@@ -189,6 +191,33 @@ class CrossAttention(nn.Module):
         k = self.to_k(context)
         v = self.to_v(context)
         key_token_length = k.shape[1]
+        
+        # Check if we can use SDPA (no complex masks)
+        use_sdpa = (not exists(mask1) and not exists(mask2) and 
+                    not exists(mask) and not use_attention_tv_loss)
+        
+        if use_sdpa and hasattr(F, 'scaled_dot_product_attention'):
+            # Use efficient SDPA path
+            b, n, _ = q.shape
+            q = rearrange(q, 'b n (h d) -> b h n d', h=h)
+            k = rearrange(k, 'b n (h d) -> b h n d', h=h)
+            v = rearrange(v, 'b n (h d) -> b h n d', h=h)
+            
+            if _ATTN_PRECISION == "fp32":
+                with torch.autocast(enabled=False, device_type='cuda'):
+                    q, k, v = q.float(), k.float(), v.float()
+                    out = F.scaled_dot_product_attention(
+                        q, k, v, attn_mask=None, dropout_p=0.0, scale=self.scale
+                    )
+            else:
+                out = F.scaled_dot_product_attention(
+                    q, k, v, attn_mask=None, dropout_p=0.0, scale=self.scale
+                )
+            
+            out = rearrange(out, 'b h n d -> b n (h d)')
+            return self.to_out(out)
+        
+        # Fall back to original implementation for complex cases
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h=h), (q, k, v))
 
         # force cast to fp32 to avoid overflowing

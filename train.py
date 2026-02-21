@@ -4,6 +4,7 @@ from os.path import join as opj
 import datetime
 from importlib import import_module
 from omegaconf import OmegaConf
+import torch
 
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -13,6 +14,10 @@ from torch.utils.data import DataLoader, ConcatDataset
 from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
 from utils import save_args
+
+torch.backends.cuda.enable_flash_sdp(True)
+torch.backends.cuda.enable_mem_efficient_sdp(True)
+torch.backends.cuda.enable_math_sdp(False)
 
 def build_args():
     parser = argparse.ArgumentParser()
@@ -54,7 +59,7 @@ def build_args():
     args.config_path = opj("./configs", f"{args.config_name}.yaml")
     args.n_gpus = len(os.environ["CUDA_VISIBLE_DEVICES"].split(","))
     args.devices = [i for i in range(args.n_gpus)]
-    args.strategy = "auto"
+    args.strategy = "ddp" if args.n_gpus > 1 else None
     args.sd_locked = not args.sd_unlocked
     args.no_validation = not args.use_validation
     
@@ -151,24 +156,24 @@ def main_worker(args):
       
     train_dataloader = DataLoader(
         train_dataset,
-        num_workers=4, 
+        num_workers=0, #CHANGED HERE from 4 to 0
         batch_size=max(args.batch_size//args.n_gpus, 1), 
         shuffle=True, 
-        pin_memory=True
+        pin_memory=False
     )
     valid_paired_dataloader = DataLoader(
         valid_paired_dataset, 
-        num_workers=4, 
+        num_workers=0, #CHANGED HERE from 4 to 0
         batch_size=max(args.batch_size//args.n_gpus, 1), 
         shuffle=False, 
-        pin_memory=True
+        pin_memory=False
     )
     valid_unpaired_dataloader = DataLoader(
         valid_unpaired_dataset, 
-        num_workers=4, 
+        num_workers=0, #CHANGED HERE from 4 to 0
         batch_size=max(args.batch_size//args.n_gpus, 1), 
         shuffle=False, 
-        pin_memory=True
+        pin_memory=False
     )
     
     #### trainer >>>>
@@ -178,26 +183,29 @@ def main_worker(args):
         log_images_kwargs=config.get("log_images_kwargs", None)
     )
     tb_logger = TensorBoardLogger(args.tb_save_dir)
-    cp_callback = ModelCheckpoint(
-        dirpath=args.model_save_dir, 
-        filename="[Train]_[{epoch}]_[{train_loss_epoch:.04f}]", 
-        save_top_k=-1, 
-        every_n_epochs=args.save_every_n_epochs, 
-        save_last=False, 
-        save_on_train_epoch_end=True
-    )
+    # cp_callback = ModelCheckpoint(
+    #     dirpath=args.model_save_dir, 
+    #     filename="[Train]_[{epoch}]_[{train_loss_epoch:.04f}]", 
+    #     save_top_k=1, 
+    #     every_n_epochs=args.save_every_n_epochs, 
+    #     save_last=False, #CHANGED HERE from False to True
+    #     save_on_train_epoch_end=True,
+    #     save_weights_only=True #ADDED THIS TO SAVE ONLY MODEL WEIGHTS, NOT THE ENTIRE CHECKPOINT (WHICH CAN BE LARGE DUE TO OPTIMIZER STATE, ETC.
+    # )
 
     trainer = pl.Trainer(
         precision=args.precision, 
-        callbacks=[img_logger, cp_callback], 
+        callbacks=[img_logger], 
         logger=tb_logger, 
         devices=args.devices,
         accelerator="gpu", 
-        strategy="ddp", 
+        strategy=args.strategy, 
         max_epochs=args.max_epochs, 
         accumulate_grad_batches=args.accum_iter, 
         check_val_every_n_epoch=args.valid_epoch_freq,
-        num_sanity_val_steps=args.num_sanity_val_steps
+        num_sanity_val_steps=args.num_sanity_val_steps,
+        enable_checkpointing=False,
+        # limit_train_batches = 5
     )
     #### trainer <<<<
     
@@ -205,6 +213,90 @@ def main_worker(args):
         trainer.fit(model, train_dataloader, [valid_paired_dataloader, valid_unpaired_dataloader])
     else:
         trainer.fit(model, train_dataloader)
+
+    print("\n" + "="*70)
+    print("TRAINING COMPLETED - Saving checkpoint manually...")
+    print("="*70)
+    
+    import gc
+    import time
+    import psutil
+    
+    # Show current memory
+    mem = psutil.virtual_memory()
+    print(f"\nRAM before cleanup:")
+    print(f"  Used: {mem.used / (1024**3):.2f} GB / {mem.total / (1024**3):.2f} GB")
+    print(f"  Available: {mem.available / (1024**3):.2f} GB")
+    
+    # Step 1: Move model to CPU (frees GPU memory)
+    print("\n[1/5] Moving model from GPU to CPU...")
+    model = model.cpu()
+    print("  ✅ Model moved to CPU")
+    
+    # Step 2: Clear CUDA cache
+    print("[2/5] Clearing CUDA cache...")
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+    print("  ✅ CUDA cache cleared")
+    
+    # Step 3: Aggressive garbage collection
+    print("[3/5] Running garbage collection (takes ~6 seconds)...")
+    for i in range(3):
+        collected = gc.collect()
+        print(f"  GC pass {i+1}: {collected} objects collected")
+        time.sleep(2)
+    
+    # Show memory after cleanup
+    mem = psutil.virtual_memory()
+    print(f"\n[4/5] RAM after cleanup:")
+    print(f"  Available: {mem.available / (1024**3):.2f} GB")
+    
+    # Step 4: Create checkpoint
+    print(f"\n[5/5] Creating and saving checkpoint...")
+    checkpoint = {
+        'state_dict': model.state_dict(),
+        'epoch': trainer.current_epoch,
+        'global_step': trainer.global_step,
+    }
+    
+    checkpoint_path = os.path.join(
+        args.model_save_dir,
+        f"manual_epoch{trainer.current_epoch}.ckpt"
+    )
+    
+    print(f"  Saving to: {checkpoint_path}")
+    
+    try:
+        torch.save(checkpoint, checkpoint_path)
+        size_gb = os.path.getsize(checkpoint_path) / (1024**3)
+        print(f"\n{'='*70}")
+        print(f"✅ SUCCESS! Checkpoint saved successfully!")
+        print(f"✅ Size: {size_gb:.2f} GB")
+        print(f"✅ Path: {checkpoint_path}")
+        print(f"{'='*70}")
+        
+    except MemoryError as e:
+        print(f"\n❌ MemoryError: {e}")
+        print("\nAttempting emergency save")
+        
+        try:
+            emergency_path = f"D:/emergency_epoch{trainer.current_epoch}.ckpt"
+            os.makedirs("D:/", exist_ok=True)
+            torch.save(checkpoint, emergency_path)
+            size_gb = os.path.getsize(emergency_path) / (1024**3)
+            print(f"✅ Emergency save successful!")
+            print(f"  Size: {size_gb:.2f} GB")
+            
+        except Exception as e2:
+            print(f"❌ Emergency save also failed: {e2}")
+    
+    except Exception as e:
+        print(f"\n❌ Unexpected error: {e}")
+        import traceback
+        traceback.print_exc()
+    
+    print("\n" + "="*70 + "\n")
 
 if __name__ == "__main__":
     args = build_args()
