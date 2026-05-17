@@ -9,6 +9,7 @@ DATA
 *.ckpt
 sampled_images
 logs
+inference_zeroshot_full
 inference_epoch0_full
 inference_epoch2_full
 inference_epoch4_full

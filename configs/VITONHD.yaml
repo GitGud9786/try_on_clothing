@@ -8,8 +8,8 @@ model:
     timesteps: 1000
     first_stage_key: "image"
     first_stage_key_cond: ["agn", "agn_mask", "image_densepose"]
-    cond_stage_key: "cloth"
-    control_key: "cloth"
+    cond_stage_key: "cloth_outer"
+    control_key: ["cloth_inner", "cloth_outer"]
     image_size: 64
     channels: 4
     cond_stage_trainable: False
@@ -24,7 +24,7 @@ model:
     use_pbe_weight: True
     u_cond_percent: 0.2
     use_attn_mask: False
-    mask1_key: "gt_cloth_warped_mask"
+    mask1_key: "gt_cloth_warped_outer_mask"
     mask2_key: "agn_mask"
 
     control_stage_config:
@@ -43,7 +43,7 @@ model:
         context_dim: 768
         use_checkpoint: True
         legacy: False
-        cond_first_ch: 4
+        cond_first_ch: 8
 
     unet_config:
       target: cldm.warping_cldm_network.StableVITON

@@ -101,33 +101,42 @@ class VITONHDDataset(Dataset):
                 transform_crop_cloth_lst.append(A.ShiftScaleRotate(rotate_limit=0, shift_limit=0.2, scale_limit=(-0.2, 0.2), border_mode=cv2.BORDER_CONSTANT, p=0.5, value=0))
 
         self.transform_crop_person = A.Compose(
-                transform_crop_person_lst,
-                additional_targets={"agn":"image", 
-                                    "agn_mask":"image", 
-                                    "cloth_mask_warped":"image", 
-                                    "cloth_warped":"image", 
-                                    "image_densepose":"image", 
-                                    "image_parse":"image", 
-                                    "gt_cloth_warped_mask":"image", 
-                                    }
+            transform_crop_person_lst,
+            additional_targets={"agn":"image", 
+                        "agn_mask":"image", 
+                        "cloth_mask_warped":"image", 
+                        "cloth_warped":"image", 
+                        "image_densepose":"image", 
+                        "image_parse":"image", 
+                        "gt_cloth_warped_inner_mask":"image",
+                        "gt_cloth_warped_outer_mask":"image",
+                        }
         )
         self.transform_crop_cloth = A.Compose(
-                transform_crop_cloth_lst,
-                additional_targets={"cloth_mask":"image"}
+            transform_crop_cloth_lst,
+            additional_targets={
+                "cloth_inner":"image",
+                "cloth_outer":"image",
+                "cloth_inner_mask":"image",
+                "cloth_outer_mask":"image",
+            }
         )
 
         self.transform_size = A.Compose(
-                transform_size_lst,
-                additional_targets={"agn":"image", 
-                                    "agn_mask":"image", 
-                                    "cloth":"image", 
-                                    "cloth_mask":"image", 
-                                    "cloth_mask_warped":"image", 
-                                    "cloth_warped":"image", 
-                                    "image_densepose":"image", 
-                                    "image_parse":"image", 
-                                    "gt_cloth_warped_mask":"image",
-                                    }
+            transform_size_lst,
+            additional_targets={"agn":"image", 
+                        "agn_mask":"image", 
+                        "cloth_inner":"image",
+                        "cloth_outer":"image",
+                        "cloth_inner_mask":"image",
+                        "cloth_outer_mask":"image",
+                        "cloth_mask_warped":"image", 
+                        "cloth_warped":"image", 
+                        "image_densepose":"image", 
+                        "image_parse":"image", 
+                        "gt_cloth_warped_inner_mask":"image",
+                        "gt_cloth_warped_outer_mask":"image",
+                        }
             )
         #### spatial aug <<<<
 
@@ -143,7 +152,8 @@ class VITONHDDataset(Dataset):
             self.transform_color = A.Compose(
                 transform_color_lst,
                 additional_targets={"agn":"image", 
-                                    "cloth":"image",  
+                                    "cloth_inner":"image",
+                                    "cloth_outer":"image",
                                     "cloth_warped":"image",
                                     }
             )
@@ -185,21 +195,45 @@ class VITONHDDataset(Dataset):
                 is_mask=True, 
                 in_inverse_mask=True
             )
-            cloth = imread(
-                opj(self.drd, self.data_type, "cloth", self.c_names[self.pair_key][idx]), 
-                self.img_H, 
+            # cloth = imread(
+            #     opj(self.drd, self.data_type, "cloth", self.c_names[self.pair_key][idx]), 
+            #     self.img_H, 
+            #     self.img_W
+            # )
+            cloth_inner = imread(
+                opj(self.drd, self.data_type, "cloth_inner", self.c_names[self.pair_key][idx]),
+                self.img_H,
                 self.img_W
             )
-            cloth_mask = imread(
-                opj(self.drd, self.data_type, "cloth-mask", self.c_names[self.pair_key][idx]), 
+            cloth_outer = imread(
+                opj(self.drd, self.data_type, "cloth_outer", self.c_names[self.pair_key][idx]),
+                self.img_H,
+                self.img_W
+            )
+            cloth_inner_mask = imread(
+                opj(self.drd, self.data_type, "cloth-inner-mask", self.c_names[self.pair_key][idx]), 
+                self.img_H, 
+                self.img_W, 
+                is_mask=True, 
+                cloth_mask_check=True
+            )
+            cloth_outer_mask = imread(
+                opj(self.drd, self.data_type, "cloth-outer-mask", self.c_names[self.pair_key][idx]), 
                 self.img_H, 
                 self.img_W, 
                 is_mask=True, 
                 cloth_mask_check=True
             )
             
-            gt_cloth_warped_mask = imread(
-                opj(self.drd, self.data_type, "gt_cloth_warped_mask", self.im_names[idx]), 
+            gt_cloth_warped_inner_mask = imread(
+                opj(self.drd, self.data_type, "gt_cloth_warped_inner_mask", self.im_names[idx]), 
+                self.img_H, 
+                self.img_W, 
+                is_mask=True
+            ) if not self.is_test else np.zeros_like(agn_mask)
+
+            gt_cloth_warped_outer_mask = imread(
+                opj(self.drd, self.data_type, "gt_cloth_warped_outer_mask", self.im_names[idx]), 
                 self.img_H, 
                 self.img_W, 
                 is_mask=True
@@ -211,11 +245,27 @@ class VITONHDDataset(Dataset):
         else:
             agn = imread_for_albu(opj(self.drd, self.data_type, "agnostic-v3.2", self.im_names[idx]))
             agn_mask = imread_for_albu(opj(self.drd, self.data_type, "agnostic-mask", self.im_names[idx].replace(".jpg", "_mask.png")), is_mask=True)
-            cloth = imread_for_albu(opj(self.drd, self.data_type, "cloth", self.c_names[self.pair_key][idx]))
-            cloth_mask = imread_for_albu(opj(self.drd, self.data_type, "cloth-mask", self.c_names[self.pair_key][idx]), is_mask=True, cloth_mask_check=True)
+            # cloth = imread_for_albu(opj(self.drd, self.data_type, "cloth", self.c_names[self.pair_key][idx]))
+            cloth_inner = imread_for_albu(opj(self.drd, self.data_type, "cloth_inner", self.c_names[self.pair_key][idx]))
+            cloth_outer = imread_for_albu(opj(self.drd, self.data_type, "cloth_outer", self.c_names[self.pair_key][idx]))
+            cloth_inner_mask = imread_for_albu(
+                opj(self.drd, self.data_type, "cloth-inner-mask", self.c_names[self.pair_key][idx]),
+                is_mask=True,
+                cloth_mask_check=True
+            )
+            cloth_outer_mask = imread_for_albu(
+                opj(self.drd, self.data_type, "cloth-outer-mask", self.c_names[self.pair_key][idx]),
+                is_mask=True,
+                cloth_mask_check=True
+            )
             
-            gt_cloth_warped_mask = imread_for_albu(
-                opj(self.drd, self.data_type, "gt_cloth_warped_mask", self.im_names[idx]),
+            gt_cloth_warped_inner_mask = imread_for_albu(
+                opj(self.drd, self.data_type, "gt_cloth_warped_inner_mask", self.im_names[idx]),
+                is_mask=True
+            ) if not self.is_test else np.zeros_like(agn_mask)
+
+            gt_cloth_warped_outer_mask = imread_for_albu(
+                opj(self.drd, self.data_type, "gt_cloth_warped_outer_mask", self.im_names[idx]),
                 is_mask=True
             ) if not self.is_test else np.zeros_like(agn_mask)
                 
@@ -227,19 +277,25 @@ class VITONHDDataset(Dataset):
                     image=image, 
                     agn=agn, 
                     agn_mask=agn_mask, 
-                    cloth=cloth, 
-                    cloth_mask=cloth_mask, 
+                    cloth_inner=cloth_inner,
+                    cloth_outer=cloth_outer,
+                    cloth_inner_mask=cloth_inner_mask,
+                    cloth_outer_mask=cloth_outer_mask,
                     image_densepose=image_densepose,
-                    gt_cloth_warped_mask=gt_cloth_warped_mask,
+                    gt_cloth_warped_inner_mask=gt_cloth_warped_inner_mask,
+                    gt_cloth_warped_outer_mask=gt_cloth_warped_outer_mask,
                 )
                 image=transformed["image"]
                 agn=transformed["agn"]
                 agn_mask=transformed["agn_mask"]
                 image_densepose=transformed["image_densepose"]
-                gt_cloth_warped_mask=transformed["gt_cloth_warped_mask"]
+                gt_cloth_warped_inner_mask=transformed["gt_cloth_warped_inner_mask"]
+                gt_cloth_warped_outer_mask=transformed["gt_cloth_warped_outer_mask"]
 
-                cloth=transformed["cloth"]
-                cloth_mask=transformed["cloth_mask"]
+                cloth_inner=transformed["cloth_inner"]
+                cloth_outer=transformed["cloth_outer"]
+                cloth_inner_mask=transformed["cloth_inner_mask"]
+                cloth_outer_mask=transformed["cloth_outer_mask"]
                 
             if self.transform_crop_person is not None:
                 transformed_image = self.transform_crop_person(
@@ -247,54 +303,68 @@ class VITONHDDataset(Dataset):
                     agn=agn,
                     agn_mask=agn_mask,
                     image_densepose=image_densepose,
-                    gt_cloth_warped_mask=gt_cloth_warped_mask,
+                    gt_cloth_warped_inner_mask=gt_cloth_warped_inner_mask,
+                    gt_cloth_warped_outer_mask=gt_cloth_warped_outer_mask,
                 )
 
                 image=transformed_image["image"]
                 agn=transformed_image["agn"]
                 agn_mask=transformed_image["agn_mask"]
                 image_densepose=transformed_image["image_densepose"]
-                gt_cloth_warped_mask=transformed["gt_cloth_warped_mask"]
+                gt_cloth_warped_inner_mask=transformed["gt_cloth_warped_inner_mask"]
+                gt_cloth_warped_outer_mask=transformed["gt_cloth_warped_outer_mask"]
 
             if self.transform_crop_cloth is not None:
                 transformed_cloth = self.transform_crop_cloth(
-                    image=cloth,
-                    cloth_mask=cloth_mask
+                    cloth_inner=cloth_inner,
+                    cloth_outer=cloth_outer,
+                    cloth_inner_mask=cloth_inner_mask,
+                    cloth_outer_mask=cloth_outer_mask
                 )
 
-                cloth=transformed_cloth["image"]
-                cloth_mask=transformed_cloth["cloth_mask"]
+                cloth_inner=transformed_cloth["cloth_inner"]
+                cloth_outer=transformed_cloth["cloth_outer"]
+                cloth_inner_mask=transformed_cloth["cloth_inner_mask"]
+                cloth_outer_mask=transformed_cloth["cloth_outer_mask"]
 
             agn_mask = 255 - agn_mask
             if self.transform_color is not None:
                 transformed = self.transform_color(
                     image=image, 
                     agn=agn, 
-                    cloth=cloth,
+                    cloth_inner=cloth_inner,
+                    cloth_outer=cloth_outer,
                 )
 
                 image=transformed["image"]
                 agn=transformed["agn"]
-                cloth=transformed["cloth"]
+                cloth_inner=transformed["cloth_inner"]
+                cloth_outer=transformed["cloth_outer"]
 
                 agn = agn * agn_mask[:,:,None].astype(np.float32)/255.0 + 128 * (1 - agn_mask[:,:,None].astype(np.float32)/255.0)
                 
             agn = norm_for_albu(agn)
             agn_mask = norm_for_albu(agn_mask, is_mask=True)
-            cloth = norm_for_albu(cloth)
-            cloth_mask = norm_for_albu(cloth_mask, is_mask=True)
+            cloth_inner = norm_for_albu(cloth_inner)
+            cloth_outer = norm_for_albu(cloth_outer)
+            cloth_inner_mask = norm_for_albu(cloth_inner_mask, is_mask=True)
+            cloth_outer_mask = norm_for_albu(cloth_outer_mask, is_mask=True)
             image = norm_for_albu(image)
             image_densepose = norm_for_albu(image_densepose)
-            gt_cloth_warped_mask = norm_for_albu(gt_cloth_warped_mask, is_mask=True)
+            gt_cloth_warped_inner_mask = norm_for_albu(gt_cloth_warped_inner_mask, is_mask=True)
+            gt_cloth_warped_outer_mask = norm_for_albu(gt_cloth_warped_outer_mask, is_mask=True)
             
         return dict(
             agn=agn,
             agn_mask=agn_mask,
-            cloth=cloth,
-            cloth_mask=cloth_mask,
+            cloth_inner=cloth_inner,
+            cloth_outer=cloth_outer,
+            cloth_inner_mask=cloth_inner_mask,
+            cloth_outer_mask=cloth_outer_mask,
             image=image,
             image_densepose=image_densepose,
-            gt_cloth_warped_mask=gt_cloth_warped_mask,
+            gt_cloth_warped_inner_mask=gt_cloth_warped_inner_mask,
+            gt_cloth_warped_outer_mask=gt_cloth_warped_outer_mask,
             txt="",
             img_fn=img_fn,
             cloth_fn=cloth_fn,
