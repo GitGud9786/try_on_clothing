@@ -243,34 +243,77 @@ class VITONHDDataset(Dataset):
             image_densepose = imread(opj(self.drd, self.data_type, "image-densepose", self.im_names[idx]), self.img_H, self.img_W)
 
         else:
-            agn = imread_for_albu(opj(self.drd, self.data_type, "agnostic-v3.2", self.im_names[idx]))
-            agn_mask = imread_for_albu(opj(self.drd, self.data_type, "agnostic-mask", self.im_names[idx].replace(".jpg", "_mask.png")), is_mask=True)
+            agn = imread_for_albu(
+                opj(self.drd, self.data_type, "agnostic-v3.2", self.im_names[idx]),
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
+            )
+            agn_mask = imread_for_albu(
+                opj(self.drd, self.data_type, "agnostic-mask", self.im_names[idx].replace(".jpg", "_mask.png")),
+                is_mask=True,
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
+            )
             # cloth = imread_for_albu(opj(self.drd, self.data_type, "cloth", self.c_names[self.pair_key][idx]))
-            cloth_inner = imread_for_albu(opj(self.drd, self.data_type, "cloth_inner", self.c_names[self.pair_key][idx]))
-            cloth_outer = imread_for_albu(opj(self.drd, self.data_type, "cloth_outer", self.c_names[self.pair_key][idx]))
+            cloth_inner = imread_for_albu(
+                opj(self.drd, self.data_type, "cloth_inner", self.c_names[self.pair_key][idx]),
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
+            )
+            cloth_outer = imread_for_albu(
+                opj(self.drd, self.data_type, "cloth_outer", self.c_names[self.pair_key][idx]),
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
+            )
             cloth_inner_mask = imread_for_albu(
                 opj(self.drd, self.data_type, "cloth-inner-mask", self.c_names[self.pair_key][idx]),
                 is_mask=True,
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
                 cloth_mask_check=True
             )
             cloth_outer_mask = imread_for_albu(
                 opj(self.drd, self.data_type, "cloth-outer-mask", self.c_names[self.pair_key][idx]),
                 is_mask=True,
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
                 cloth_mask_check=True
             )
             
             gt_cloth_warped_inner_mask = imread_for_albu(
                 opj(self.drd, self.data_type, "gt_cloth_warped_inner_mask", self.im_names[idx]),
-                is_mask=True
+                is_mask=True,
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
             ) if not self.is_test else np.zeros_like(agn_mask)
 
             gt_cloth_warped_outer_mask = imread_for_albu(
                 opj(self.drd, self.data_type, "gt_cloth_warped_outer_mask", self.im_names[idx]),
-                is_mask=True
+                is_mask=True,
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
             ) if not self.is_test else np.zeros_like(agn_mask)
                 
-            image = imread_for_albu(opj(self.drd, self.data_type, "image", self.im_names[idx]))
-            image_densepose = imread_for_albu(opj(self.drd, self.data_type, "image-densepose", self.im_names[idx]))
+            image = imread_for_albu(
+                opj(self.drd, self.data_type, "image", self.im_names[idx]),
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
+            )
+            image_densepose = imread_for_albu(
+                opj(self.drd, self.data_type, "image-densepose", self.im_names[idx]),
+                use_resize=True,
+                height=self.img_H,
+                width=self.img_W,
+            )
 
             if self.transform_size is not None:
                 transformed = self.transform_size(

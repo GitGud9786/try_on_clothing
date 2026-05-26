@@ -93,7 +93,7 @@ model:
     cond_stage_config:
       target: ldm.modules.image_encoders.modules.FrozenCLIPImageEmbedder
 dataset_name: VITONHDDataset
-resume_path: ./ckpts/VITONHD_PBE_pose.ckpt
+resume_path: null
 default_prompt: ""
 log_images_kwargs:
   unconditional_guidance_scale: 5.0

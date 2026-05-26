@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 from torch import nn
 from typing import Iterable, Optional
 
@@ -214,7 +215,11 @@ class MappingUNet(nn.Module):
         b = self.bottleneck(e2)                              # (B, hidden*2, H/2, W/2)
 
         d1 = self.dec1_up(b)                                 # (B, hidden,   H,   W)
+        if d1.shape[-2:] != e2.shape[-2:]:
+            d1 = F.interpolate(d1, size=e2.shape[-2:], mode="nearest")
         d1 = self.dec1_conv(torch.cat([d1, e2], dim=1))     # skip from e2
+        if d1.shape[-2:] != e1.shape[-2:]:
+            d1 = F.interpolate(d1, size=e1.shape[-2:], mode="nearest")
         d2 = self.dec2(torch.cat([d1, e1], dim=1))          # skip from e1
 
         return d2                                            # (B, hidden, H, W)

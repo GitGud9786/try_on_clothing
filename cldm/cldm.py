@@ -5,6 +5,7 @@ import omegaconf
 import cv2
 import einops
 import torch
+from torch import nn
 import torchvision.transforms as T
 import torch.nn.functional as F
 import numpy as np
@@ -16,6 +17,7 @@ from torchvision.utils import make_grid
 from ldm.models.diffusion.ddpm import LatentDiffusion
 from ldm.util import log_txt_as_img, instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
+from garment_concat_unet import GarmentConcatUNet, GarmentEncoder
 
 class ControlLDM(LatentDiffusion):
     def __init__(
@@ -24,7 +26,7 @@ class ControlLDM(LatentDiffusion):
             validation_config, 
             control_key, 
             only_mid_control, 
-            use_VAEdownsample=False,
+            use_VAEdownsample=True,
             all_unlocked=False,
             config_name="",
             control_scales=None,
@@ -56,6 +58,18 @@ class ControlLDM(LatentDiffusion):
         super().__init__(*args, **kwargs)
         control_stage_config.params["use_VAEdownsample"] = use_VAEdownsample
         self.control_model = instantiate_from_config(control_stage_config)
+        if use_VAEdownsample:
+            inner_encoder = GarmentEncoder(in_channels=self.channels)
+            outer_encoder = GarmentEncoder(in_channels=self.channels)
+            self.garment_refiner = GarmentConcatUNet(
+                inner_encoder,
+                outer_encoder,
+                nn.Identity(),
+                project_in=False,
+                unet_takes_timesteps=False,
+            )
+        else:
+            self.garment_refiner = None
         self.control_key = control_key
         self.only_mid_control = only_mid_control
         if control_scales is None:
@@ -123,11 +137,37 @@ class ControlLDM(LatentDiffusion):
                 hint = cond["c_concat"]
             else:
                 hint = []
-                for h in cond["c_concat"]:
+                z_inner = None
+                z_outer = None
+                if isinstance(self.control_key, omegaconf.listconfig.ListConfig) or isinstance(self.control_key, (list, tuple)):
+                    control_keys = list(self.control_key)
+                else:
+                    control_keys = [self.control_key]
+                for key, h in zip(control_keys, cond["c_concat"]):
                     if h.shape[2] == self.img_H and h.shape[3] == self.img_W:
                         h = self.encode_first_stage(h)
                         h = self.get_first_stage_encoding(h).detach()
+                    if key == "cloth_inner":
+                        z_inner = h
+                    elif key == "cloth_outer":
+                        z_outer = h
                     hint.append(h)
+                if self.garment_refiner is not None and z_inner is not None and z_outer is not None:
+                    _, attention = self.garment_refiner(
+                        z_inner,
+                        z_outer,
+                        timesteps=t,
+                        context=cond_txt,
+                        return_attention=True,
+                    )
+                    attention = F.interpolate(
+                        attention,
+                        size=z_inner.shape[-2:],
+                        mode="bilinear",
+                        align_corners=False,
+                    )
+                    z_inner = z_inner * attention
+                    hint = [z_outer, z_inner]
             hint = torch.cat(hint, dim=1)
             control, cond_output = self.control_model(x=x_noisy, hint=hint, timesteps=t, context=cond_txt, only_mid_control=self.only_mid_control)
             if len(control) == len(self.control_scales):
@@ -383,10 +423,10 @@ class ControlLDM(LatentDiffusion):
         x_samples = self.decode_first_stage(samples)
         to_dir = opj(self.valid_config.img_save_dir, f"{data_type}_{self.current_epoch}")
         os.makedirs(to_dir, exist_ok=True)
-        for x_sample, cloth, gt, fn, recon in zip(x_samples, batch["cloth"], batch["image"], batch["img_fn"], x_recon):
+        for x_sample, cloth_outer, gt, fn, recon in zip(x_samples, batch["cloth_outer"], batch["image"], batch["img_fn"], x_recon):
             x_sample_img = tensor2img(x_sample)
             x_recon_img = tensor2img(recon)
-            cloth_img = np.uint8((cloth.detach().cpu()+1)/2 * 255.0)
+            cloth_img = np.uint8((cloth_outer.detach().cpu()+1)/2 * 255.0)
             gt_img = np.uint8((gt.detach().cpu()+1)/2 * 255.0)
             cloth_save = np.concatenate([x_sample_img, gt_img, cloth_img, x_recon_img], axis=1)
 
