@@ -316,6 +316,9 @@ class ControlLDM(LatentDiffusion):
             print("pbe train mode")
             params = list(self.model.parameters())
             print("- unet is added")
+            if self.garment_refiner is not None:
+                params += list(self.garment_refiner.parameters())
+                print("- garment refiner is added")
             params += list(self.cond_stage_model.final_ln.parameters())
             print("- cond stage model final ln is added")
             params += list(self.cond_stage_model.mapper.parameters())
@@ -329,6 +332,9 @@ class ControlLDM(LatentDiffusion):
             return opt
         params = list(self.control_model.parameters())
         print("control model is added")
+        if self.garment_refiner is not None:
+            params += list(self.garment_refiner.parameters())
+            print("garment refiner is added")
         if self.all_unlocked:
             params += list(self.model.parameters())
             print("Unet is added")

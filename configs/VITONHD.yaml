@@ -96,5 +96,5 @@ dataset_name: VITONHDDataset
 resume_path: null
 default_prompt: ""
 log_images_kwargs:
-  unconditional_guidance_scale: 5.0
+  unconditional_guidance_scale: 0.0
 

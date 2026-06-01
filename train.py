@@ -51,10 +51,28 @@ def build_args():
 
     parser.add_argument("--lambda_simple", type=float, default=1.0)
     parser.add_argument("--control_scales", nargs="+", type=float, default=None)
+    parser.add_argument("--u_cond_percent", type=float, default=None)
     parser.add_argument("--imageclip_trainable", action="store_false")
     parser.add_argument("--no_strict_load", action="store_true")    
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--verify_impl", action="store_true")
+    parser.add_argument("--no_aug", action="store_true")
     
     args = parser.parse_args()
+
+    if args.verify_impl:
+        args.sd_unlocked = True
+        args.all_unlocked = True
+        if args.u_cond_percent is None:
+            args.u_cond_percent = 0.0
+        if args.seed is None:
+            args.seed = 123
+        args.transform_size = None
+        args.transform_color = None
+
+    if args.no_aug:
+        args.transform_size = None
+        args.transform_color = None
     
     args.config_path = opj("./configs", f"{args.config_name}.yaml")
     args.n_gpus = len(os.environ["CUDA_VISIBLE_DEVICES"].split(","))
@@ -86,8 +104,14 @@ def build_config(args, config_path=None):
     config.model.params.setdefault("use_lastzc", False)
     config.model.params.setdefault("use_pbe_weight", False)
     if args is not None:
+        override_keys = {"u_cond_percent"}
         for k, v in vars(args).items():
-            config.model.params.setdefault(k, v)
+            if v is None:
+                continue
+            if k in override_keys:
+                config.model.params[k] = v
+            else:
+                config.model.params.setdefault(k, v)
     if not config.model.params.get("validation_config", None):
         config.model.params.validation_config = OmegaConf.create()
     config.model.params.validation_config.ddim_steps = config.model.params.validation_config.get("ddim_steps", 50)
@@ -103,6 +127,8 @@ def build_config(args, config_path=None):
     return config
     
 def main_worker(args):
+    if args.seed is not None:
+        pl.seed_everything(args.seed, workers=True)
     config = build_config(args)
     OmegaConf.save(config, args.config_save_path)
     model = create_model(args.config_path, config=config).cpu()
