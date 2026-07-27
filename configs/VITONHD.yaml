@@ -92,6 +92,18 @@ model:
 
     cond_stage_config:
       target: ldm.modules.image_encoders.modules.FrozenCLIPImageEmbedder
+    semantic_cond_stage_config:
+      target: ldm.modules.encoders.modules.FrozenCLIPEmbedder
+      params:
+        version: openai/clip-vit-large-patch14
+        device: cuda
+        max_length: 77
+        freeze: true
+        layer: last
+    semantic_cond_stage_key: txt
+    main_unet_unfreeze_interval: 0
+    main_unet_unfreeze_epochs: 1
+    main_unet_unfreeze_lr: 1.0e-06
 dataset_name: VITONHDDataset
 resume_path: null
 default_prompt: ""

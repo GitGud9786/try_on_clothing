@@ -1,4 +1,5 @@
 import os
+import random
 from os.path import join as opj
 import omegaconf
 
@@ -40,6 +41,11 @@ class ControlLDM(LatentDiffusion):
             always_learnable_param=False,
             mask1_key="",
             mask2_key="",
+            semantic_cond_stage_config=None,
+            semantic_cond_stage_key="txt",
+            main_unet_unfreeze_interval=0,
+            main_unet_unfreeze_epochs=1,
+            main_unet_unfreeze_lr=1e-6,
             *args, 
             **kwargs
         ):
@@ -55,9 +61,18 @@ class ControlLDM(LatentDiffusion):
         self.mask1_key = mask1_key
         self.mask2_key = mask2_key
         self.always_learnable_param = always_learnable_param
+        self.semantic_cond_stage_config = semantic_cond_stage_config
+        self.semantic_cond_stage_key = semantic_cond_stage_key
+        self.main_unet_unfreeze_interval = main_unet_unfreeze_interval
+        self.main_unet_unfreeze_epochs = main_unet_unfreeze_epochs
+        self.main_unet_unfreeze_lr = main_unet_unfreeze_lr
         super().__init__(*args, **kwargs)
         control_stage_config.params["use_VAEdownsample"] = use_VAEdownsample
         self.control_model = instantiate_from_config(control_stage_config)
+        if semantic_cond_stage_config is not None:
+            self.semantic_cond_stage_model = instantiate_from_config(semantic_cond_stage_config)
+        else:
+            self.semantic_cond_stage_model = None
         if use_VAEdownsample:
             inner_encoder = GarmentEncoder(in_channels=self.channels)
             outer_encoder = GarmentEncoder(in_channels=self.channels)
@@ -82,9 +97,69 @@ class ControlLDM(LatentDiffusion):
         self.all_unlocked = all_unlocked
         self.gmm = None
         self.clothflow = None
+        self.visual_context_dim = 768
+        self.visual_context_proj = None
+
+    def _encode_semantic_conditioning(self, batch, bs=None):
+        if self.semantic_cond_stage_model is None:
+            return None
+        captions = batch.get(self.semantic_cond_stage_key, None)
+        if captions is None:
+            captions = [""] * (bs if bs is not None else len(batch[self.first_stage_key]))
+        if bs is not None:
+            captions = captions[:bs]
+        semantic_context = self.semantic_cond_stage_model.encode(captions)
+        return semantic_context
+
+    def _prepare_crossattn_context(self, visual_context, semantic_context=None):
+        if isinstance(visual_context, (list, tuple)):
+            visual_context = visual_context[0] if len(visual_context) > 0 else None
+        if visual_context is not None and visual_context.dim() == 4 and self.cond_stage_model is not None:
+            visual_context = self.cond_stage_model.encode(visual_context)
+        if visual_context is not None and visual_context.shape[-1] != self.visual_context_dim:
+            if self.visual_context_proj is None:
+                self.visual_context_proj = nn.Linear(visual_context.shape[-1], self.visual_context_dim).to(visual_context.device)
+            visual_context = self.visual_context_proj(visual_context)
+        if self.proj_out is not None and visual_context is not None and visual_context.shape[-1] == 1024:
+            visual_context = self.proj_out(visual_context)
+        if semantic_context is None:
+            return [visual_context]
+        if isinstance(semantic_context, (list, tuple)):
+            semantic_context = semantic_context[0] if len(semantic_context) > 0 else None
+        if semantic_context is not None and semantic_context.device != visual_context.device:
+            semantic_context = semantic_context.to(visual_context.device)
+        return [torch.cat([visual_context, semantic_context], dim=1)]
+
+    def _main_unet_epoch_active(self):
+        if self.main_unet_unfreeze_interval <= 0:
+            return False
+        return (self.current_epoch % self.main_unet_unfreeze_interval) < self.main_unet_unfreeze_epochs
+
+    def _set_main_unet_trainable(self, trainable):
+        for param in self.model.parameters():
+            param.requires_grad = trainable
+
+    def _update_main_unet_optimizer_lr(self, lr):
+        if not hasattr(self, "trainer") or self.trainer is None or len(self.trainer.optimizers) == 0:
+            return
+        optimizer = self.trainer.optimizers[0]
+        if len(optimizer.param_groups) > 1:
+            optimizer.param_groups[-1]["lr"] = lr
+
+    def on_train_epoch_start(self):
+        if self.main_unet_unfreeze_interval <= 0:
+            return
+        active = self._main_unet_epoch_active()
+        self._set_main_unet_trainable(active)
+        self._update_main_unet_optimizer_lr(self.main_unet_unfreeze_lr if active else 0.0)
+
     @torch.no_grad()
     def get_input(self, batch, k, bs=None, *args, **kwargs):
         x, c = super().get_input(batch, self.first_stage_key, *args, **kwargs)
+        semantic_context = self._encode_semantic_conditioning(batch, bs=bs)
+        if bs is not None and isinstance(c, torch.Tensor):
+            c = c[:bs]
+        c_crossattn = self._prepare_crossattn_context(c, semantic_context)
         if isinstance(self.control_key, omegaconf.listconfig.ListConfig):
             control_lst = []
             for key in self.control_key:
@@ -96,6 +171,7 @@ class ControlLDM(LatentDiffusion):
                 control = control.to(memory_format=torch.contiguous_format).float()
                 control_lst.append(control)
             control = control_lst
+            cond_dict = dict(c_crossattn=c_crossattn, c_concat=control)
         else:
             control = batch[self.control_key]
             if bs is not None:
@@ -104,7 +180,7 @@ class ControlLDM(LatentDiffusion):
             control = einops.rearrange(control, 'b h w c -> b c h w')
             control = control.to(memory_format=torch.contiguous_format).float()
             control = [control]
-        cond_dict = dict(c_crossattn=[c], c_concat=control)
+            cond_dict = dict(c_crossattn=c_crossattn, c_concat=control)
         if self.first_stage_key_cond is not None:
             first_stage_cond = []
             for key in self.first_stage_key_cond:
@@ -121,12 +197,10 @@ class ControlLDM(LatentDiffusion):
         assert isinstance(cond, dict)
         
         diffusion_model = self.model.diffusion_model
-        cond_txt = torch.cat(cond["c_crossattn"], 1)
-        if self.proj_out is not None:
-            if cond_txt.shape[-1] == 1024:
-                cond_txt = self.proj_out(cond_txt)  # [BS x 1 x 768]
         if self.always_learnable_param:
-            cond_txt = self.get_unconditional_conditioning(cond_txt.shape[0])
+            cond_txt = self.get_unconditional_conditioning(x_noisy.shape[0])
+        else:
+            cond_txt = cond["c_crossattn"]
         
         if cond['c_concat'] is None:
             eps = diffusion_model(x=x_noisy, timesteps=t, context=cond_txt, control=None, only_mid_control=self.only_mid_control)
@@ -187,6 +261,14 @@ class ControlLDM(LatentDiffusion):
 
             eps = diffusion_model(x=x_noisy, timesteps=t, context=cond_txt, control=control, only_mid_control=self.only_mid_control, mask1=mask1, mask2=mask2)
         return eps, None
+
+    def forward(self, x, c, *args, **kwargs):
+        t = torch.randint(0, self.num_timesteps, (x.shape[0],), device=self.device).long()
+        if self.use_pbe_weight:
+            self.u_cond_prop = random.uniform(0, 1)
+            if self.u_cond_prop < self.u_cond_percent:
+                c["c_crossattn"] = self.get_unconditional_conditioning(x.shape[0])
+        return self.p_losses(x, c, t, *args, **kwargs)
     
     @torch.no_grad()
     def mask_resize(self, m, h, w, inverse=False):
@@ -196,10 +278,15 @@ class ControlLDM(LatentDiffusion):
         return m
     @torch.no_grad()
     def get_unconditional_conditioning(self, N):
-        if not self.kwargs["use_imageCLIP"]:
-            return self.get_learned_conditioning([""] * N)
-        else:
-            return self.learnable_vector.repeat(N,1,1)
+        visual_uc = self.learnable_vector.repeat(N,1,1) if self.learnable_vector is not None else None
+        semantic_uc = None
+        if self.semantic_cond_stage_model is not None:
+            semantic_uc = self.semantic_cond_stage_model.encode([""] * N)
+        if visual_uc is None:
+            return [semantic_uc] if semantic_uc is not None else None
+        if semantic_uc is None:
+            return [visual_uc]
+        return [torch.cat([visual_uc, semantic_uc], dim=1)]
     @torch.no_grad()
     def get_unconditional_conditioning_cnet(self, N):
         return self.learnable_matrix.repeat(N,1,1,1)
@@ -223,9 +310,6 @@ class ControlLDM(LatentDiffusion):
                 cond = cond.to(memory_format=torch.contiguous_format).float()
                 log[f"first_stage_cond_{key_idx}"] = cond
         c_cat = [i[:N] for i in c["c_concat"]]
-        c = c["c_crossattn"][0][:N]
-        if c.ndim == 4:
-            c = self.get_learned_conditioning(c)
         N = min(z.shape[0], N)
         n_row = min(z.shape[0], n_row)
         
@@ -271,7 +355,7 @@ class ControlLDM(LatentDiffusion):
             log["diffusion_row"] = diffusion_grid
         if sample:
             # get denoise row
-            samples, z_denoise_row = self.sample_log(cond={"c_concat": c_cat, "c_crossattn": [c]},
+            samples, z_denoise_row = self.sample_log(cond={"c_concat": c_cat, "c_crossattn": c["c_crossattn"]},
                                                      batch_size=N, ddim=use_ddim,
                                                      ddim_steps=ddim_steps, eta=ddim_eta)
             x_samples = self.decode_first_stage(samples)
@@ -282,8 +366,8 @@ class ControlLDM(LatentDiffusion):
         if unconditional_guidance_scale >= 1.0:
             uc_cross = self.get_unconditional_conditioning(N)
             uc_cat = c_cat
-            cond = {"c_concat": c_cat, "c_crossattn": [c]}
-            uc_full = {"c_concat": uc_cat, "c_crossattn": [uc_cross]}
+            cond = {"c_concat": c_cat, "c_crossattn": c["c_crossattn"]}
+            uc_full = {"c_concat": uc_cat, "c_crossattn": uc_cross}
             if self.first_stage_key_cond:
                 cond["first_stage_cond"] = first_stage_cond
                 uc_full["first_stage_cond"] = first_stage_cond
@@ -328,6 +412,41 @@ class ControlLDM(LatentDiffusion):
             params.append(self.learnable_vector)
             print("- learnable vector is added")
             opt = torch.optim.AdamW(params, lr=lr)
+            print("============================")
+            return opt
+        if self.main_unet_unfreeze_interval > 0:
+            control_params = list(self.control_model.parameters())
+            print("control model is added")
+            if self.garment_refiner is not None:
+                control_params += list(self.garment_refiner.parameters())
+                print("garment refiner is added")
+            if self.cond_stage_trainable:
+                if hasattr(self.cond_stage_model, "final_ln"):
+                    control_params += list(self.cond_stage_model.final_ln.parameters())
+                    print("cond stage model final ln is added")
+                if hasattr(self.cond_stage_model, "mapper"):
+                    control_params += list(self.cond_stage_model.mapper.parameters())
+                    print("cond stage model mapper is added")
+            if self.proj_out is not None:
+                control_params += list(self.proj_out.parameters())
+                print("proj out is added")
+            if self.learnable_vector is not None:
+                control_params.append(self.learnable_vector)
+                print("learnable vector is added")
+            if hasattr(self.model.diffusion_model, "warp_flow_blks"):
+                control_params += list(self.model.diffusion_model.warp_flow_blks.parameters())
+                print(f"warp flow blks is added")
+            if hasattr(self.model.diffusion_model, "warp_zero_convs"):
+                control_params += list(self.model.diffusion_model.warp_zero_convs.parameters())
+                print(f"warp zero convs is added")
+
+            main_params = list(self.model.parameters())
+            print("main unet is added for periodic unfreeze")
+            self._set_main_unet_trainable(False)
+            opt = torch.optim.AdamW([
+                {"params": control_params, "lr": lr},
+                {"params": main_params, "lr": 0.0},
+            ])
             print("============================")
             return opt
         params = list(self.control_model.parameters())
@@ -381,11 +500,15 @@ class ControlLDM(LatentDiffusion):
             self.control_model = self.control_model.cuda()
             self.first_stage_model = self.first_stage_model.cpu()
             self.cond_stage_model = self.cond_stage_model.cpu()
+            if self.semantic_cond_stage_model is not None:
+                self.semantic_cond_stage_model = self.semantic_cond_stage_model.cpu()
         else:
             self.model = self.model.cpu()
             self.control_model = self.control_model.cpu()
             self.first_stage_model = self.first_stage_model.cuda()
             self.cond_stage_model = self.cond_stage_model.cuda()
+            if self.semantic_cond_stage_model is not None:
+                self.semantic_cond_stage_model = self.semantic_cond_stage_model.cuda()
         
     @torch.no_grad()
     def on_validation_epoch_start(self):
@@ -403,14 +526,10 @@ class ControlLDM(LatentDiffusion):
         x_recon = self.decode_first_stage(z)
         shape = (4, self.img_H//8, self.img_W//8)
         bs = z.shape[0]
-        c_crossattn = c["c_crossattn"][0][:bs]
-        if c_crossattn.ndim == 4:
-            c_crossattn = self.get_learned_conditioning(c_crossattn)
-            c["c_crossattn"] = [c_crossattn]
         uc_cross = self.get_unconditional_conditioning(bs)
 
         uc_cat = c["c_concat"]
-        uc_full = {"c_concat": uc_cat, "c_crossattn": [uc_cross]}
+        uc_full = {"c_concat": uc_cat, "c_crossattn": uc_cross}
         uc_full["first_stage_cond"] = c["first_stage_cond"]
 
         samples, intermediates, _ = self.ddim_sampler.sample(

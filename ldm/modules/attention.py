@@ -187,91 +187,93 @@ class CrossAttention(nn.Module):
         h = self.heads
         is_self_attn = context is None
         q = self.to_q(x)
-        context = default(context, x)
-        k = self.to_k(context)
-        v = self.to_v(context)
-        key_token_length = k.shape[1]
-        
-        # Check if we can use SDPA (no complex masks)
-        use_sdpa = (not exists(mask1) and not exists(mask2) and 
-                    not exists(mask) and not use_attention_tv_loss)
-        
-        if use_sdpa and hasattr(F, 'scaled_dot_product_attention'):
-            # Use efficient SDPA path
-            b, n, _ = q.shape
-            q = rearrange(q, 'b n (h d) -> b h n d', h=h)
-            k = rearrange(k, 'b n (h d) -> b h n d', h=h)
-            v = rearrange(v, 'b n (h d) -> b h n d', h=h)
-            
+        if isinstance(context, (list, tuple)):
+            contexts = [default(single_context, x) for single_context in context if single_context is not None]
+        else:
+            contexts = [default(context, x)]
+
+        key_token_length = sum(single_context.shape[1] for single_context in contexts)
+
+        def attend(single_context):
+            k = self.to_k(single_context)
+            v = self.to_v(single_context)
+
+            use_sdpa = (not exists(mask1) and not exists(mask2) and
+                        not exists(mask) and not use_attention_tv_loss)
+
+            if use_sdpa and hasattr(F, 'scaled_dot_product_attention'):
+                b, n, _ = q.shape
+                q_ = rearrange(q, 'b n (h d) -> b h n d', h=h)
+                k_ = rearrange(k, 'b n (h d) -> b h n d', h=h)
+                v_ = rearrange(v, 'b n (h d) -> b h n d', h=h)
+
+                if _ATTN_PRECISION == "fp32":
+                    with torch.autocast(enabled=False, device_type='cuda'):
+                        qf, kf, vf = q_.float(), k_.float(), v_.float()
+                        out = F.scaled_dot_product_attention(
+                            qf, kf, vf, attn_mask=None, dropout_p=0.0, scale=self.scale
+                        )
+                else:
+                    out = F.scaled_dot_product_attention(
+                        q_, k_, v_, attn_mask=None, dropout_p=0.0, scale=self.scale
+                    )
+
+                return rearrange(out, 'b h n d -> b n (h d)')
+
+            q_, k_, v_ = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h=h), (q, k, v))
+
             if _ATTN_PRECISION == "fp32":
                 with torch.autocast(enabled=False, device_type='cuda'):
-                    q, k, v = q.float(), k.float(), v.float()
-                    out = F.scaled_dot_product_attention(
-                        q, k, v, attn_mask=None, dropout_p=0.0, scale=self.scale
-                    )
+                    qf, kf = q_.float(), k_.float()
+                    sim = einsum('b i d, b j d -> b i j', qf, kf) * self.scale
             else:
-                out = F.scaled_dot_product_attention(
-                    q, k, v, attn_mask=None, dropout_p=0.0, scale=self.scale
-                )
-            
-            out = rearrange(out, 'b h n d -> b n (h d)')
-            return self.to_out(out)
-        
-        # Fall back to original implementation for complex cases
-        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h=h), (q, k, v))
+                sim = einsum('b i d, b j d -> b i j', q_, k_) * self.scale
 
-        # force cast to fp32 to avoid overflowing
-        if _ATTN_PRECISION =="fp32":
-            with torch.autocast(enabled=False, device_type = 'cuda'):
-                q, k = q.float(), k.float()
-                sim = einsum('b i d, b j d -> b i j', q, k) * self.scale
-        else:
-            sim = einsum('b i d, b j d -> b i j', q, k) * self.scale
-        
-        del q, k
-        attn_mask = None
-        if exists(mask1) or exists(mask2):  # [BS x 1 x H x W] float
-            if mask1.ndim == 4 and mask2.ndim == 4:
-                _, HW, hw = sim.shape
-                bs = mask1.shape[0]
-                dx = int((HW//12) ** 0.5)
-                mH = int(4*dx)
-                mW = int(3*dx)
-                dx = int((hw//12) ** 0.5)
-                mh = int(4*dx)
-                mw = int(3*dx)
-                if mH != 8:
-                    mask1 = attn_mask_resize(mask1, mH, mW)  # [BS x H x W]
-                    mask2 = attn_mask_resize(mask2, mh, mw)  # [BS x h x w]
-                    
-                    attn_mask = mask1.reshape(bs, -1).unsqueeze(-1) * mask2.reshape(bs, -1).unsqueeze(1)  # [BS x HW x hw]               
-                    attn_mask = repeat(attn_mask, "b HW hw -> (b h) HW hw", h=h)
-        
-                    assert attn_mask.shape == sim.shape, f"mask : {attn_mask.shape}, attn map : {sim.shape}"   
-                             
-                    if not use_attention_tv_loss:
-                        max_neg_value = -torch.finfo(sim.dtype).max
-                        sim.masked_fill_(attn_mask, max_neg_value)
-                        
-            else:
-                raise NotImplementedError
-        if exists(mask):
-            mask = rearrange(mask, 'b ... -> b (...)')
-            max_neg_value = -torch.finfo(sim.dtype).max
-            mask = repeat(mask, 'b j -> (b h) () j', h=h)
-            sim.masked_fill_(~mask, max_neg_value)
-               
-        
-        sim = sim.softmax(dim=-1)  # [(BSxh) x HW x hw]
+            del q_, k_
+            if exists(mask1) or exists(mask2):
+                if mask1.ndim == 4 and mask2.ndim == 4:
+                    _, HW, hw = sim.shape
+                    bs = mask1.shape[0]
+                    dx = int((HW // 12) ** 0.5)
+                    mH = int(4 * dx)
+                    mW = int(3 * dx)
+                    dx = int((hw // 12) ** 0.5)
+                    mh = int(4 * dx)
+                    mw = int(3 * dx)
+                    if mH != 8:
+                        mask1_resized = attn_mask_resize(mask1, mH, mW)
+                        mask2_resized = attn_mask_resize(mask2, mh, mw)
 
-        attn_loss = torch.tensor(0, dtype=x.dtype, device=x.device)
-        out = einsum('b i j, b j d -> b i d', sim, v)
-        out = rearrange(out, '(b h) n d -> b n (h d)', h=h)
+                        attn_mask = mask1_resized.reshape(bs, -1).unsqueeze(-1) * mask2_resized.reshape(bs, -1).unsqueeze(1)
+                        attn_mask = repeat(attn_mask, "b HW hw -> (b h) HW hw", h=h)
+
+                        assert attn_mask.shape == sim.shape, f"mask : {attn_mask.shape}, attn map : {sim.shape}"
+
+                        if not use_attention_tv_loss:
+                            max_neg_value = -torch.finfo(sim.dtype).max
+                            sim.masked_fill_(attn_mask, max_neg_value)
+                else:
+                    raise NotImplementedError
+            if exists(mask):
+                mask_ = rearrange(mask, 'b ... -> b (...)')
+                max_neg_value = -torch.finfo(sim.dtype).max
+                mask_ = repeat(mask_, 'b j -> (b h) () j', h=h)
+                sim.masked_fill_(~mask_, max_neg_value)
+
+            sim = sim.softmax(dim=-1)
+            out = einsum('b i j, b j d -> b i d', sim, v_)
+            out = rearrange(out, '(b h) n d -> b n (h d)', h=h)
+            return out
+
+        out = torch.zeros((q.shape[0], q.shape[1], q.shape[2]), dtype=q.dtype, device=x.device)
+        for single_context in contexts:
+            out = out + attend(single_context)
 
         if not use_attention_tv_loss:
             return self.to_out(out)
-        else:
-            return self.to_out(out), attn_loss
+
+        attn_loss = torch.tensor(0, dtype=x.dtype, device=x.device)
+        return self.to_out(out), attn_loss
 
 class MemoryEfficientCrossAttention(nn.Module):
     # https://github.com/MatthieuTPHR/diffusers/blob/d80b531ff8060ec1ea982b65a1b8df70f73aa67c/src/diffusers/models/attention.py#L223
@@ -310,62 +312,75 @@ class MemoryEfficientCrossAttention(nn.Module):
         ):
         q = self.to_q(x)
         is_self_attn = context is None
-        context = default(context, x)
-        k = self.to_k(context)
-        v = self.to_v(context)
-        key_token_length = k.shape[1]
+        if isinstance(context, (list, tuple)):
+            contexts = [default(single_context, x) for single_context in context if single_context is not None]
+        else:
+            contexts = [default(context, x)]
+
+        key_token_length = sum(single_context.shape[1] for single_context in contexts)
         b, _, _ = q.shape
-        q, k, v = map(
-            lambda t: t.unsqueeze(3)
-            .reshape(b, t.shape[1], self.heads, self.dim_head)
-            .permute(0, 2, 1, 3)
-            .reshape(b * self.heads, t.shape[1], self.dim_head)
-            .contiguous(),
-            (q, k, v),
-        )
 
+        def attend(single_context):
+            k = self.to_k(single_context)
+            v = self.to_v(single_context)
+            q_, k_, v_ = map(
+                lambda t: t.unsqueeze(3)
+                .reshape(b, t.shape[1], self.heads, self.dim_head)
+                .permute(0, 2, 1, 3)
+                .reshape(b * self.heads, t.shape[1], self.dim_head)
+                .contiguous(),
+                (q, k, v),
+            )
+
+            attn_loss = torch.tensor(0, dtype=x.dtype, device=x.device)
+            if use_attention_tv_loss and key_token_length > 700 and (not is_self_attn) and key_token_length < 3000 and use_loss:
+                sim = einsum('b i d, b j d -> b i j', q_, k_) * (self.dim_head ** -0.5)
+                sim = sim.softmax(dim=-1)
+                h = self.heads
+                _, HW, hw = sim.shape
+                dx = int((HW // 12) ** 0.5)
+                mH = int(4 * dx)
+                mW = int(3 * dx)
+                dx = int((hw // 12) ** 0.5)
+                mh = int(4 * dx)
+                mw = int(3 * dx)
+
+                mask1_resized = attn_mask_resize(mask1, mH, mW)  # [BS x H x W]
+                reshaped_sim = sim.reshape(-1, h, mH * mW, mh, mw).mean(dim=1)
+                mask1_repeat = mask1_resized
+                h_linspace = torch.linspace(0, mh - 1, mh, device=sim.device)
+                w_linspace = torch.linspace(0, mw - 1, mw, device=sim.device)
+                grid_h, grid_w = torch.meshgrid(h_linspace, w_linspace)
+                grid_hw = torch.stack([grid_h, grid_w])
+
+                weighted_grid_hw = reshaped_sim.unsqueeze(2) * grid_hw.unsqueeze(0).unsqueeze(0)
+                weighted_centered_grid_hw = weighted_grid_hw.sum((-2, -1))
+
+                tv_loss = get_tvloss(weighted_centered_grid_hw, ~mask1_repeat, ch=mh, cw=mw)
+                attn_loss = tv_loss * 0.001
+
+            out = xformers.ops.memory_efficient_attention(q_, k_, v_, attn_bias=None, op=self.attention_op)
+
+            if exists(mask):
+                raise NotImplementedError
+            out = (
+                out.unsqueeze(0)
+                .reshape(b, self.heads, out.shape[1], self.dim_head)
+                .permute(0, 2, 1, 3)
+                .reshape(b, out.shape[1], self.heads * self.dim_head)
+            )
+            return out, attn_loss
+
+        out = torch.zeros((b, q.shape[1], self.heads * self.dim_head), dtype=q.dtype, device=x.device)
         attn_loss = torch.tensor(0, dtype=x.dtype, device=x.device)
-        if use_attention_tv_loss and key_token_length > 700 and (not is_self_attn) and key_token_length < 3000 and use_loss:
-            sim = einsum('b i d, b j d -> b i j', q, k) * (self.dim_head ** -0.5)
-            sim = sim.softmax(dim=-1)
-            h = self.heads
-            _, HW, hw = sim.shape
-            dx = int((HW//12) ** 0.5)
-            mH = int(4*dx)
-            mW = int(3*dx)
-            dx = int((hw//12) ** 0.5)
-            mh = int(4*dx)
-            mw = int(3*dx)
-            
-            mask1 = attn_mask_resize(mask1, mH, mW)  # [BS x H x W]
-            reshaped_sim = sim.reshape(-1, h, mH*mW, mh, mw).mean(dim=1) 
-            mask1_repeat = mask1
-            h_linspace = torch.linspace(0,mh-1,mh, device=sim.device)
-            w_linspace = torch.linspace(0,mw-1,mw, device=sim.device)
-            grid_h, grid_w = torch.meshgrid(h_linspace, w_linspace)
-            grid_hw = torch.stack([grid_h, grid_w])
-            
-            weighted_grid_hw = reshaped_sim.unsqueeze(2) * grid_hw.unsqueeze(0).unsqueeze(0)  # [b HW 2 h w]
-            weighted_centered_grid_hw = weighted_grid_hw.sum((-2,-1))  # [b HW 2]
+        for single_context in contexts:
+            partial_out, partial_loss = attend(single_context)
+            out = out + partial_out
+            attn_loss = attn_loss + partial_loss
 
-            tv_loss = get_tvloss(weighted_centered_grid_hw, ~mask1_repeat, ch=mh, cw=mw)
-            attn_loss = tv_loss * 0.001
-        
-        out = xformers.ops.memory_efficient_attention(q, k, v, attn_bias=None, op=self.attention_op)
-
-        if exists(mask):
-            raise NotImplementedError
-        out = (
-            out.unsqueeze(0)
-            .reshape(b, self.heads, out.shape[1], self.dim_head)
-            .permute(0, 2, 1, 3)
-            .reshape(b, out.shape[1], self.heads * self.dim_head)
-        )
-        # if not (use_attention_tv_loss or use_center_loss):
         if not use_attention_tv_loss:
             return self.to_out(out)
-        else:
-            return self.to_out(out), attn_loss
+        return self.to_out(out), attn_loss
     
 class BasicTransformerBlock(nn.Module):
     ATTENTION_MODES = {

@@ -23,6 +23,11 @@ from torchvision.transforms.functional import resize
 import torchvision.transforms as T
 import random
 import torch.nn.functional as F
+import huggingface_hub.constants as hf_constants
+
+if not hasattr(hf_constants, "hf_cache_home"):
+    hf_constants.hf_cache_home = hf_constants.HUGGINGFACE_HUB_CACHE
+
 from diffusers.models.autoencoder_kl import AutoencoderKLOutput
 from diffusers.models.vae import DecoderOutput
 

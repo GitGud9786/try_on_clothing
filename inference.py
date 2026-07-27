@@ -67,12 +67,8 @@ def main(args):
         print(f"{batch_idx}/{len(dataloader)}")
         z, c = model.get_input(batch, params.first_stage_key)
         bs = z.shape[0]
-        c_crossattn = c["c_crossattn"][0][:bs]
-        if c_crossattn.ndim == 4:
-            c_crossattn = model.get_learned_conditioning(c_crossattn)
-            c["c_crossattn"] = [c_crossattn]
         uc_cross = model.get_unconditional_conditioning(bs)
-        uc_full = {"c_concat": c["c_concat"], "c_crossattn": [uc_cross]}
+        uc_full = {"c_concat": c["c_concat"], "c_crossattn": uc_cross}
         uc_full["first_stage_cond"] = c["first_stage_cond"]
         for k, v in batch.items():
             if isinstance(v, torch.Tensor):

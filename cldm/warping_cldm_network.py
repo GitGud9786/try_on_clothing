@@ -305,20 +305,24 @@ class StableVITON(UNetModel):
             h = module(h, emb, context)
 
         n_warp = len(self.encode_output_chs)
-        for i, (module, warp_blk, warp_zc) in enumerate(zip(self.output_blocks[3:n_warp+3], self.warp_flow_blks, self.warp_zero_convs)):
-            if control is None or (h.shape[-2] == 8 and h.shape[-1] == 6):
-                assert 0, f"shape is wrong : {h.shape}"
-            else:
+
+        for module, warp_blk, warp_zc in zip(
+            self.output_blocks[3:n_warp + 3],
+            self.warp_flow_blks,
+            self.warp_zero_convs,
+        ):
+            if control is not None:
                 hint = control.pop()
-                h, attn_loss = self.warp(h, hint, warp_blk, warp_zc, mask1=mask1, mask2=mask2)
+                h, attn_loss = self.warp(
+                    h, hint, warp_blk, warp_zc,
+                    mask1=mask1, mask2=mask2,
+                )
                 loss += attn_loss
-                h = torch.cat([h, hs.pop()], dim=1)
+
+            h = torch.cat([h, hs.pop()], dim=1)
             h = module(h, emb, context)
-        for module in self.output_blocks[n_warp+3:]:
-            if control is None:
-                h = torch.cat([h, hs.pop()], dim=1)                                          
-            else:
-                h = torch.cat([h, hs.pop()], dim=1)
+        for module in self.output_blocks[n_warp + 3:]:
+            h = torch.cat([h, hs.pop()], dim=1)
             h = module(h, emb, context)
         h = h.type(x.dtype)
         if self.use_atv_loss:

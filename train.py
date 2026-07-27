@@ -57,6 +57,13 @@ def build_args():
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--verify_impl", action="store_true")
     parser.add_argument("--no_aug", action="store_true")
+    parser.add_argument("--semantic_cond_stage_key", type=str, default="txt")
+    parser.add_argument("--main_unet_unfreeze_interval", type=int, default=0)
+    parser.add_argument("--main_unet_unfreeze_epochs", type=int, default=1)
+    parser.add_argument("--main_unet_unfreeze_lr", type=float, default=1e-6)
+    parser.add_argument("--limit_train_batches", type=float, default=None)
+    parser.add_argument("--limit_val_batches", type=float, default=None)
+    parser.add_argument("--no_validation", action="store_true")
     
     args = parser.parse_args()
 
@@ -73,9 +80,19 @@ def build_args():
     if args.no_aug:
         args.transform_size = None
         args.transform_color = None
+
+    if args.no_validation:
+        args.use_validation = False
     
     args.config_path = opj("./configs", f"{args.config_name}.yaml")
-    args.n_gpus = len(os.environ["CUDA_VISIBLE_DEVICES"].split(","))
+    cuda_visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES", "")
+    if cuda_visible_devices.strip():
+        args.n_gpus = len([device for device in cuda_visible_devices.split(",") if device.strip()])
+    elif torch.cuda.is_available():
+        args.n_gpus = torch.cuda.device_count()
+    else:
+        args.n_gpus = 1
+    args.n_gpus = max(args.n_gpus, 1)
     args.devices = [i for i in range(args.n_gpus)]
     args.strategy = "ddp" if args.n_gpus > 1 else None
     args.sd_locked = not args.sd_unlocked
@@ -103,6 +120,11 @@ def build_config(args, config_path=None):
     config.model.params.setdefault("use_imageCLIP", False)
     config.model.params.setdefault("use_lastzc", False)
     config.model.params.setdefault("use_pbe_weight", False)
+    config.model.params.setdefault("semantic_cond_stage_config", None)
+    config.model.params.setdefault("semantic_cond_stage_key", "txt")
+    config.model.params.setdefault("main_unet_unfreeze_interval", 0)
+    config.model.params.setdefault("main_unet_unfreeze_epochs", 1)
+    config.model.params.setdefault("main_unet_unfreeze_lr", 1e-6)
     if args is not None:
         override_keys = {"u_cond_percent"}
         for k, v in vars(args).items():
@@ -125,6 +147,25 @@ def build_config(args, config_path=None):
         if args.use_atv_loss:
             config.model.params.use_attn_mask = True
     return config
+
+
+def filter_state_dict_for_model(model, state_dict):
+    model_state = model.state_dict()
+    filtered_state_dict = {}
+    removed_keys = []
+    for key, value in state_dict.items():
+        if key not in model_state:
+            removed_keys.append(key)
+            continue
+        if model_state[key].shape != value.shape:
+            removed_keys.append(key)
+            continue
+        filtered_state_dict[key] = value
+    if removed_keys:
+        print("Skipping incompatible checkpoint keys:")
+        for key in removed_keys:
+            print(f"  - {key}")
+    return filtered_state_dict
     
 def main_worker(args):
     if args.seed is not None:
@@ -133,15 +174,19 @@ def main_worker(args):
     OmegaConf.save(config, args.config_save_path)
     model = create_model(args.config_path, config=config).cpu()
     if args.resume_path is not None:
+        resume_state_dict = load_state_dict(args.resume_path, location="cpu")
+        resume_state_dict = filter_state_dict_for_model(model, resume_state_dict)
         if not args.no_strict_load:
-            model.load_state_dict(load_state_dict(args.resume_path, location="cpu"))
+            model.load_state_dict(resume_state_dict)
         else:
-            model.load_state_dict(load_state_dict(args.resume_path, location="cpu"), strict=False)
+            model.load_state_dict(resume_state_dict, strict=False)
     elif config.resume_path is not None:
+        resume_state_dict = load_state_dict(config.resume_path, location="cpu")
+        resume_state_dict = filter_state_dict_for_model(model, resume_state_dict)
         if not args.no_strict_load:
-            model.load_state_dict(load_state_dict(config.resume_path, location="cpu"))
+            model.load_state_dict(resume_state_dict)
         else:
-            model.load_state_dict(load_state_dict(config.resume_path, location="cpu"), strict=False)
+            model.load_state_dict(resume_state_dict, strict=False)
         
     # finetuned vae load
     if args.vae_load_path is not None:
@@ -219,20 +264,25 @@ def main_worker(args):
     #     save_weights_only=True #ADDED THIS TO SAVE ONLY MODEL WEIGHTS, NOT THE ENTIRE CHECKPOINT (WHICH CAN BE LARGE DUE TO OPTIMIZER STATE, ETC.
     # )
 
-    trainer = pl.Trainer(
-        precision=args.precision, 
-        callbacks=[img_logger], 
-        logger=tb_logger, 
+    trainer_kwargs = dict(
+        precision=args.precision,
+        callbacks=[img_logger],
+        logger=tb_logger,
         devices=args.devices,
-        accelerator="gpu", 
-        strategy=args.strategy, 
-        max_epochs=args.max_epochs, 
-        accumulate_grad_batches=args.accum_iter, 
+        accelerator="gpu" if torch.cuda.is_available() else "cpu",
+        strategy=args.strategy,
+        max_epochs=args.max_epochs,
+        accumulate_grad_batches=args.accum_iter,
         check_val_every_n_epoch=args.valid_epoch_freq,
         num_sanity_val_steps=args.num_sanity_val_steps,
         enable_checkpointing=False,
-        # limit_train_batches = 5
     )
+    if args.limit_train_batches is not None:
+        trainer_kwargs["limit_train_batches"] = args.limit_train_batches
+    if args.limit_val_batches is not None:
+        trainer_kwargs["limit_val_batches"] = args.limit_val_batches
+
+    trainer = pl.Trainer(**trainer_kwargs)
     #### trainer <<<<
     
     if not args.no_validation:

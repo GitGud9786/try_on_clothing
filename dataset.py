@@ -1,4 +1,5 @@
 import os
+import json
 from os.path import join as opj
 
 import cv2
@@ -78,6 +79,7 @@ class VITONHDDataset(Dataset):
         self.pair_key = "paired" if is_paired else "unpaired"
         self.data_type = "train" if not is_test else "test"
         self.is_test = is_test
+        self.lmm_captions = self._load_lmm_captions()
         self.resize_ratio_H = 1.0
         self.resize_ratio_W = 1.0
 
@@ -176,6 +178,77 @@ class VITONHDDataset(Dataset):
         self.c_names["paired"] = im_names
         self.c_names["unpaired"] = c_names
 
+    def _load_lmm_captions(self):
+        candidate_paths = [
+            opj(self.drd, self.data_type, "lmm_captions.json"),
+            opj(self.drd, "train", "lmm_captions.json"),
+            opj(self.drd, "test", "lmm_captions.json"),
+        ]
+        for caption_path in candidate_paths:
+            if os.path.isfile(caption_path):
+                with open(caption_path, "r") as f:
+                    return json.load(f)
+        return {}
+
+    def _resolve_first_existing_path(self, *candidate_paths):
+        for path in candidate_paths:
+            if path is not None and os.path.isfile(path):
+                return path
+        return None
+
+    def _load_cloth_pair(self, cloth_name):
+        cloth_inner_path = self._resolve_first_existing_path(
+            opj(self.drd, self.data_type, "cloth_inner", cloth_name),
+            opj(self.drd, self.data_type, "cloth", cloth_name),
+        )
+        cloth_outer_path = self._resolve_first_existing_path(
+            opj(self.drd, self.data_type, "cloth_outer", cloth_name),
+            opj(self.drd, self.data_type, "cloth", cloth_name),
+        )
+        cloth_inner_mask_path = self._resolve_first_existing_path(
+            opj(self.drd, self.data_type, "cloth-inner-mask", cloth_name),
+            opj(self.drd, self.data_type, "cloth_mask", cloth_name),
+            opj(self.drd, self.data_type, "cloth-mask", cloth_name),
+        )
+        cloth_outer_mask_path = self._resolve_first_existing_path(
+            opj(self.drd, self.data_type, "cloth-outer-mask", cloth_name),
+            opj(self.drd, self.data_type, "cloth_mask", cloth_name),
+            opj(self.drd, self.data_type, "cloth-mask", cloth_name),
+        )
+        gt_cloth_warped_inner_mask_path = self._resolve_first_existing_path(
+            opj(self.drd, self.data_type, "gt_cloth_warped_inner_mask", cloth_name),
+            opj(self.drd, self.data_type, "gt_cloth_warped_mask", cloth_name),
+        )
+        gt_cloth_warped_outer_mask_path = self._resolve_first_existing_path(
+            opj(self.drd, self.data_type, "gt_cloth_warped_outer_mask", cloth_name),
+            opj(self.drd, self.data_type, "gt_cloth_warped_mask", cloth_name),
+        )
+
+        cloth_inner = cloth_outer = cloth_inner_mask = cloth_outer_mask = None
+        gt_cloth_warped_inner_mask = gt_cloth_warped_outer_mask = None
+
+        if cloth_inner_path is not None:
+            cloth_inner = cloth_inner_path
+        if cloth_outer_path is not None:
+            cloth_outer = cloth_outer_path
+        if cloth_inner_mask_path is not None:
+            cloth_inner_mask = cloth_inner_mask_path
+        if cloth_outer_mask_path is not None:
+            cloth_outer_mask = cloth_outer_mask_path
+        if gt_cloth_warped_inner_mask_path is not None:
+            gt_cloth_warped_inner_mask = gt_cloth_warped_inner_mask_path
+        if gt_cloth_warped_outer_mask_path is not None:
+            gt_cloth_warped_outer_mask = gt_cloth_warped_outer_mask_path
+
+        return (
+            cloth_inner,
+            cloth_outer,
+            cloth_inner_mask,
+            cloth_outer_mask,
+            gt_cloth_warped_inner_mask,
+            gt_cloth_warped_outer_mask,
+        )
+
     def __len__(self):
         return len(self.im_names)
     
@@ -200,44 +273,50 @@ class VITONHDDataset(Dataset):
             #     self.img_H, 
             #     self.img_W
             # )
-            cloth_inner = imread(
-                opj(self.drd, self.data_type, "cloth_inner", self.c_names[self.pair_key][idx]),
-                self.img_H,
-                self.img_W
-            )
-            cloth_outer = imread(
-                opj(self.drd, self.data_type, "cloth_outer", self.c_names[self.pair_key][idx]),
-                self.img_H,
-                self.img_W
-            )
+            (
+                cloth_inner_path,
+                cloth_outer_path,
+                cloth_inner_mask_path,
+                cloth_outer_mask_path,
+                gt_cloth_warped_inner_mask_path,
+                gt_cloth_warped_outer_mask_path,
+            ) = self._load_cloth_pair(self.c_names[self.pair_key][idx])
+
+            if cloth_inner_path is None or cloth_outer_path is None:
+                raise FileNotFoundError(f"Could not find cloth image for {cloth_fn}")
+            if cloth_inner_mask_path is None or cloth_outer_mask_path is None:
+                raise FileNotFoundError(f"Could not find cloth mask for {cloth_fn}")
+
+            cloth_inner = imread(cloth_inner_path, self.img_H, self.img_W)
+            cloth_outer = imread(cloth_outer_path, self.img_H, self.img_W)
             cloth_inner_mask = imread(
-                opj(self.drd, self.data_type, "cloth-inner-mask", self.c_names[self.pair_key][idx]), 
-                self.img_H, 
-                self.img_W, 
-                is_mask=True, 
-                cloth_mask_check=True
+                cloth_inner_mask_path,
+                self.img_H,
+                self.img_W,
+                is_mask=True,
+                cloth_mask_check=True,
             )
             cloth_outer_mask = imread(
-                opj(self.drd, self.data_type, "cloth-outer-mask", self.c_names[self.pair_key][idx]), 
-                self.img_H, 
-                self.img_W, 
-                is_mask=True, 
-                cloth_mask_check=True
+                cloth_outer_mask_path,
+                self.img_H,
+                self.img_W,
+                is_mask=True,
+                cloth_mask_check=True,
             )
-            
+
             gt_cloth_warped_inner_mask = imread(
-                opj(self.drd, self.data_type, "gt_cloth_warped_inner_mask", self.im_names[idx]), 
-                self.img_H, 
-                self.img_W, 
-                is_mask=True
-            ) if not self.is_test else np.zeros_like(agn_mask)
+                gt_cloth_warped_inner_mask_path,
+                self.img_H,
+                self.img_W,
+                is_mask=True,
+            ) if (not self.is_test and gt_cloth_warped_inner_mask_path is not None) else np.zeros_like(agn_mask)
 
             gt_cloth_warped_outer_mask = imread(
-                opj(self.drd, self.data_type, "gt_cloth_warped_outer_mask", self.im_names[idx]), 
-                self.img_H, 
-                self.img_W, 
-                is_mask=True
-            ) if not self.is_test else np.zeros_like(agn_mask)
+                gt_cloth_warped_outer_mask_path,
+                self.img_H,
+                self.img_W,
+                is_mask=True,
+            ) if (not self.is_test and gt_cloth_warped_outer_mask_path is not None) else np.zeros_like(agn_mask)
 
             image = imread(opj(self.drd, self.data_type, "image", self.im_names[idx]), self.img_H, self.img_W)
             image_densepose = imread(opj(self.drd, self.data_type, "image-densepose", self.im_names[idx]), self.img_H, self.img_W)
@@ -257,20 +336,34 @@ class VITONHDDataset(Dataset):
                 width=self.img_W,
             )
             # cloth = imread_for_albu(opj(self.drd, self.data_type, "cloth", self.c_names[self.pair_key][idx]))
+            (
+                cloth_inner_path,
+                cloth_outer_path,
+                cloth_inner_mask_path,
+                cloth_outer_mask_path,
+                gt_cloth_warped_inner_mask_path,
+                gt_cloth_warped_outer_mask_path,
+            ) = self._load_cloth_pair(self.c_names[self.pair_key][idx])
+
+            if cloth_inner_path is None or cloth_outer_path is None:
+                raise FileNotFoundError(f"Could not find cloth image for {cloth_fn}")
+            if cloth_inner_mask_path is None or cloth_outer_mask_path is None:
+                raise FileNotFoundError(f"Could not find cloth mask for {cloth_fn}")
+
             cloth_inner = imread_for_albu(
-                opj(self.drd, self.data_type, "cloth_inner", self.c_names[self.pair_key][idx]),
+                cloth_inner_path,
                 use_resize=True,
                 height=self.img_H,
                 width=self.img_W,
             )
             cloth_outer = imread_for_albu(
-                opj(self.drd, self.data_type, "cloth_outer", self.c_names[self.pair_key][idx]),
+                cloth_outer_path,
                 use_resize=True,
                 height=self.img_H,
                 width=self.img_W,
             )
             cloth_inner_mask = imread_for_albu(
-                opj(self.drd, self.data_type, "cloth-inner-mask", self.c_names[self.pair_key][idx]),
+                cloth_inner_mask_path,
                 is_mask=True,
                 use_resize=True,
                 height=self.img_H,
@@ -278,29 +371,29 @@ class VITONHDDataset(Dataset):
                 cloth_mask_check=True
             )
             cloth_outer_mask = imread_for_albu(
-                opj(self.drd, self.data_type, "cloth-outer-mask", self.c_names[self.pair_key][idx]),
+                cloth_outer_mask_path,
                 is_mask=True,
                 use_resize=True,
                 height=self.img_H,
                 width=self.img_W,
                 cloth_mask_check=True
             )
-            
+
             gt_cloth_warped_inner_mask = imread_for_albu(
-                opj(self.drd, self.data_type, "gt_cloth_warped_inner_mask", self.im_names[idx]),
+                gt_cloth_warped_inner_mask_path,
                 is_mask=True,
                 use_resize=True,
                 height=self.img_H,
                 width=self.img_W,
-            ) if not self.is_test else np.zeros_like(agn_mask)
+            ) if (not self.is_test and gt_cloth_warped_inner_mask_path is not None) else np.zeros_like(agn_mask)
 
             gt_cloth_warped_outer_mask = imread_for_albu(
-                opj(self.drd, self.data_type, "gt_cloth_warped_outer_mask", self.im_names[idx]),
+                gt_cloth_warped_outer_mask_path,
                 is_mask=True,
                 use_resize=True,
                 height=self.img_H,
                 width=self.img_W,
-            ) if not self.is_test else np.zeros_like(agn_mask)
+            ) if (not self.is_test and gt_cloth_warped_outer_mask_path is not None) else np.zeros_like(agn_mask)
                 
             image = imread_for_albu(
                 opj(self.drd, self.data_type, "image", self.im_names[idx]),
@@ -408,7 +501,7 @@ class VITONHDDataset(Dataset):
             image_densepose=image_densepose,
             gt_cloth_warped_inner_mask=gt_cloth_warped_inner_mask,
             gt_cloth_warped_outer_mask=gt_cloth_warped_outer_mask,
-            txt="",
+            txt=self.lmm_captions.get(cloth_fn, ""),
             img_fn=img_fn,
             cloth_fn=cloth_fn,
         )
