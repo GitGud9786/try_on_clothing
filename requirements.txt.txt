@@ -12,3 +12,5 @@ pytorch-lightning==1.5.0
 scipy
 transformers==4.36.2
 xformers
+scikit-image
+hf_transfer
