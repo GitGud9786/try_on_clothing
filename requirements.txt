@@ -1,0 +1,25 @@
+
+torch==2.5.1+cu121
+torchvision==0.20.1+cu121
+torchaudio==2.5.1+cu121
+
+# StableVITON dependencies (unchanged from the repo)
+albumentations
+clean-fid
+diffusers==0.20.2
+einops
+huggingface-hub<0.23.0
+matplotlib
+numpy<2
+omegaconf
+open-clip-torch==2.19.0
+opencv-python==4.7.0.72
+pytorch-lightning==1.5.0
+scipy
+transformers==4.36.2
+scikit-image
+hf_transfer
+
+# xformers intentionally omitted. If you later need it (bigger batches / higher
+# res), install AFTER the above with the build matched to torch 2.5.1:
+#   pip install xformers==0.0.28.post3 --index-url https://download.pytorch.org/whl/cu121
