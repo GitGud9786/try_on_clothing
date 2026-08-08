@@ -186,9 +186,52 @@ class VITONHDDataset(Dataset):
         ]
         for caption_path in candidate_paths:
             if os.path.isfile(caption_path):
-                with open(caption_path, "r") as f:
-                    return json.load(f)
+                with open(caption_path, "r", encoding="utf-8") as f:
+                    captions = json.load(f)
+                print(f"[lmm] loaded {len(captions)} captions from {caption_path}")
+                self.caption_path = caption_path
+                return captions
+
+        self.caption_path = None
+        print(
+            f"\n[WARNING] No lmm_captions.json found for split '{self.data_type}'. Looked in:\n"
+            + "".join(f"          {p}\n" for p in candidate_paths)
+            + "          Every caption will be the empty string, so the semantic branch\n"
+            "          will train on a constant and contribute nothing. Pass\n"
+            "          --require_captions to make this a hard error instead.\n"
+        )
         return {}
+
+    def validate_captions(self, strict=False, sample_limit=5):
+        """
+        Check the caption keys actually line up with the filenames we look them up by.
+
+        Worth being explicit about: for the paired split the lookup key is the
+        *person image* filename, because c_names["paired"] is im_names. A caption
+        file keyed by cloth filenames will miss on every single sample and do so
+        silently, which looks exactly like training normally.
+        """
+        keys = [self.c_names[self.pair_key][i] for i in range(len(self.im_names))]
+        missing = [k for k in keys if not str(self.lmm_captions.get(k, "")).strip()]
+        coverage = 1.0 - (len(missing) / max(len(keys), 1))
+
+        print(f"[lmm] caption coverage for '{self.data_type}/{self.pair_key}': "
+              f"{len(keys) - len(missing)}/{len(keys)} ({coverage:.1%})")
+        if missing:
+            print(f"[lmm] first {min(sample_limit, len(missing))} keys with no caption: "
+                  f"{missing[:sample_limit]}")
+            if self.lmm_captions:
+                print(f"[lmm] first {sample_limit} keys present in the json: "
+                      f"{list(self.lmm_captions)[:sample_limit]}")
+
+        if strict and missing:
+            raise ValueError(
+                f"{len(missing)}/{len(keys)} samples in '{self.data_type}' have no caption. "
+                f"Caption file: {self.caption_path}. Lookup uses the '{self.pair_key}' name "
+                f"(for the paired split that is the person image filename). "
+                f"Fix the json keys or drop --require_captions."
+            )
+        return coverage
 
     def _resolve_first_existing_path(self, *candidate_paths):
         for path in candidate_paths:

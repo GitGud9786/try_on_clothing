@@ -56,62 +56,67 @@ class CustomBasicTransformerBlock(nn.Module):
         self.use_loss = use_loss
 
     def forward(
-            self, 
-            x, 
-            context=None, 
-            mask=None, 
-            mask1=None, 
-            mask2=None, 
+            self,
+            x,
+            context=None,
+            mask=None,
+            mask1=None,
+            mask2=None,
             use_attention_mask=False,
             use_attention_tv_loss=False,
             tv_loss_type=None,
+            ip_context=None,
         ):
+        # `ip_context` carries the semantic (LMM caption) embedding into attn2 only.
+        # attn1 stays a pure self-attention - no self-attention surgery.
         if not (use_attention_tv_loss or use_attention_mask):
             x = self.attn1(self.norm1(x), context=context if self.disable_self_attn else None, mask=mask) + x
-            x = self.attn2(self.norm2(x), context=context, mask=mask) + x
+            x = self.attn2(self.norm2(x), context=context, mask=mask, ip_context=ip_context) + x
             x = self.ff(self.norm3(x)) + x
             return x
         elif use_attention_mask:
             x1 = self.attn1(
-                self.norm1(x), 
-                context=context if self.disable_self_attn else None, 
-                mask=mask, 
-                mask1=mask1, 
-                mask2=mask2, 
+                self.norm1(x),
+                context=context if self.disable_self_attn else None,
+                mask=mask,
+                mask1=mask1,
+                mask2=mask2,
                 use_attention_tv_loss=False,
             )
             x = x1 + x
             x2 = self.attn2(  # cross attention
-                self.norm2(x), 
+                self.norm2(x),
                 context=context,
                 mask=mask,
-                mask1=mask1, 
-                mask2=mask2, 
+                mask1=mask1,
+                mask2=mask2,
                 use_attention_tv_loss=False,
+                ip_context=ip_context,
             )
             x = x2 + x
             x = self.ff(self.norm3(x)) + x
             return x
         else:
             x1, loss1 = self.attn1(
-                self.norm1(x), 
-                context=context if self.disable_self_attn else None, 
-                mask=mask, 
-                mask1=mask1, 
-                mask2=mask2, 
+                self.norm1(x),
+                context=context if self.disable_self_attn else None,
+                mask=mask,
+                mask1=mask1,
+                mask2=mask2,
                 use_attention_tv_loss=use_attention_tv_loss,
                 tv_loss_type=tv_loss_type,
             )
             x = x1 + x
             x2, loss2 = self.attn2(
-                self.norm2(x), 
+                self.norm2(x),
                 context=context,
                 mask=mask,
-                mask1=mask1, 
-                mask2=mask2, 
+                mask1=mask1,
+                mask2=mask2,
                 use_attention_tv_loss=use_attention_tv_loss,
                 use_loss=self.use_loss,
                 tv_loss_type=tv_loss_type,
+                ip_context=ip_context,
             )
             x = x2 + x
             x = self.ff(self.norm3(x)) + x
@@ -169,15 +174,16 @@ class CustomSpatialTransformer(nn.Module):
         self.use_linear = use_linear
         self.use_loss = use_loss
     def forward(
-            self, 
-            x, 
-            context=None, 
-            mask=None, 
-            mask1=None, 
-            mask2=None, 
+            self,
+            x,
+            context=None,
+            mask=None,
+            mask1=None,
+            mask2=None,
             use_attention_mask=False,
             use_attention_tv_loss=False,
             tv_loss_type=None,
+            ip_context=None,
     ):
         # note: if no context is given, cross-attention defaults to self-attention
         loss = 0
@@ -193,28 +199,30 @@ class CustomSpatialTransformer(nn.Module):
             x = self.proj_in(x)
         for i, block in enumerate(self.transformer_blocks):
             if not (use_attention_tv_loss or use_attention_mask):
-                x = block(x, context=context[i], mask=mask)
+                x = block(x, context=context[i], mask=mask, ip_context=ip_context)
             elif use_attention_mask:
                 x = block(
                     x,
                     context=context[i],
-                    mask=mask, 
-                    mask1=mask1, 
-                    mask2=mask2, 
+                    mask=mask,
+                    mask1=mask1,
+                    mask2=mask2,
                     use_attention_mask=True,
                     use_attention_tv_loss=False,
                     use_center_loss=False,
+                    ip_context=ip_context,
                 )
             else:
                 x, attn_loss = block(
                     x,
                     context=context[i],
-                    mask=mask, 
-                    mask1=mask1, 
-                    mask2=mask2, 
+                    mask=mask,
+                    mask1=mask1,
+                    mask2=mask2,
                     use_attention_mask=use_attention_mask,
                     use_attention_tv_loss=use_attention_tv_loss,
                     tv_loss_type=tv_loss_type,
+                    ip_context=ip_context,
                 )
                 loss += attn_loss
         if self.use_linear:
@@ -231,10 +239,18 @@ class StableVITON(UNetModel):
         self,
         dim_head_denorm=1,
         use_atv_loss=False,
+        semantic_num_tokens=0,
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+        # Number of trailing tokens in `context` that belong to the semantic
+        # (LMM caption) branch. Sliced off and routed to the decoupled K/V
+        # projections instead of being fed to the pretrained ones.
+        self.semantic_num_tokens = semantic_num_tokens
+        # Flipped per-epoch by the periodic-unfreeze schedule. When False the
+        # encoder runs under no_grad exactly like baseline StableVITON.
+        self.train_main_encoder = False
         warp_flow_blks = []
         warp_zero_convs = []
 
@@ -282,12 +298,28 @@ class StableVITON(UNetModel):
         self.use_atv_loss = use_atv_loss
     def make_zero_conv(self, channels):
         return zero_module(conv_nd(2, channels, channels, 1, padding=0))
+    def _split_semantic(self, context):
+        """Pull the trailing semantic tokens out of the fused context tensor."""
+        ctx = context[0] if isinstance(context, (list, tuple)) else context
+        if not self.semantic_num_tokens or ctx is None:
+            return None
+        if ctx.shape[1] <= self.semantic_num_tokens:
+            return None
+        return ctx[:, -self.semantic_num_tokens:, :]
+
     def forward(self, x, timesteps=None, context=None, control=None, only_mid_control=False, **kwargs):
         hs = []
         mask1 = kwargs.get("mask1", None)
         mask2 = kwargs.get("mask2", None)
         loss = 0
-        with torch.no_grad():
+        ip_context = self._split_semantic(context)
+
+        # Baseline StableVITON hard-wires the encoder under no_grad, which makes the
+        # "unfreeze the main SD encoder" schedule a no-op no matter what requires_grad
+        # says. Gate it on the schedule flag instead so gradients can actually reach
+        # input_blocks / middle_block / time_embed on unfrozen epochs.
+        encoder_grad = self.train_main_encoder and torch.is_grad_enabled()
+        with torch.set_grad_enabled(encoder_grad):
             t_emb = timestep_embedding(timesteps, self.model_channels, repeat_only=False)
             emb = self.time_embed(t_emb)
             h = x.type(self.dtype)
@@ -296,7 +328,7 @@ class StableVITON(UNetModel):
                 hs.append(h)
             h = self.middle_block(h, emb, context)
 
-        if control is not None:                 
+        if control is not None:
             hint = control.pop()
         # resolution 8 is skipped
         for module in self.output_blocks[:3]:
@@ -315,7 +347,7 @@ class StableVITON(UNetModel):
                 hint = control.pop()
                 h, attn_loss = self.warp(
                     h, hint, warp_blk, warp_zc,
-                    mask1=mask1, mask2=mask2,
+                    mask1=mask1, mask2=mask2, ip_context=ip_context,
                 )
                 loss += attn_loss
 
@@ -329,14 +361,19 @@ class StableVITON(UNetModel):
             return self.out(h), loss
         else:
             return self.out(h)
-    def warp(self, x, hint, crossattn_layer, zero_conv, mask1=None, mask2=None):
+    def warp(self, x, hint, crossattn_layer, zero_conv, mask1=None, mask2=None, ip_context=None):
+        # Zero Cross-Attention block. Both conditioning paths land here and both
+        # exit through the same zero-conv: the spatial map c_i on the pretrained
+        # K/V, and the semantic embedding on the decoupled K_ip/V_ip.
         hint = rearrange(hint, "b c h w -> b (h w) c").contiguous()
         if self.use_atv_loss:
-            output, attn_loss = crossattn_layer(x, hint, mask1=mask1, mask2=mask2, use_attention_tv_loss=True)
+            output, attn_loss = crossattn_layer(
+                x, hint, mask1=mask1, mask2=mask2, use_attention_tv_loss=True, ip_context=ip_context,
+            )
             output = zero_conv(output)
             return output + x, attn_loss
         else:
-            output = crossattn_layer(x, hint)
+            output = crossattn_layer(x, hint, ip_context=ip_context)
             output = zero_conv(output)
             return output + x, 0
 

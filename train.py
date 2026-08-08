@@ -58,6 +58,16 @@ def build_args():
     parser.add_argument("--verify_impl", action="store_true")
     parser.add_argument("--no_aug", action="store_true")
     parser.add_argument("--semantic_cond_stage_key", type=str, default="txt")
+    # default=None so "flag not passed" stays distinguishable from "passed False"
+    # and the config file keeps control unless the CLI explicitly overrides.
+    parser.add_argument("--use_ip_adapter", action="store_true", default=None,
+                        help="enable decoupled cross-attention for the LMM caption branch")
+    parser.add_argument("--no_ip_adapter", action="store_true",
+                        help="force the semantic branch off, overriding the config")
+    parser.add_argument("--ip_adapter_scale", type=float, default=None,
+                        help="weight on the semantic attention branch")
+    parser.add_argument("--require_captions", action="store_true",
+                        help="fail fast if lmm_captions.json is missing or does not match the pair list")
     parser.add_argument("--main_unet_unfreeze_interval", type=int, default=0)
     parser.add_argument("--main_unet_unfreeze_epochs", type=int, default=1)
     parser.add_argument("--main_unet_unfreeze_lr", type=float, default=1e-6)
@@ -83,7 +93,10 @@ def build_args():
 
     if args.no_validation:
         args.use_validation = False
-    
+
+    if args.no_ip_adapter:
+        args.use_ip_adapter = False
+
     args.config_path = opj("./configs", f"{args.config_name}.yaml")
     cuda_visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES", "")
     if cuda_visible_devices.strip():
@@ -122,11 +135,18 @@ def build_config(args, config_path=None):
     config.model.params.setdefault("use_pbe_weight", False)
     config.model.params.setdefault("semantic_cond_stage_config", None)
     config.model.params.setdefault("semantic_cond_stage_key", "txt")
+    config.model.params.setdefault("use_ip_adapter", False)
+    config.model.params.setdefault("ip_adapter_scale", 1.0)
+    config.model.params.setdefault("ip_adapter_zero_init", True)
+    config.model.params.setdefault("semantic_num_tokens", 77)
     config.model.params.setdefault("main_unet_unfreeze_interval", 0)
     config.model.params.setdefault("main_unet_unfreeze_epochs", 1)
     config.model.params.setdefault("main_unet_unfreeze_lr", 1e-6)
     if args is not None:
-        override_keys = {"u_cond_percent"}
+        # Explicitly-passed CLI values win over the config file for these.
+        override_keys = {"u_cond_percent", "use_ip_adapter", "ip_adapter_scale",
+                         "main_unet_unfreeze_interval", "main_unet_unfreeze_epochs",
+                         "main_unet_unfreeze_lr"}
         for k, v in vars(args).items():
             if v is None:
                 continue
@@ -134,6 +154,15 @@ def build_config(args, config_path=None):
                 config.model.params[k] = v
             else:
                 config.model.params.setdefault(k, v)
+    # The semantic tokens are split off the context tail by position, so this count
+    # must equal what the text encoder actually emits.
+    semantic_cfg = config.model.params.get("semantic_cond_stage_config", None)
+    if semantic_cfg is not None and semantic_cfg.get("params", None) is not None:
+        max_length = semantic_cfg.params.get("max_length", None)
+        if max_length is not None and max_length != config.model.params.semantic_num_tokens:
+            print(f"[config] aligning semantic_num_tokens -> {max_length} (text encoder max_length)")
+            config.model.params.semantic_num_tokens = max_length
+
     if not config.model.params.get("validation_config", None):
         config.model.params.validation_config = OmegaConf.create()
     config.model.params.validation_config.ddim_steps = config.model.params.validation_config.get("ddim_steps", 50)
@@ -208,6 +237,9 @@ def main_worker(args):
         transform_size=args.transform_size, 
         transform_color=args.transform_color, 
     )
+    if config.model.params.get("use_ip_adapter", False) and hasattr(train_dataset, "validate_captions"):
+        train_dataset.validate_captions(strict=args.require_captions)
+
     valid_paired_dataset = getattr(import_module("dataset"), config.dataset_name)(
         data_root_dir=args.data_root_dir, 
         img_H=args.img_H, 

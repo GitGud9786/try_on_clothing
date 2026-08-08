@@ -101,6 +101,15 @@ model:
         freeze: true
         layer: last
     semantic_cond_stage_key: txt
+    # Dual-path conditioning: decoupled cross-attention for the semantic branch.
+    use_ip_adapter: true
+    ip_adapter_scale: 1.0
+    # to_v_ip starts at zero so the model begins bit-identical to baseline
+    # StableVITON and learns the semantic anchor in.
+    ip_adapter_zero_init: true
+    # Must equal the text encoder's max_length above.
+    semantic_num_tokens: 77
+    # Periodic unfreezing of the main SD encoder. 0 disables.
     main_unet_unfreeze_interval: 0
     main_unet_unfreeze_epochs: 1
     main_unet_unfreeze_lr: 1.0e-06

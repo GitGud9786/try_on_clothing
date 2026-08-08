@@ -18,6 +18,7 @@ from torchvision.utils import make_grid
 from ldm.models.diffusion.ddpm import LatentDiffusion
 from ldm.util import log_txt_as_img, instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
+from ldm.modules.attention import enable_ip_adapter, ip_adapter_parameters
 from garment_concat_unet import GarmentConcatUNet, GarmentEncoder
 
 class ControlLDM(LatentDiffusion):
@@ -43,10 +44,14 @@ class ControlLDM(LatentDiffusion):
             mask2_key="",
             semantic_cond_stage_config=None,
             semantic_cond_stage_key="txt",
+            use_ip_adapter=False,
+            ip_adapter_scale=1.0,
+            ip_adapter_zero_init=True,
+            semantic_num_tokens=77,
             main_unet_unfreeze_interval=0,
             main_unet_unfreeze_epochs=1,
             main_unet_unfreeze_lr=1e-6,
-            *args, 
+            *args,
             **kwargs
         ):
         self.control_stage_config = control_stage_config
@@ -63,6 +68,10 @@ class ControlLDM(LatentDiffusion):
         self.always_learnable_param = always_learnable_param
         self.semantic_cond_stage_config = semantic_cond_stage_config
         self.semantic_cond_stage_key = semantic_cond_stage_key
+        self.use_ip_adapter = use_ip_adapter
+        self.ip_adapter_scale = ip_adapter_scale
+        self.ip_adapter_zero_init = ip_adapter_zero_init
+        self.semantic_num_tokens = semantic_num_tokens
         self.main_unet_unfreeze_interval = main_unet_unfreeze_interval
         self.main_unet_unfreeze_epochs = main_unet_unfreeze_epochs
         self.main_unet_unfreeze_lr = main_unet_unfreeze_lr
@@ -99,6 +108,51 @@ class ControlLDM(LatentDiffusion):
         self.clothflow = None
         self.visual_context_dim = 768
         self.visual_context_proj = None
+        self._empty_caption_warned = False
+        self._install_ip_adapter()
+
+    def _install_ip_adapter(self):
+        """
+        Wire up the decoupled semantic branch across all three consumers of the
+        conditioning: the warp / zero cross-attention blocks, the main UNet, and
+        the trainable spatial encoder (ControlNet copy).
+
+        Order matters. The warp blocks live *inside* diffusion_model, so they are
+        installed first with ip_num_tokens=0 (they receive the semantic embedding
+        as an explicit argument because their base context is a spatial map with a
+        different channel count). The subsequent whole-UNet pass skips any layer
+        that already has the projections.
+        """
+        if not self.use_ip_adapter:
+            self.semantic_num_tokens = 0
+            return
+        if self.semantic_cond_stage_model is None:
+            print("[IP-Adapter] use_ip_adapter=True but no semantic_cond_stage_config; disabling.")
+            self.use_ip_adapter = False
+            self.semantic_num_tokens = 0
+            return
+
+        semantic_dim = getattr(self.semantic_cond_stage_model, "transformer", None)
+        semantic_dim = semantic_dim.config.hidden_size if semantic_dim is not None else 768
+
+        diffusion_model = self.model.diffusion_model
+        if hasattr(diffusion_model, "warp_flow_blks"):
+            enable_ip_adapter(
+                diffusion_model.warp_flow_blks, semantic_dim, ip_num_tokens=0,
+                ip_scale=self.ip_adapter_scale, ip_zero_init=self.ip_adapter_zero_init,
+                verbose_name="warp_flow_blks (zero cross-attn)",
+            )
+        enable_ip_adapter(
+            diffusion_model, semantic_dim, ip_num_tokens=self.semantic_num_tokens,
+            ip_scale=self.ip_adapter_scale, ip_zero_init=self.ip_adapter_zero_init,
+            verbose_name="main UNet",
+        )
+        enable_ip_adapter(
+            self.control_model, semantic_dim, ip_num_tokens=self.semantic_num_tokens,
+            ip_scale=self.ip_adapter_scale, ip_zero_init=self.ip_adapter_zero_init,
+            verbose_name="spatial encoder (ControlNet)",
+        )
+        diffusion_model.semantic_num_tokens = self.semantic_num_tokens
 
     def _encode_semantic_conditioning(self, batch, bs=None):
         if self.semantic_cond_stage_model is None:
@@ -108,10 +162,31 @@ class ControlLDM(LatentDiffusion):
             captions = [""] * (bs if bs is not None else len(batch[self.first_stage_key]))
         if bs is not None:
             captions = captions[:bs]
-        semantic_context = self.semantic_cond_stage_model.encode(captions)
-        return semantic_context
+
+        # Silently training on all-empty captions is the failure mode that costs a
+        # whole run, so say something loud once instead.
+        if not self._empty_caption_warned and all(not str(c).strip() for c in captions):
+            print(
+                "\n[WARNING] Every caption in this batch is empty. The semantic branch "
+                "is contributing nothing.\n"
+                f"          Expected key '{self.semantic_cond_stage_key}' populated from "
+                "lmm_captions.json in the data root.\n"
+                "          Check the file exists and that its keys match the filenames in "
+                "train_pairs_unpaired.txt.\n"
+            )
+            self._empty_caption_warned = True
+
+        return self.semantic_cond_stage_model.encode(captions)
 
     def _prepare_crossattn_context(self, visual_context, semantic_context=None):
+        """
+        Build the fused conditioning tensor: [visual tokens | semantic tokens].
+
+        The concatenation here is purely a transport detail - the attention layers
+        split the tail back off and route it through separate K/V projections, so
+        the two paths never share a key space. This mirrors the reference
+        IP-Adapter attention processor.
+        """
         if isinstance(visual_context, (list, tuple)):
             visual_context = visual_context[0] if len(visual_context) > 0 else None
         if visual_context is not None and visual_context.dim() == 4 and self.cond_stage_model is not None:
@@ -122,12 +197,21 @@ class ControlLDM(LatentDiffusion):
             visual_context = self.visual_context_proj(visual_context)
         if self.proj_out is not None and visual_context is not None and visual_context.shape[-1] == 1024:
             visual_context = self.proj_out(visual_context)
-        if semantic_context is None:
+
+        if not self.use_ip_adapter or semantic_context is None:
             return [visual_context]
         if isinstance(semantic_context, (list, tuple)):
             semantic_context = semantic_context[0] if len(semantic_context) > 0 else None
-        if semantic_context is not None and semantic_context.device != visual_context.device:
-            semantic_context = semantic_context.to(visual_context.device)
+        if semantic_context is None:
+            return [visual_context]
+        semantic_context = semantic_context.to(visual_context.device, dtype=visual_context.dtype)
+
+        # The split downstream is positional, so the semantic block must be exactly
+        # semantic_num_tokens wide on every single call or the branches desync.
+        assert semantic_context.shape[1] == self.semantic_num_tokens, (
+            f"semantic context has {semantic_context.shape[1]} tokens but semantic_num_tokens="
+            f"{self.semantic_num_tokens}; these must match exactly"
+        )
         return [torch.cat([visual_context, semantic_context], dim=1)]
 
     def _main_unet_epoch_active(self):
@@ -135,23 +219,49 @@ class ControlLDM(LatentDiffusion):
             return False
         return (self.current_epoch % self.main_unet_unfreeze_interval) < self.main_unet_unfreeze_epochs
 
-    def _set_main_unet_trainable(self, trainable):
-        for param in self.model.parameters():
+    def _main_encoder_modules(self):
+        """
+        The 'Blue SD Encoder' half of the main generator only.
+
+        Deliberately excludes warp_flow_blks / warp_zero_convs: those live under
+        self.model too, but they are StableVITON's core always-trainable modules.
+        Sweeping requires_grad across all of self.model would freeze them on every
+        non-unfreeze epoch and stall the primary learning signal.
+        """
+        diffusion_model = self.model.diffusion_model
+        return [diffusion_model.time_embed, diffusion_model.input_blocks, diffusion_model.middle_block]
+
+    def _main_encoder_parameters(self):
+        params = []
+        for module in self._main_encoder_modules():
+            params += list(module.parameters())
+        return params
+
+    def _set_main_encoder_trainable(self, trainable):
+        for param in self._main_encoder_parameters():
             param.requires_grad = trainable
+        # Without this the encoder forward stays wrapped in no_grad and no gradient
+        # reaches these parameters regardless of requires_grad.
+        self.model.diffusion_model.train_main_encoder = bool(trainable)
 
     def _update_main_unet_optimizer_lr(self, lr):
         if not hasattr(self, "trainer") or self.trainer is None or len(self.trainer.optimizers) == 0:
             return
         optimizer = self.trainer.optimizers[0]
-        if len(optimizer.param_groups) > 1:
-            optimizer.param_groups[-1]["lr"] = lr
+        for group in optimizer.param_groups:
+            if group.get("name") == "main_encoder":
+                group["lr"] = lr
 
     def on_train_epoch_start(self):
         if self.main_unet_unfreeze_interval <= 0:
             return
         active = self._main_unet_epoch_active()
-        self._set_main_unet_trainable(active)
+        self._set_main_encoder_trainable(active)
         self._update_main_unet_optimizer_lr(self.main_unet_unfreeze_lr if active else 0.0)
+        print(
+            f"[periodic-unfreeze] epoch {self.current_epoch}: main SD encoder "
+            f"{'UNFROZEN (lr=%g)' % self.main_unet_unfreeze_lr if active else 'frozen'}"
+        )
 
     @torch.no_grad()
     def get_input(self, batch, k, bs=None, *args, **kwargs):
@@ -278,14 +388,21 @@ class ControlLDM(LatentDiffusion):
         return m
     @torch.no_grad()
     def get_unconditional_conditioning(self, N):
-        visual_uc = self.learnable_vector.repeat(N,1,1) if self.learnable_vector is not None else None
-        semantic_uc = None
-        if self.semantic_cond_stage_model is not None:
-            semantic_uc = self.semantic_cond_stage_model.encode([""] * N)
+        """
+        The null conditioning must carry the *same token layout* as the conditional
+        one, because the attention layers split the semantic block off by position.
+        The empty prompt is the correct null for the semantic branch, so it stays
+        present here - only its content goes empty, never its width.
+        """
+        visual_uc = self.learnable_vector.repeat(N, 1, 1) if self.learnable_vector is not None else None
+        if not self.use_ip_adapter or self.semantic_cond_stage_model is None:
+            return [visual_uc] if visual_uc is not None else None
+
+        semantic_uc = self.semantic_cond_stage_model.encode([""] * N)
         if visual_uc is None:
-            return [semantic_uc] if semantic_uc is not None else None
-        if semantic_uc is None:
-            return [visual_uc]
+            # Nothing to prepend: the split would leave the base branch empty.
+            return [semantic_uc]
+        semantic_uc = semantic_uc.to(visual_uc.device, dtype=visual_uc.dtype)
         return [torch.cat([visual_uc, semantic_uc], dim=1)]
     @torch.no_grad()
     def get_unconditional_conditioning_cnet(self, N):
@@ -393,6 +510,24 @@ class ControlLDM(LatentDiffusion):
         samples, intermediates, cond_output_dict = ddim_sampler.sample(ddim_steps, batch_size, shape, cond, verbose=False, **kwargs)
         return samples, intermediates, cond_output_dict
 
+    @staticmethod
+    def _dedupe_params(params, exclude=None):
+        """
+        Drop repeated tensors, preserving order.
+
+        torch.optim raises "some parameters appear in more than one parameter group"
+        if the same tensor lands in two groups, and the warp blocks are reachable
+        both directly and via self.model.parameters().
+        """
+        seen = {id(p) for p in (exclude or [])}
+        out = []
+        for p in params:
+            if id(p) in seen:
+                continue
+            seen.add(id(p))
+            out.append(p)
+        return out
+
     def configure_optimizers(self):
         lr = self.learning_rate
         print("=====configure optimizer=====")
@@ -439,13 +574,20 @@ class ControlLDM(LatentDiffusion):
             if hasattr(self.model.diffusion_model, "warp_zero_convs"):
                 control_params += list(self.model.diffusion_model.warp_zero_convs.parameters())
                 print(f"warp zero convs is added")
+            if self.use_ip_adapter:
+                control_params += ip_adapter_parameters(self.model.diffusion_model)
+                print("ip-adapter decoupled K/V (main unet) is added")
 
-            main_params = list(self.model.parameters())
-            print("main unet is added for periodic unfreeze")
-            self._set_main_unet_trainable(False)
+            control_params = self._dedupe_params(control_params)
+
+            # Encoder only, and disjoint from control_params - the warp blocks sit
+            # under self.model but belong to the always-trainable control group.
+            main_params = self._dedupe_params(self._main_encoder_parameters(), exclude=control_params)
+            print(f"main SD encoder is added for periodic unfreeze ({len(main_params)} tensors)")
+            self._set_main_encoder_trainable(False)
             opt = torch.optim.AdamW([
-                {"params": control_params, "lr": lr},
-                {"params": main_params, "lr": 0.0},
+                {"params": control_params, "lr": lr, "name": "control"},
+                {"params": main_params, "lr": 0.0, "name": "main_encoder"},
             ])
             print("============================")
             return opt
@@ -490,6 +632,10 @@ class ControlLDM(LatentDiffusion):
         if hasattr(self.model.diffusion_model, "warp_zero_convs"):
             params += list(self.model.diffusion_model.warp_zero_convs.parameters())
             print(f"warp zero convs is added")
+        if self.use_ip_adapter:
+            params += ip_adapter_parameters(self.model.diffusion_model)
+            print("ip-adapter decoupled K/V (main unet) is added")
+        params = self._dedupe_params(params)
         opt = torch.optim.AdamW(params, lr=lr)
         print("============================")
         return opt

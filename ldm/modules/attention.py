@@ -162,8 +162,55 @@ def attn_mask_resize(m,h,w):
     m = torch.where(m>=0.5, True, False)
     return m
 
+def init_ip_projections(module, inner_dim, ip_context_dim, source_k=None, source_v=None, zero_init=True):
+    """
+    Build the decoupled key/value projections used by IP-Adapter style conditioning.
+
+    `to_k_ip` is warm-started from the pretrained `to_k` whenever the context dims
+    agree, so the semantic branch starts out reading its tokens the same way the
+    pretrained branch does. `to_v_ip` is zero initialised, which makes the whole
+    branch contribute exactly 0 at step 0 (out = softmax(q k^T) v = 0). The model
+    therefore starts bit-identical to the baseline and learns the semantic anchor
+    in gradually. Note we zero only `to_v_ip`: zeroing `to_k_ip` as well would also
+    zero its gradient (d out/d k is proportional to v) and the branch would never
+    train.
+    """
+    to_k_ip = nn.Linear(ip_context_dim, inner_dim, bias=False)
+    to_v_ip = nn.Linear(ip_context_dim, inner_dim, bias=False)
+    if source_k is not None and source_k.weight.shape == to_k_ip.weight.shape:
+        with torch.no_grad():
+            to_k_ip.weight.copy_(source_k.weight)
+    if zero_init:
+        to_v_ip = zero_module(to_v_ip)
+    elif source_v is not None and source_v.weight.shape == to_v_ip.weight.shape:
+        with torch.no_grad():
+            to_v_ip.weight.copy_(source_v.weight)
+    module.to_k_ip = to_k_ip
+    module.to_v_ip = to_v_ip
+
+
+def split_ip_context(context, ip_context, ip_num_tokens):
+    """
+    Resolve the (base_context, ip_context) pair for a decoupled attention layer.
+
+    Two ways the semantic tokens arrive:
+      1. explicit `ip_context` tensor - used by the warp / zero cross-attention
+         blocks, where the base context is a spatial feature map whose channel
+         count differs from the semantic embedding dim so they cannot be concatenated.
+      2. concatenated onto the tail of `context` - used everywhere the dims match,
+         matching the reference IP-Adapter attention processor.
+    """
+    if ip_context is not None:
+        return context, ip_context
+    if ip_num_tokens and context is not None and context.shape[1] > ip_num_tokens:
+        end_pos = context.shape[1] - ip_num_tokens
+        return context[:, :end_pos, :], context[:, end_pos:, :]
+    return context, None
+
+
 class CrossAttention(nn.Module):
-    def __init__(self, query_dim, context_dim=None, heads=8, dim_head=64, dropout=0., **kwargs):
+    def __init__(self, query_dim, context_dim=None, heads=8, dim_head=64, dropout=0.,
+                 ip_context_dim=None, ip_num_tokens=0, ip_scale=1.0, ip_zero_init=True, **kwargs):
         super().__init__()
         inner_dim = dim_head * heads
         context_dim = default(context_dim, query_dim)
@@ -179,11 +226,22 @@ class CrossAttention(nn.Module):
             nn.Linear(inner_dim, query_dim),
             nn.Dropout(dropout)
         )
-        
+
+        self.ip_num_tokens = ip_num_tokens
+        self.ip_scale = ip_scale
+        if ip_context_dim is not None:
+            init_ip_projections(self, inner_dim, ip_context_dim, self.to_k, self.to_v, ip_zero_init)
+        else:
+            self.to_k_ip = None
+            self.to_v_ip = None
 
     # Replace the forward method in CrossAttention class (around line 184-243)
 
-    def forward(self, x, context=None, mask=None, hint=None, mask1=None, mask2=None, use_attention_tv_loss=False):
+    def forward(self, x, context=None, mask=None, hint=None, mask1=None, mask2=None, use_attention_tv_loss=False,
+                ip_context=None, **kwargs):
+        # **kwargs absorbs tv_loss_type / use_loss, which CustomBasicTransformerBlock
+        # passes unconditionally. MemoryEfficientCrossAttention already swallowed them;
+        # this path would raise TypeError under --use_atv_loss without xformers.
         h = self.heads
         is_self_attn = context is None
         q = self.to_q(x)
@@ -192,14 +250,25 @@ class CrossAttention(nn.Module):
         else:
             contexts = [default(context, x)]
 
+        if self.to_k_ip is not None and not is_self_attn:
+            base_context, ip_context = split_ip_context(contexts[0], ip_context, self.ip_num_tokens)
+            contexts = [base_context]
+        else:
+            ip_context = None
+
         key_token_length = sum(single_context.shape[1] for single_context in contexts)
 
-        def attend(single_context):
-            k = self.to_k(single_context)
-            v = self.to_v(single_context)
+        def attend(single_context, to_k=None, to_v=None, use_masks=True):
+            to_k = default(to_k, self.to_k)
+            to_v = default(to_v, self.to_v)
+            k = to_k(single_context)
+            v = to_v(single_context)
 
-            use_sdpa = (not exists(mask1) and not exists(mask2) and
-                        not exists(mask) and not use_attention_tv_loss)
+            # The attention-mask / TV-loss geometry assumes the key axis is a
+            # flattened spatial grid. The semantic branch carries 77 text tokens,
+            # which has no such geometry, so it always takes the plain path.
+            use_sdpa = (not (use_masks and exists(mask1)) and not (use_masks and exists(mask2)) and
+                        not exists(mask) and not (use_masks and use_attention_tv_loss))
 
             if use_sdpa and hasattr(F, 'scaled_dot_product_attention'):
                 b, n, _ = q.shape
@@ -230,7 +299,7 @@ class CrossAttention(nn.Module):
                 sim = einsum('b i d, b j d -> b i j', q_, k_) * self.scale
 
             del q_, k_
-            if exists(mask1) or exists(mask2):
+            if use_masks and (exists(mask1) or exists(mask2)):
                 if mask1.ndim == 4 and mask2.ndim == 4:
                     _, HW, hw = sim.shape
                     bs = mask1.shape[0]
@@ -269,6 +338,12 @@ class CrossAttention(nn.Module):
         for single_context in contexts:
             out = out + attend(single_context)
 
+        # Decoupled cross-attention: Attention(Q, K_c, V_c) + Attention(Q, K_i, V_i).
+        # The two branches share Q but own separate K/V projections, so the semantic
+        # tokens are never concatenated into the pretrained branch's key space.
+        if ip_context is not None and self.to_k_ip is not None:
+            out = out + self.ip_scale * attend(ip_context, self.to_k_ip, self.to_v_ip, use_masks=False)
+
         if not use_attention_tv_loss:
             return self.to_out(out)
 
@@ -277,7 +352,8 @@ class CrossAttention(nn.Module):
 
 class MemoryEfficientCrossAttention(nn.Module):
     # https://github.com/MatthieuTPHR/diffusers/blob/d80b531ff8060ec1ea982b65a1b8df70f73aa67c/src/diffusers/models/attention.py#L223
-    def __init__(self, query_dim, context_dim=None, heads=8, dim_head=64, dropout=0.0, zero_init=False, **kwargs):
+    def __init__(self, query_dim, context_dim=None, heads=8, dim_head=64, dropout=0.0, zero_init=False,
+                 ip_context_dim=None, ip_num_tokens=0, ip_scale=1.0, ip_zero_init=True, **kwargs):
         super().__init__()
         print(f"Setting up {self.__class__.__name__}. Query dim is {query_dim}, context_dim is {context_dim} and using "
               f"{heads} heads.")
@@ -298,16 +374,25 @@ class MemoryEfficientCrossAttention(nn.Module):
         self.to_out = nn.Sequential(nn.Linear(inner_dim, query_dim), nn.Dropout(dropout))
         self.attention_op: Optional[Any] = None
 
+        self.ip_num_tokens = ip_num_tokens
+        self.ip_scale = ip_scale
+        if ip_context_dim is not None:
+            init_ip_projections(self, inner_dim, ip_context_dim, self.to_k, self.to_v, ip_zero_init)
+        else:
+            self.to_k_ip = None
+            self.to_v_ip = None
+
     def forward(
-            self, 
+            self,
             x,
-            context=None, 
-            mask=None, 
-            hint=None, 
-            mask1=None, 
-            mask2=None, 
-            use_attention_tv_loss=False, 
-            use_loss=True, 
+            context=None,
+            mask=None,
+            hint=None,
+            mask1=None,
+            mask2=None,
+            use_attention_tv_loss=False,
+            use_loss=True,
+            ip_context=None,
             **kwargs
         ):
         q = self.to_q(x)
@@ -317,12 +402,20 @@ class MemoryEfficientCrossAttention(nn.Module):
         else:
             contexts = [default(context, x)]
 
+        if self.to_k_ip is not None and not is_self_attn:
+            base_context, ip_context = split_ip_context(contexts[0], ip_context, self.ip_num_tokens)
+            contexts = [base_context]
+        else:
+            ip_context = None
+
         key_token_length = sum(single_context.shape[1] for single_context in contexts)
         b, _, _ = q.shape
 
-        def attend(single_context):
-            k = self.to_k(single_context)
-            v = self.to_v(single_context)
+        def attend(single_context, to_k=None, to_v=None, use_masks=True):
+            to_k = default(to_k, self.to_k)
+            to_v = default(to_v, self.to_v)
+            k = to_k(single_context)
+            v = to_v(single_context)
             q_, k_, v_ = map(
                 lambda t: t.unsqueeze(3)
                 .reshape(b, t.shape[1], self.heads, self.dim_head)
@@ -333,7 +426,7 @@ class MemoryEfficientCrossAttention(nn.Module):
             )
 
             attn_loss = torch.tensor(0, dtype=x.dtype, device=x.device)
-            if use_attention_tv_loss and key_token_length > 700 and (not is_self_attn) and key_token_length < 3000 and use_loss:
+            if use_masks and use_attention_tv_loss and key_token_length > 700 and (not is_self_attn) and key_token_length < 3000 and use_loss:
                 sim = einsum('b i d, b j d -> b i j', q_, k_) * (self.dim_head ** -0.5)
                 sim = sim.softmax(dim=-1)
                 h = self.heads
@@ -378,10 +471,68 @@ class MemoryEfficientCrossAttention(nn.Module):
             out = out + partial_out
             attn_loss = attn_loss + partial_loss
 
+        # Decoupled cross-attention: Attention(Q, K_c, V_c) + Attention(Q, K_i, V_i).
+        if ip_context is not None and self.to_k_ip is not None:
+            ip_out, _ = attend(ip_context, self.to_k_ip, self.to_v_ip, use_masks=False)
+            out = out + self.ip_scale * ip_out
+
         if not use_attention_tv_loss:
             return self.to_out(out)
         return self.to_out(out), attn_loss
     
+def enable_ip_adapter(root, ip_context_dim, ip_num_tokens=0, ip_scale=1.0, ip_zero_init=True,
+                      attn_names=("attn2",), verbose_name=""):
+    """
+    Install decoupled IP-Adapter key/value projections on every cross-attention
+    module under `root`.
+
+    Done as a post-construction pass rather than by threading kwargs through
+    UNetModel -> SpatialTransformer -> BasicTransformerBlock, which would touch a
+    lot of baseline code for no behavioural gain.
+
+    Only modules named in `attn_names` are touched - by default that is `attn2`,
+    the cross-attention. `attn1` (self-attention) is deliberately left untouched:
+    no self-attention surgery.
+
+    `ip_num_tokens > 0` means the semantic tokens arrive concatenated on the tail
+    of the normal context and get split off inside the layer. `ip_num_tokens == 0`
+    means they arrive as an explicit `ip_context` argument instead, which is what
+    the warp / zero cross-attention blocks use because their base context is a
+    spatial feature map with an incompatible channel count.
+    """
+    targets = []
+    for name, module in root.named_modules():
+        if not isinstance(module, (CrossAttention, MemoryEfficientCrossAttention)):
+            continue
+        if name.rsplit(".", 1)[-1] not in attn_names:
+            continue
+        if getattr(module, "to_k_ip", None) is not None:
+            continue
+        targets.append(module)
+
+    for module in targets:
+        inner_dim = module.to_k.weight.shape[0]
+        init_ip_projections(module, inner_dim, ip_context_dim, module.to_k, module.to_v, ip_zero_init)
+        module.to_k_ip = module.to_k_ip.to(module.to_k.weight.device, dtype=module.to_k.weight.dtype)
+        module.to_v_ip = module.to_v_ip.to(module.to_v.weight.device, dtype=module.to_v.weight.dtype)
+        module.ip_num_tokens = ip_num_tokens
+        module.ip_scale = ip_scale
+
+    print(f"[IP-Adapter] installed decoupled K/V on {len(targets)} cross-attn layers "
+          f"in {verbose_name or type(root).__name__} (ip_num_tokens={ip_num_tokens}, scale={ip_scale})")
+    return len(targets)
+
+
+def ip_adapter_parameters(root):
+    """Every parameter belonging to the decoupled semantic branch, for the optimizer."""
+    params = []
+    for module in root.modules():
+        if isinstance(module, (CrossAttention, MemoryEfficientCrossAttention)) and getattr(module, "to_k_ip", None) is not None:
+            params += list(module.to_k_ip.parameters())
+            params += list(module.to_v_ip.parameters())
+    return params
+
+
 class BasicTransformerBlock(nn.Module):
     ATTENTION_MODES = {
         "softmax": CrossAttention,  # vanilla attention
