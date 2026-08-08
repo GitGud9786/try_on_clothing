@@ -1,46 +1,47 @@
-import os
-from tqdm import tqdm
+#!/usr/bin/env python3
+"""Strip the _mask suffix from cloth-mask filenames (00553_00_mask.png -> 00553_00.png)
+so they match the loader's plain cloth_name lookup.
+Dry-run by default; add --apply to actually rename.
+Deliberately does NOT touch agnostic-mask (the loader expects its _mask suffix)."""
+import os, argparse
 
-def remove_mask_suffix(folder_path):
-    """Remove _mask from filenames in agnostic-mask folder"""
-    
-    if not os.path.exists(folder_path):
-        print(f"Folder not found: {folder_path}")
-        return
-    
-    # Get all files with _mask.png
-    mask_files = [f for f in os.listdir(folder_path) 
-                  if f.endswith('_mask.png')]
-    
-    if not mask_files:
-        print(f"No *_mask.png files found in {folder_path}")
-        return
-    
-    print(f"Renaming {len(mask_files)} files...")
-    
-    renamed = 0
-    for filename in tqdm(mask_files):
-        old_path = os.path.join(folder_path, filename)
-        # Remove '_mask' from filename
-        new_filename = filename.replace('_mask.png', '.png')
-        new_path = os.path.join(folder_path, new_filename)
-        
-        try:
-            os.rename(old_path, new_path)
-            renamed += 1
-        except Exception as e:
-            print(f"Error renaming {filename}: {e}")
-    
-    print(f"\n✅ Renamed {renamed} files")
-    print(f"Example: 00612_00_mask.png → 00612_00.png")
+TARGET_DIRS = [
+    "cloth-inner-mask",
+    "cloth-outer-mask",
+    "gt_cloth_warped_inner_mask",
+    "gt_cloth_warped_outer_mask",
+]
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("root", help="dataset root, e.g. my_dataset")
+    ap.add_argument("--apply", action="store_true", help="actually rename (default: dry run)")
+    args = ap.parse_args()
+
+    renamed = skipped = 0
+    for split in ("train", "test"):
+        for d in TARGET_DIRS:
+            folder = os.path.join(args.root, split, d)
+            if not os.path.isdir(folder):
+                continue
+            for fn in os.listdir(folder):
+                stem, ext = os.path.splitext(fn)
+                if not stem.endswith("_mask"):
+                    continue
+                new_fn = stem[:-len("_mask")] + ext
+                src, dst = os.path.join(folder, fn), os.path.join(folder, new_fn)
+                if os.path.exists(dst):
+                    print(f"SKIP (target exists): {src}")
+                    skipped += 1
+                    continue
+                print(f"{src}  ->  {new_fn}")
+                if args.apply:
+                    os.rename(src, dst)
+                renamed += 1
+    mode = "RENAMED" if args.apply else "WOULD RENAME (dry run)"
+    print(f"\n{mode}: {renamed} files, skipped {skipped}")
+    if not args.apply:
+        print("Re-run with --apply to actually do it.")
 
 if __name__ == "__main__":
-    # Rename train folder
-    print("Processing train/agnostic-mask...")
-    remove_mask_suffix("./DATA/my_dataset/train/agnostic-mask")
-    
-    # Rename test folder
-    print("\nProcessing test/agnostic-mask...")
-    remove_mask_suffix("./DATA/my_dataset/test/agnostic-mask")
-    
-    print("\n✅ All done!")
+    main()
