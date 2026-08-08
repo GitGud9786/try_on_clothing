@@ -83,14 +83,20 @@ class ControlLDM(LatentDiffusion):
         else:
             self.semantic_cond_stage_model = None
         if use_VAEdownsample:
-            inner_encoder = GarmentEncoder(in_channels=self.channels)
-            outer_encoder = GarmentEncoder(in_channels=self.channels)
+            # Inputs here are VAE latents (already at H/8), so the encoders must not
+            # downsample again: five strided layers would take a 64x48 latent to 2x1.
+            no_downsample = (False,) * 5
+            inner_encoder = GarmentEncoder(
+                in_channels=self.channels, downsample=no_downsample
+            )
+            outer_encoder = GarmentEncoder(
+                in_channels=self.channels, downsample=no_downsample
+            )
             self.garment_refiner = GarmentConcatUNet(
                 inner_encoder,
                 outer_encoder,
                 nn.Identity(),
-                project_in=False,
-                unet_takes_timesteps=False,
+                latent_channels=self.channels,
             )
         else:
             self.garment_refiner = None
@@ -337,20 +343,10 @@ class ControlLDM(LatentDiffusion):
                         z_outer = h
                     hint.append(h)
                 if self.garment_refiner is not None and z_inner is not None and z_outer is not None:
-                    _, attention = self.garment_refiner(
-                        z_inner,
-                        z_outer,
-                        timesteps=t,
-                        context=cond_txt,
-                        return_attention=True,
-                    )
-                    attention = F.interpolate(
-                        attention,
-                        size=z_inner.shape[-2:],
-                        mode="bilinear",
-                        align_corners=False,
-                    )
-                    z_inner = z_inner * attention
+                    # Outer first: matches E_o(g_o) (c) E_i(g_i). The module resizes
+                    # A onto the latent grid and applies it internally, so the
+                    # interpolate/multiply that used to live here is no longer needed.
+                    _, z_inner, attention = self.garment_refiner(z_outer, z_inner)
                     hint = [z_outer, z_inner]
             hint = torch.cat(hint, dim=1)
             control, cond_output = self.control_model(x=x_noisy, hint=hint, timesteps=t, context=cond_txt, only_mid_control=self.only_mid_control)
