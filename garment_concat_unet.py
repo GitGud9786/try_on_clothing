@@ -1,8 +1,35 @@
+"""
+Garment Occlusion Learning (GOL) module for multi-layer virtual try-on.
+
+Implements the forward path of Eq. (3):
+
+    A    = Linear(U(E_o(g_o) (c) E_i(g_i)))
+    z_iv = z_i * A
+
+The supervised occlusion loss L_OCC is deliberately NOT included: it requires an
+unoccluded inner-garment image as input and the *visible* inner region as target.
+When both are the same crop, the loss is minimised by A = 1 and trains the module
+towards the identity. Here A is instead learned end-to-end from the diffusion
+objective. See `attention_stats` for how to check it is actually doing something.
+
+Structure:
+    GarmentEncoder            -- E_o / E_i, M layers of (downsample conv + 2 res blocks)
+    MappingUNet               -- U
+    GarmentOcclusionLearning  -- predicts A, applies it to the inner VAE latent
+    GarmentConditionFusion    -- concat [z_o, z_iv] -> conditioning tensor
+    GarmentConcatUNet         -- convenience wrapper over the two above
+"""
+
+from typing import Iterable, Optional, Sequence, Tuple
+
 import torch
 import torch.nn.functional as F
 from torch import nn
-from typing import Iterable, Optional
 
+
+# --------------------------------------------------------------------------- #
+# Primitives
+# --------------------------------------------------------------------------- #
 
 def _group_norm(num_channels: int) -> nn.GroupNorm:
     groups = min(32, num_channels)
@@ -41,142 +68,78 @@ class ResidualBlock(nn.Module):
 
 
 class EncoderLayer(nn.Module):
-    def __init__(self, in_ch: int, out_ch: int, use_norm: bool) -> None:
+    """One (optionally downsampling) convolution followed by two residual blocks."""
+
+    def __init__(self, in_ch: int, out_ch: int, downsample: bool, use_norm: bool) -> None:
         super().__init__()
-        self.down = ConvBlock(in_ch, out_ch, downsample=True, use_norm=use_norm)
+        self.down = ConvBlock(in_ch, out_ch, downsample=downsample, use_norm=use_norm)
         self.res1 = ResidualBlock(out_ch, out_ch, use_norm)
         self.res2 = ResidualBlock(out_ch, out_ch, use_norm)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.down(x)
-        x = self.res1(x)
-        x = self.res2(x)
-        return x
+        return self.res2(self.res1(self.down(x)))
 
 
 class GarmentEncoder(nn.Module):
     """
-    Small image encoder that preserves or downsamples spatial resolution.
+    E_o / E_i from the paper: M layers, each = conv + 2 residual blocks.
 
-    channels: output channels per layer, e.g. (64, 128, 256, 256, 256)
-    num_layers: number of downsampling layers (M in the paper)
+    `downsample` lets you control the stride per layer. The paper downsamples in
+    all M=5 layers (image H -> H/32). If you would rather feed VAE latents
+    directly (in_channels=4, already at H/8), set some entries to False so the
+    encoder grid lands closer to the latent grid and A needs less upsampling.
     """
 
     def __init__(
         self,
         in_channels: int = 3,
         channels: Iterable[int] = (64, 128, 256, 256, 256),
-        num_layers: int = 5,
+        downsample: Optional[Sequence[bool]] = None,
         use_norm: bool = True,
     ) -> None:
         super().__init__()
         channels = list(channels)
         if not channels:
             raise ValueError("channels must have at least one entry")
-        if num_layers != len(channels):
-            raise ValueError("num_layers must match the length of channels")
 
-        layers = []
-        in_ch = in_channels
-        for out_ch in channels:
-            layers.append(EncoderLayer(in_ch, out_ch, use_norm))
+        if downsample is None:
+            downsample = [True] * len(channels)
+        downsample = list(downsample)
+        if len(downsample) != len(channels):
+            raise ValueError(
+                f"downsample has {len(downsample)} entries but channels has {len(channels)}"
+            )
+
+        layers, in_ch = [], in_channels
+        for out_ch, ds in zip(channels, downsample):
+            layers.append(EncoderLayer(in_ch, out_ch, ds, use_norm))
             in_ch = out_ch
 
         self.net = nn.Sequential(*layers)
         self.out_channels = channels[-1]
+        self.downsample_factor = 2 ** sum(downsample)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.net(x)
 
 
-class GarmentConcatUNet(nn.Module):
-    """
-    Two encoders + occlusion mapping + U-Net.
-
-    The two garment images are encoded separately, concatenated on channel
-    dimension, processed by mapping network U and a linear layer to produce
-    a spatial attention map A, then passed into the provided UNet.
-    """
-
-    def __init__(
-        self,
-        inner_encoder: nn.Module,
-        outer_encoder: nn.Module,
-        unet: nn.Module,
-        project_in: bool = True,
-        unet_takes_timesteps: bool = True,
-        mapping_hidden_channels: Optional[int] = None,
-    ) -> None:
-        super().__init__()
-        self.inner_encoder = inner_encoder
-        self.outer_encoder = outer_encoder
-        self.unet = unet
-        self.unet_takes_timesteps = unet_takes_timesteps
-
-        inner_ch = getattr(inner_encoder, "out_channels", None)
-        outer_ch = getattr(outer_encoder, "out_channels", None)
-        unet_in = getattr(unet, "in_channels", None)
-
-        if inner_ch is not None and outer_ch is not None:
-            mapping_in = inner_ch + outer_ch
-            mapping_hidden = mapping_hidden_channels or mapping_in
-            self.mapping_u = MappingUNet(mapping_in, mapping_hidden)
-            self.to_attention = nn.Conv2d(mapping_hidden, 1, kernel_size=1)
-        else:
-            self.mapping_u = nn.Identity()
-            self.to_attention = nn.Conv2d(1, 1, kernel_size=1)
-
-        if project_in and inner_ch is not None and outer_ch is not None and unet_in is not None:
-            concat_ch = inner_ch + outer_ch
-            if concat_ch != unet_in:
-                self.project_in = nn.Conv2d(concat_ch, unet_in, kernel_size=1)
-            else:
-                self.project_in = nn.Identity()
-        else:
-            self.project_in = nn.Identity()
-
-    def forward(
-        self,
-        inner_img: torch.Tensor,
-        outer_img: torch.Tensor,
-        timesteps: Optional[torch.Tensor] = None,
-        context: Optional[torch.Tensor] = None,
-        return_attention: bool = False,
-        **kwargs,
-    ) -> torch.Tensor:
-        inner_feat = self.inner_encoder(inner_img)
-        outer_feat = self.outer_encoder(outer_img)
-
-        if inner_feat.shape[-2:] != outer_feat.shape[-2:]:
-            raise ValueError(
-                f"Encoded sizes differ: inner={inner_feat.shape[-2:]}, outer={outer_feat.shape[-2:]}"
-            )
-
-        concat_feat = torch.cat([outer_feat, inner_feat], dim=1)
-        u = self.mapping_u(concat_feat)
-        attention = torch.sigmoid(self.to_attention(u))
-        refined_inner = inner_feat * attention
-
-        x = torch.cat([outer_feat, refined_inner], dim=1)
-        x = self.project_in(x)
-
-        if self.unet_takes_timesteps:
-            if timesteps is None:
-                timesteps = torch.zeros(x.shape[0], device=x.device, dtype=torch.long)
-            out = self.unet(x, timesteps=timesteps, context=context, **kwargs)
-        else:
-            out = self.unet(x)
-
-        if return_attention:
-            return out, attention
-
-        return out
+# --------------------------------------------------------------------------- #
+# Mapping network U
+# --------------------------------------------------------------------------- #
 
 class MappingUNet(nn.Module):
+    """
+    Small U-Net `U`: one downsample, one upsample, skip taken at the matching
+    resolution.
+
+    (The earlier version upsampled with a transposed conv and then immediately
+    nearest-resized back down to concatenate with the *low*-resolution skip,
+    which discarded three quarters of the transposed conv's output on every
+    forward pass and left the final upsample non-learned.)
+    """
+
     def __init__(self, in_ch: int, hidden_ch: int) -> None:
         super().__init__()
-
-        # Encoder
         self.enc1 = nn.Sequential(
             nn.Conv2d(in_ch, hidden_ch, kernel_size=3, padding=1),
             _group_norm(hidden_ch),
@@ -187,45 +150,244 @@ class MappingUNet(nn.Module):
             _group_norm(hidden_ch * 2),
             nn.SiLU(),
         )
-
-        # Bottleneck
         self.bottleneck = nn.Sequential(
             nn.Conv2d(hidden_ch * 2, hidden_ch * 2, kernel_size=3, padding=1),
             _group_norm(hidden_ch * 2),
             nn.SiLU(),
         )
-
-        # Decoder
-        self.dec1_up = nn.ConvTranspose2d(hidden_ch * 2, hidden_ch, kernel_size=4, stride=2, padding=1)
-        self.dec1_conv = nn.Sequential(
-            nn.Conv2d(hidden_ch + hidden_ch * 2, hidden_ch, kernel_size=3, padding=1),
+        self.up = nn.ConvTranspose2d(hidden_ch * 2, hidden_ch, kernel_size=4, stride=2, padding=1)
+        self.dec = nn.Sequential(
+            nn.Conv2d(hidden_ch * 2, hidden_ch, kernel_size=3, padding=1),
             _group_norm(hidden_ch),
             nn.SiLU(),
         )
-        self.dec2 = nn.Sequential(
-            nn.Conv2d(hidden_ch + hidden_ch, hidden_ch, kernel_size=3, padding=1),
-            _group_norm(hidden_ch),
-            nn.SiLU(),
-        )
+        self.out_channels = hidden_ch
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        e1 = self.enc1(x)                                    # (B, hidden,   H,   W)
-        e2 = self.enc2(e1)                                   # (B, hidden*2, H/2, W/2)
+        e1 = self.enc1(x)                  # (B,  h,   H,   W)
+        e2 = self.enc2(e1)                 # (B, 2h, H/2, W/2)
+        b = self.bottleneck(e2)            # (B, 2h, H/2, W/2)
 
-        b = self.bottleneck(e2)                              # (B, hidden*2, H/2, W/2)
-
-        d1 = self.dec1_up(b)                                 # (B, hidden,   H,   W)
-        if d1.shape[-2:] != e2.shape[-2:]:
-            d1 = F.interpolate(d1, size=e2.shape[-2:], mode="nearest")
-        d1 = self.dec1_conv(torch.cat([d1, e2], dim=1))     # skip from e2
-        if d1.shape[-2:] != e1.shape[-2:]:
-            d1 = F.interpolate(d1, size=e1.shape[-2:], mode="nearest")
-        d2 = self.dec2(torch.cat([d1, e1], dim=1))          # skip from e1
-
-        return d2                                            # (B, hidden, H, W)
+        d = self.up(b)                     # (B,  h,   H,   W)
+        if d.shape[-2:] != e1.shape[-2:]:  # only fires when H or W is odd
+            d = F.interpolate(d, size=e1.shape[-2:], mode="nearest")
+        return self.dec(torch.cat([d, e1], dim=1))   # (B, h, H, W)
 
 
-def build_simple_garment_concat_unet(unet: nn.Module) -> GarmentConcatUNet:
-    inner_encoder = GarmentEncoder(in_channels=3)
-    outer_encoder = GarmentEncoder(in_channels=3)
-    return GarmentConcatUNet(inner_encoder, outer_encoder, unet)
+# --------------------------------------------------------------------------- #
+# GOL module
+# --------------------------------------------------------------------------- #
+
+class GarmentOcclusionLearning(nn.Module):
+    """
+    Predicts the spatial attention map A from the two garment images, then
+    applies it to the inner garment's VAE latent to produce z_iv.
+
+    A is predicted on the encoder grid and bilinearly resized onto the latent
+    grid before the multiply -- five downsampling layers put the encoder at H/32
+    while the SD VAE latent sits at H/8, so the two never line up on their own.
+    """
+
+    def __init__(
+        self,
+        in_channels: int = 3,
+        encoder_channels: Iterable[int] = (64, 128, 256, 256, 256),
+        encoder_downsample: Optional[Sequence[bool]] = None,
+        mapping_hidden_channels: int = 256,
+        use_norm: bool = True,
+        attention_bias_init: float = 2.0,
+        attention_floor: float = 0.0,
+        share_encoder_weights: bool = False,
+    ) -> None:
+        super().__init__()
+        if not 0.0 <= attention_floor < 1.0:
+            raise ValueError("attention_floor must be in [0, 1)")
+        self.attention_floor = attention_floor
+
+        self.outer_encoder = GarmentEncoder(
+            in_channels, encoder_channels, encoder_downsample, use_norm
+        )
+        if share_encoder_weights:
+            # "Two identical encoders" in the paper means identical architecture.
+            # Tying the weights is available but off by default -- the two inputs
+            # play asymmetric roles (occluder vs occluded).
+            self.inner_encoder = self.outer_encoder
+        else:
+            self.inner_encoder = GarmentEncoder(
+                in_channels, encoder_channels, encoder_downsample, use_norm
+            )
+
+        mapping_in = self.outer_encoder.out_channels + self.inner_encoder.out_channels
+        self.mapping_u = MappingUNet(mapping_in, mapping_hidden_channels)
+
+        # "Linear" in Eq. (3): a per-pixel linear projection to a 1-channel map.
+        self.to_attention = nn.Conv2d(mapping_hidden_channels, 1, kernel_size=1)
+        nn.init.zeros_(self.to_attention.weight)
+        # Start at A = sigmoid(2) ~= 0.88 so the gate is open at init and z_iv is
+        # close to z_i. Starting at sigmoid(0) = 0.5 silently halves every inner
+        # latent before training has learned anything.
+        nn.init.constant_(self.to_attention.bias, attention_bias_init)
+
+    def forward(
+        self,
+        outer_img: torch.Tensor,
+        inner_img: torch.Tensor,
+        inner_latent: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        outer_img / inner_img : (B, C_in, H, W)      garment images (or latents)
+        inner_latent  (z_i)   : (B, C_lat, h, w)     frozen-VAE encoding of the inner garment
+
+        returns (z_iv, A), on the latent grid: (B, C_lat, h, w) and (B, 1, h, w).
+        """
+        if outer_img.shape[-2:] != inner_img.shape[-2:]:
+            raise ValueError(
+                f"Garment inputs differ spatially: outer={tuple(outer_img.shape[-2:])}, "
+                f"inner={tuple(inner_img.shape[-2:])}. Feed both at the same resolution."
+            )
+
+        f_o = self.outer_encoder(outer_img)
+        f_i = self.inner_encoder(inner_img)
+
+        u = self.mapping_u(torch.cat([f_o, f_i], dim=1))   # E_o(g_o) (c) E_i(g_i) -> U
+        attention = torch.sigmoid(self.to_attention(u))    # (B, 1, H/32, W/32)
+
+        if self.attention_floor > 0.0:
+            # Keeps a little signal alive in fully-suppressed regions so their
+            # gradients do not die permanently.
+            attention = self.attention_floor + (1.0 - self.attention_floor) * attention
+
+        if attention.shape[-2:] != inner_latent.shape[-2:]:
+            attention = F.interpolate(
+                attention,
+                size=inner_latent.shape[-2:],
+                mode="bilinear",
+                align_corners=False,
+            )
+        attention = attention.to(inner_latent.dtype)   # survives AMP / fp16 latents
+
+        z_iv = inner_latent * attention
+        return z_iv, attention
+
+
+@torch.no_grad()
+def attention_stats(attention: torch.Tensor) -> dict:
+    """
+    Log these every epoch. A degenerate gate is invisible in the loss curve but
+    obvious here: mean drifting to ~1.0 with std collapsing towards 0 means A has
+    become the identity and the module is contributing nothing.
+    """
+    a = attention.float()
+    return {
+        "A/mean": a.mean().item(),
+        "A/std": a.std().item(),
+        "A/min": a.amin().item(),
+        "A/max": a.amax().item(),
+        "A/frac_below_0.5": (a < 0.5).float().mean().item(),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Fusion into the StableVITON conditioning branch
+# --------------------------------------------------------------------------- #
+
+class GarmentConditionFusion(nn.Module):
+    """
+    Channel-concatenates z_o and z_iv and projects to the conditioning tensor.
+
+    Init is identity-on-z_o, zero-on-z_iv: at step 0 the branch emits exactly z_o,
+    so the model starts as single-garment StableVITON conditioned on the outer
+    garment -- a state the pretrained weights already handle -- and learns to mix
+    z_iv in from there.
+
+    Note this is NOT StableVITON's zero conv. Those sit on the *output* injections
+    of the spatial encoder; zero-initialising the branch *input* would feed the
+    conditioning path nothing at all and discard the pretrained garment behaviour.
+    Leave the existing zero convs inside the spatial encoder untouched.
+    """
+
+    def __init__(self, latent_channels: int = 4, out_channels: Optional[int] = None) -> None:
+        super().__init__()
+        out_channels = out_channels or latent_channels
+        self.proj = nn.Conv2d(latent_channels * 2, out_channels, kernel_size=1)
+        self.out_channels = out_channels
+
+        with torch.no_grad():
+            self.proj.weight.zero_()
+            self.proj.bias.zero_()
+            for c in range(min(out_channels, latent_channels)):
+                self.proj.weight[c, c, 0, 0] = 1.0
+
+    def forward(self, outer_latent: torch.Tensor, z_iv: torch.Tensor) -> torch.Tensor:
+        return self.proj(torch.cat([outer_latent, z_iv], dim=1))
+
+
+class GarmentConcatUNet(nn.Module):
+    """
+    GOL + fusion. Produces the conditioning tensor for StableVITON's spatial
+    encoder (the ControlNet-style branch).
+
+    Name kept for import compatibility, but note it no longer wraps a UNet. The
+    original version passed the garment features in as the UNet's `x`, which
+    replaces the noisy latent and breaks the diffusion process -- StableVITON's
+    main UNet input is the noisy person latent stacked with the agnostic latent,
+    resized mask and densepose latent, while the garment enters through the
+    conditioning branch. Passing a `unet` here raises rather than silently doing
+    the wrong thing. Wire the output into the branch; see the usage sketch below.
+    """
+
+    def __init__(
+        self,
+        inner_encoder: Optional[nn.Module] = None,
+        outer_encoder: Optional[nn.Module] = None,
+        unet: Optional[nn.Module] = None,
+        latent_channels: int = 4,
+        cond_out_channels: Optional[int] = None,
+        project_in: Optional[bool] = None,          # deprecated, ignored
+        unet_takes_timesteps: Optional[bool] = None,  # deprecated, ignored
+        **gol_kwargs,
+    ) -> None:
+        super().__init__()
+        # nn.Identity() was the idiom for "no UNet here" and is accepted silently.
+        # A real UNet is refused: the old code called it with the garment tensor as
+        # `x`, which replaces the noisy latent and breaks the diffusion process.
+        if unet is not None and not isinstance(unet, nn.Identity):
+            raise TypeError(
+                "GarmentConcatUNet no longer takes a `unet`. It produces the garment "
+                "conditioning tensor only; feed that into StableVITON's spatial encoder "
+                "and leave the denoising UNet's input (noisy latent + agnostic + mask + "
+                "densepose) untouched. Pass nn.Identity() or omit the argument."
+            )
+
+        self.gol = GarmentOcclusionLearning(**gol_kwargs)
+        # Optional injection of pre-built encoders, matching the old call style.
+        if inner_encoder is not None:
+            self.gol.inner_encoder = inner_encoder
+        if outer_encoder is not None:
+            self.gol.outer_encoder = outer_encoder
+
+        self.fusion = GarmentConditionFusion(latent_channels, cond_out_channels)
+
+    def forward(
+        self,
+        outer_img: torch.Tensor,
+        inner_img: torch.Tensor,
+        outer_latent: Optional[torch.Tensor] = None,
+        inner_latent: Optional[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        # Under StableVITON's use_VAEdownsample path the garment inputs are already
+        # VAE latents, so they double as the modulation targets.
+        if outer_latent is None:
+            outer_latent = outer_img
+        if inner_latent is None:
+            inner_latent = inner_img
+
+        if outer_latent.shape[-2:] != inner_latent.shape[-2:]:
+            raise ValueError(
+                f"Latents differ spatially: outer={tuple(outer_latent.shape[-2:])}, "
+                f"inner={tuple(inner_latent.shape[-2:])}."
+            )
+        z_iv, attention = self.gol(outer_img, inner_img, inner_latent)
+        cond = self.fusion(outer_latent, z_iv)
+        return cond, z_iv, attention
+
