@@ -1,9 +1,20 @@
+# ============================================================================
+# StableVITON on RunPod (A40) — CUDA 12.1 build
+# Install with:   pip install -r requirements.txt
+#
+# The line DIRECTLY BELOW is mandatory. It points pip at PyTorch's wheel index
+# where the +cu121 builds live. Without it you get:
+#   "Could not find a version that satisfies the requirement torch==2.5.1+cu121"
+# Do NOT delete or move it above nothing — it must stay at the top of the file.
+# ============================================================================
+--extra-index-url https://download.pytorch.org/whl/cu121
 
+# --- PyTorch stack (CUDA 12.1 build; works on any driver >= 12.1) ---
 torch==2.5.1+cu121
 torchvision==0.20.1+cu121
 torchaudio==2.5.1+cu121
 
-# StableVITON dependencies (unchanged from the repo)
+# --- StableVITON dependencies (unchanged from the repo) ---
 albumentations
 clean-fid
 diffusers==0.20.2
@@ -20,6 +31,7 @@ transformers==4.36.2
 scikit-image
 hf_transfer
 
-# xformers intentionally omitted. If you later need it (bigger batches / higher
-# res), install AFTER the above with the build matched to torch 2.5.1:
+# --- xformers intentionally omitted ---
+# If you later need it (bigger batches / higher res), install AFTER the above
+# with the build matched to torch 2.5.1:
 #   pip install xformers==0.0.28.post3 --index-url https://download.pytorch.org/whl/cu121
